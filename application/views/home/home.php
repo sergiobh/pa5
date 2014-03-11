@@ -16,7 +16,7 @@
 </div>
 <script type="text/javascript">
 	function RedirecionamentoHome(){
-		$.blockUI({ message: '<h1>Ocorreu um erro no servidor!</h1>' });
+		$.blockUI({ message: '<h1>Nenhum leito encontrado!</h1>' });
 
 		// Efetuar o redirecionamento
 		setTimeout(
