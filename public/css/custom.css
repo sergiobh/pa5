@@ -3,3 +3,25 @@
     max-width: 330px;
     padding: 15px;
 }
+.btn-lg,
+.btn-sm{
+	width: 125px;
+}
+.btn-block {
+    margin-top: 0px !important;
+}
+
+
+
+/*
+/* A partir daqui são atribuições gerais para o Bootstrap
+*/
+.linha_botoes{
+	margin-top: 10px;
+}
+.linha_botoes .botao_submit{
+	float: left;
+}
+.linha_botoes .botao_reset{
+	float: right;
+}
