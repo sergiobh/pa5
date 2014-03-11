@@ -1,36 +1,21 @@
-<div class='titulo_page'>Cadastro de Quartos</div>
-<div class = 'quarto_cadastrar'>
-	<form class='formulario'>
-		<table cellspacing = "10" border = '0'>
-			<tr>
-				<td>Andar:</td>
-				<td><input type = 'text' maxlength = '10' id='Andar' name = 'Andar' descricao = 'Andar'  obrigatorio = 'sim' /></td>
-			</tr>
-			<tr>
-				<td>Identificação:</td>
-				<td><input type = 'text' maxlength = '10' id='Identificacao' name = 'identificacao' descricao = 'Identificação'  obrigatorio = 'sim' /></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>
-					<div class='retorno_ajax'></div>
-					<input class='botao_submit' type = 'button' value = 'Enviar' />
-					<input class='botao_reset' type = 'reset' value = 'Limpar' />
-				</td>
-			</tr>
-		</table>
-	</form>
-	<script type="text/javascript">
+<form class="form-signin" role="form">
+	<h2 class="form-signin-heading">Cadastro de Quartos</h2>
+	<div class="form-group">
+		<input type='text' class="form-control" placeholder="Andar" required autofocus maxlength='10' id='Andar' name='Andar' />
+	</div>
+	<div class="form-group">
+		<input type='text' class="form-control" placeholder="Identificação" required autofocus maxlength='10' id='identificacao' name='Identificação' />
+	</div>
+	<div class="linha_botoes">
+		<button class="btn btn-sm btn btn-success btn-block botao_submit">Enviar</button>
+		<button class="btn btn-sm btn btn-danger btn-block botao_reset" type="reset">Limpar</button>
+	</div>
+</form>
+<script type="text/javascript">
 		$(document).ready(function(){
 		
 			// Função para o click de cadastro
 			$('.botao_submit').click(function(){
-
-				// Validação do formulário padrão
-				if(! validaDados2('formulario')){
-					return false;
-				}
-
 				// Declaração de variaveis
 				var Andar 			= $("#Andar").val();
 				var Identificacao 	= $("#Identificacao").val();
@@ -71,7 +56,8 @@
 						$.unblockUI();
 					}
 				});
+
+				return false;
 			});	
 		});
 	</script>
-</div>
