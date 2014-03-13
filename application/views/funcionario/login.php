@@ -1,9 +1,12 @@
 <form class="form-signin" role="form">
 	<h2 class="form-signin-heading">Controle de Acesso</h2>
-	<input type='text' class="form-control" placeholder="Cpf" required autofocus maxlength='11' id='Cpf' name='cpf' />
-	<input type='password' class="form-control" placeholder="Senha" required maxlength='10' id='Senha' name='senha' /> <label class="checkbox">
-	<input type="checkbox" value="remember-me">Salvar</label>
-	<button class="btn btn-lg btn-primary btn-block botao_submit">Sign in</button>
+	<div class="form-group">
+		<input type='text' class="form-control" placeholder="Cpf" required autofocus maxlength='11' id='Cpf' name='cpf' />
+	</div>
+	<div class="form-group">
+		<input type='password' class="form-control" placeholder="Senha" required maxlength='10' id='Senha' name='senha' /> <label class="checkbox">
+	</div>
+	<button class="btn btn-lg btn-primary btn-block botao_submit">Logar</button>
 	
 	<?php /*
 	type="submit"
