@@ -7,6 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 		<meta http-equiv="content-language" content="pt-BR" />		
         <link rel="stylesheet" href="<?php echo BASE_URL;?>/web/css/global.php" type="text/css" media="screen" />
+        <?php /*<link rel="stylesheet" href="<?php echo BASE_URL;?>/web/css/custom_layout.css" type="text/css" media="screen" /> */?>
 		<script type="text/javascript" src="<?php echo BASE_URL;?>/web/js/jquery/jquery.js"></script>
 		<script type="text/javascript" src="<?php echo BASE_URL;?>/web/js/jquery/jquery.blockUI.js"></script>
 		<script type="text/javascript" src="<?php echo BASE_URL;?>/web/js/jquery/jquery.tablesorter.min.js"></script>

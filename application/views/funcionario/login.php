@@ -1,13 +1,13 @@
-<form class="form-signin" role="form">
+<form class="form-signin" novalidate role="form">
 	<h2 class="form-signin-heading">Controle de Acesso</h2>
-	<input type='text' class="form-control" placeholder="Cpf" required autofocus maxlength='11' id='Cpf' name='cpf' />
-	<input type='password' class="form-control" placeholder="Senha" required maxlength='10' id='Senha' name='senha' /> <label class="checkbox">
-	<input type="checkbox" value="remember-me">Salvar</label>
-	<button class="btn btn-lg btn-primary btn-block botao_submit">Sign in</button>
+	<div class="form-group">
+		<input type='text' class="form-control" placeholder="Cpf" required autofocus maxlength='11' id='Cpf' name='cpf' alt="${g.message(code:'codigo_mensagem')}" />
+	</div>
+	<div class="form-group">
+		<input type='password' class="form-control" placeholder="Senha" required maxlength='10' id='Senha' name='senha' /> <label class="checkbox">
+	</div>
+	<button class="btn btn-lg btn-primary btn-block botao_submit">Logar</button>
 	
-	<?php /*
-	type="submit"
-	*/?>
 </form>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -67,7 +67,7 @@ $(document).ready(function(){
           // Se php retornou erro irá salvar o retorno da div "retorno"
           //alert('Usuário ou senha inválido');
 
-          jAlert('Usuário ou senha inválido!', 'CONTROLE DE ACESSO');          
+          jAlert('Usuário ou senha inválido!', 'CONTROLE DE ACESSO');
 
           $.unblockUI();
         }
