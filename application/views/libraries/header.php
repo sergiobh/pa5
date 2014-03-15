@@ -8,7 +8,7 @@
 		<meta http-equiv="content-language" content="pt-BR" />		
         <link rel="stylesheet" href="<?php echo BASE_URL;?>/web/css/global.php" type="text/css" media="screen" />
         <?php /*<link rel="stylesheet" href="<?php echo BASE_URL;?>/web/css/custom_layout.css" type="text/css" media="screen" /> */?>
-		<script type="text/javascript" src="<?php echo BASE_URL;?>/web/js/jquery/jquery.js"></script>
+		<script type="text/javascript" src="<?php echo BASE_URL;?>/web/js/jquery/jquery-1.11.0.js"></script>
 		<script type="text/javascript" src="<?php echo BASE_URL;?>/web/js/jquery/jquery.blockUI.js"></script>
 		<script type="text/javascript" src="<?php echo BASE_URL;?>/web/js/jquery/jquery.tablesorter.min.js"></script>
 		<script type="text/javascript" src="<?php echo BASE_URL;?>/web/js/global.php"></script>
@@ -17,16 +17,19 @@
 		==========================================================-->
 		<link href="<?php echo BASE_URL; ?>/public/css/bootstrap.css" rel="stylesheet">
 		<link href="<?php echo BASE_URL; ?>/public/css/font-awesome.css" rel="stylesheet">
+		<link href="<?php echo BASE_URL; ?>/public/css/tooltipster.css" rel="stylesheet">		
 
 		<?php /* Minha customização de tela */?>
 		<link href="<?php echo BASE_URL; ?>/public/css/custom.css" rel="stylesheet">
 		
 		<!--Le JavaScript
 		==========================================================-->
-		<?php /*
-		<script src="<?php echo BASE_URL; ?>/public/js/jquery.js"></script>
-		*/ ?>
-		<script src="<?php echo BASE_URL; ?>/public/js/bootstrap.js"></script>		
+		<script src="<?php echo BASE_URL; ?>/public/js/bootstrap.js"></script>
+		<script src="<?php echo BASE_URL; ?>/public/js/jquery.validate.js"></script>
+		<script src="<?php echo BASE_URL; ?>/public/js/additional-methods.js"></script>
+
+		<script src="<?php echo BASE_URL; ?>/public/js/jquery.tooltipster.js"></script>
+				
 		
 		<?php
 			if(isset($Script)){

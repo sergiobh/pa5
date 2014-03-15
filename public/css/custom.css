@@ -14,7 +14,7 @@
 
 
 /*
-/* A partir daqui são atribuições gerais para o Bootstrap
+/* A partir daqui sï¿½o atribuiï¿½ï¿½es gerais para o Bootstrap
 */
 .linha_botoes{
 	margin-top: 10px;
@@ -24,4 +24,10 @@
 }
 .linha_botoes .botao_reset{
 	float: right;
+}
+label.error{
+	color: #FF0000;
+}
+h2.form-signin-heading{
+	margin-bottom: 24px;
 }
