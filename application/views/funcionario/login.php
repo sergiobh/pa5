@@ -61,9 +61,6 @@ $(document).ready(function(){
 	        logar();
 	      }
 	    });
-	
-		// retorno para que não ocorra o submit do form
-	    return false;
   	};
 
 
