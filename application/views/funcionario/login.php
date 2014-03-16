@@ -17,7 +17,8 @@ $(document).ready(function(){
 		rules: ( "add", {
 			cpf: {
 				required: true,
-				minlength: 11
+				minlength: 11,
+				maxlength: 11
 			},
 			senha: {
 				required: true,
@@ -29,6 +30,7 @@ $(document).ready(function(){
 			cpf:{
                 required: "Campo obrigatório",
                 minlength: "Digite um Cpf válido",
+                maxlength: "Digite um Cpf válido",
                 number: "Digite um Cpf válido"
             },
 			senha: {
