@@ -1,3 +1,8 @@
+<?php /*
+<script type="text/javascript" src="<?php echo BASE_URL;?>/web/js/jquery/jquery.mobile-1.3.2.js"></script>
+<link href="<?php echo BASE_URL; ?>/web/css/mobile/principal.css" rel="stylesheet">
+<link href="<?php echo BASE_URL; ?>/web/css/mobile/jquery.mobile-1.3.2.min.css" rel="stylesheet">
+*/ ?>
 <div class='titulo_page'>Painel de Leitos</div>
 <div class='my-page'>
 	<div class="home ui-content" data-role="content" role="main">
