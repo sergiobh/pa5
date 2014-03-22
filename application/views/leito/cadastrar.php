@@ -25,12 +25,16 @@ $(document).ready(function(){
 
 	// Reset
 	$('.botao_reset').click(function(){
+		$('#Identificacao').val('');
 		carregaQuartos();
+		$('#AndarId').val('');
+
+		return false;
 	});
 	
 	// Funçao para carregar os Andares
 	carregaAndares();
-	$('#QuartoId').html(QuartoDependendo);
+	carregaQuartos();
 	
 	// Função para carregar os Quartos
 	$('#AndarId').change(function(){
@@ -170,9 +174,8 @@ function submerterForm(){
 };
 
 function carregaQuartos(){
-	
+	$('#QuartoId').html(QuartoDependendo);
 }
-
 
 function carregaAndares(){
 	$.blockUI({ message: '<h1>Carregando os andares...</h1>' });
