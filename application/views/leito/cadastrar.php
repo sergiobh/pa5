@@ -1,63 +1,41 @@
 <form class="form-signin" role="form">
 	<h2 class="form-signin-heading">Cadastro de Leitos</h2>
 	<div class="form-group">
-		<select class="form-control" name='AndarId' id='AndarId' autofocus>
-			<option value="-1">--- Selecione ---</option>
-		</select>
+		<select class="form-control" name='AndarId' id='AndarId' autofocus></select>
 	</div>
 	<div class="form-group">
-		<select class="form-control" name='quartoid' id='QuartoId'>
-			<option value="-1">--- Selecione o andar ---</option>
-		</select>
+		<select class="form-control" name='quartoid' id='QuartoId'></select>
 	</div>
 	<div class="form-group">		
 		<input type='text' class="form-control" placeholder="Identificação" maxlength='10' id='Identificacao' name='identificacao' />
 	</div>
 	<div class="linha_botoes">
 		<button class="btn btn-sm btn btn-success btn-block botao_submit">Enviar</button>
-		<button class="btn btn-sm btn btn-danger btn-block botao_reset" type="reset">Limpar</button>
+		<button class="btn btn-sm btn btn-danger btn-block botao_reset">Limpar</button>
 	</div>
 </form>
 <script type="text/javascript">
+var AndarSelecione = '<option value="">Andar: (Selecione)</option>';
+
+var QuartoDependendo = '<option value="">Quarto: (Selecione o Andar)</option>';
+var QuartoSelecione = '<option value="">Quarto: (Selecione)</option>';
+ 
+
 $(document).ready(function(){
-	// Funçao para carregar os Andares
-	$.blockUI({ message: '<h1>Carregando os andares...</h1>' });
 
-	var Url = '<?php echo BASE_URL;?>/quarto/getAndar';
-
-	$.ajax({
-		type: "get",
-		url: Url,
-		dataType: 'json',
-		success: function(retorno){
-			var Dados = "";
-
-			if(retorno.success){
-				var Andares = retorno.Andares;
-
-				for(Reg in Andares){
-					Dados += '<option value="'+Andares[Reg].Andar+'">'+Andares[Reg].Andar+'</option>';
-				}
-
-				$('#AndarId').html('<option value="-1">--- Selecione ---</option>' + Dados);
-				$.unblockUI();
-			}
-			else{
-				
-				$('.retorno_ajax').html('Ocorreu um erro no servidor. Favor recarregar a página!');
-				$.unblockUI();
-			}
-		},
-		error: function(){
-			$('.retorno_ajax').html('Ocorreu um erro no servidor. Favor recarregar a página!');
-			$.unblockUI();
-		}
+	// Reset
+	$('.botao_reset').click(function(){
+		carregaQuartos();
 	});
-
+	
+	// Funçao para carregar os Andares
+	carregaAndares();
+	$('#QuartoId').html(QuartoDependendo);
+	
 	// Função para carregar os Quartos
 	$('#AndarId').change(function(){
-		if($(this).val() == -1){
-			$('#QuartoId').html('<option value="-1">--- Selecione o andar ---</option>');
+		if($(this).val() == ''){
+			$('#QuartoId').html(QuartoSelecione);
 		}
 		else{
 			var Andar 	= $(this).val();
@@ -82,7 +60,7 @@ $(document).ready(function(){
 							Dados += '<option value="'+Quartos[Reg].QuartoId+'">'+Quartos[Reg].Quarto+'</option>';
 						}
 
-						$('#QuartoId').html('<option value="-1">--- Selecione ---</option>' + Dados);
+						$('#QuartoId').html(QuartoSelecione + Dados);
 						$.unblockUI();
 					}
 					else{
@@ -190,4 +168,44 @@ function submerterForm(){
 		}
 	});
 };
+
+function carregaQuartos(){
+	
+}
+
+
+function carregaAndares(){
+	$.blockUI({ message: '<h1>Carregando os andares...</h1>' });
+	
+	var Url = '<?php echo BASE_URL;?>/quarto/getAndar';
+	
+	$.ajax({
+		type: "get",
+		url: Url,
+		dataType: 'json',
+		success: function(retorno){
+			var Dados = "";
+	
+			if(retorno.success){
+				var Andares = retorno.Andares;
+	
+				for(Reg in Andares){
+					Dados += '<option value="'+Andares[Reg].Andar+'">'+Andares[Reg].Andar+'</option>';
+				}
+	
+				$('#AndarId').html(AndarSelecione + Dados);
+				$.unblockUI();
+			}
+			else{
+				
+				$('.retorno_ajax').html('Ocorreu um erro no servidor. Favor recarregar a página!');
+				$.unblockUI();
+			}
+		},
+		error: function(){
+			$('.retorno_ajax').html('Ocorreu um erro no servidor. Favor recarregar a página!');
+			$.unblockUI();
+		}
+	});
+}
 </script>
