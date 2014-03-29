@@ -12,55 +12,57 @@ class Ticket_xml extends CI_Controller {
 		$config ['upload_path'] = './public/uploads/';
 		$config ['allowed_types'] = 'xml';
 		$config ['max_size'] = '1024';
-		// $config['max_width'] = '1024';
-		// $config['max_height'] = '768';
 		
-		$this->load->library('upload', $config); 
+		$this->load->library ( 'upload', $config );
 		
-		if (! $this->upload->do_upload ("ticketFile")) {
-			$error = array (
-					'error' => $this->upload->display_errors () 
-			);
+		if (! $this->upload->do_upload ( "ticketFile" )) {
+			echo 'ta dando erro antes de upload, provavel chegou a 100';exit;
 			
-			$error = array (
-					'error' => $this->upload->display_errors () 
-			);
-			
-			echo "<pre>";
-			print_r ( $error );
-			
-			// $this->load->view('upload_form', $error);
-			echo "entrou no erro";
-		} else {
-		
 			$data = array (
-					'ticketFile' => $this->upload->data () 
+					'error' => $this->upload->display_errors () 
 			);
 			
-			// $this->load->view('upload_success', $data);
+			$Dados ['Script'] [] = 'jquery/bootstrap-filestyle.min.js';
 			
-			echo "<pre>";
-			foreach ( $data["ticketFile"] as $item => $value ) {
-				echo $item . " : " . $value."<br/>";
-			}
+			$Dados ['View'] = 'ticket_xml/importar';
+			$this->load->view ( 'body/index', $Dados );
+		} else {
+			$config = $this->upload->data ( "ticketFile" );
 			
+			$file = $config ['full_path'];
+			
+			$ticketString = $this->getStringXml ( $file );
+			
+			$xml_objet = $this->converteXMLtoObject ( $ticketString );
+			
+			// echo '<pre>';print_r($xml_objet);exit;
 			/*
-			 * file_name : teste3.xml
-				file_type : text/xml
-				file_path : D:/server_php/sghh/public/uploads/
-				full_path : D:/server_php/sghh/public/uploads/teste3.xml
-				raw_name : teste3
-				orig_name : teste.xml
-				client_name : teste.xml
-				file_ext : .xml
-				file_size : 0.01
-				is_image : 
-				image_width : 
-				image_height : 
-				image_type : 
-				image_size_str : 
-			 * */
+			 * Xml Model -> Salvar Xml
+			 */
+			$this->load->model ( 'XmlMod' );
+			$this->XmlMod->setXml ( $xml_objet );	
+			$this->XmlMod->salvaXml ();
 		}
 	}
+	private function converteXMLtoObject($xml) {
+		try {
+			$xml_object = new SimpleXMLElement ( $xml );
+			if ($xml_object == false) {
+				return false;
+			}
+		} catch ( Exception $e ) {
+			return false;
+		}
+		
+		return $xml_object;
+	}
+	private function getStringXml($file) {
+		$this->load->helper ( 'file' );
+		
+		$string = read_file ( $file );
+		
+		return $string;
+	}
 }
+
 ?>

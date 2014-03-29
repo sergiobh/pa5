@@ -42,11 +42,11 @@ $(document).ready(function(){
 	});
 
 	$(".form-signin").submit(function () {
-	    if (validator.form()) {
+		if (validator.form()) {
 	        termoResponsabilidade();
 	    }
 
-        return false;
+	    return false;
 	});
 
 	//$(".form-signin").submit(function(){

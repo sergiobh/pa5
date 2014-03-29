@@ -1,16 +1,16 @@
 <helpdesk>
-	<origem>redes</origem>
+	<origem>BI</origem>
 	<incidente>
 		<atendente>
 			<cpf>04307234669</cpf>
 			<nome>fabio</nome>
 		</atendente>
 		<solicitante>
-			<cpf>11111111111</cpf>
-			<nome>fabio </nome>
+			<cpf>04564567899</cpf>
+			<nome>enrique</nome>
 		</solicitante>
-		<descricao>texto mmmmmmmmm</descricao>
-		<titulo>sei nao</titulo>
-		<abertura>times</abertura>
+		<descricao>estou com erro critico</descricao>
+		<titulo>a pagina nao carrega</titulo>
+		<abertura>1396133162</abertura>
 	</incidente>
-</helpdesk>
+</helpdesk> 

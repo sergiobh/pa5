@@ -5,8 +5,15 @@ class FuncionarioMod extends CI_Model{
     public $Nome;
     public $Cpf;
     public $Senha;
-    public $GrupoId;
+    public $SetorId;
 
+    public function setFuncionario($nome, $cpf, $senha, $setorId){
+    	$this->Nome = $nome;
+    	$this->Cpf = $cpf;
+    	$this->Senha = $senha;
+    	$this->SetorId = $setorId;
+    }
+    
     public function getFuncionario(){
 
         $sql    = "
@@ -58,9 +65,10 @@ class FuncionarioMod extends CI_Model{
     }
 
     public function SalvarCadastro(){
-        if($this->getFuncionario()){
+        if($funcionario = $this->getFuncionario()){
             $Retorno->Status = false;
             $Retorno->Msg    = "Funcionario já cadastrado!";
+            $this->FuncionarioId = $Retorno->FuncionarioId = $funcionario->FuncionarioId;
             
             return $Retorno;
         }
@@ -71,13 +79,13 @@ class FuncionarioMod extends CI_Model{
                         Nome
                         ,Cpf
                         ,Senha
-                        ,GrupoId
+                        ,SetorId
                     )
                     VALUES(
                         '".$this->Nome."'
                         ,'".$this->Cpf."'
                         ,'".$this->Senha."'
-                        ,'".$this->GrupoId."'
+                        ,'".$this->SetorId."'
                     )";
 
         $this->db->query($sql);
@@ -85,6 +93,7 @@ class FuncionarioMod extends CI_Model{
         if($this->db->affected_rows() > 0){
             $Retorno->Status = true;
             $Retorno->Msg    = "Funcionario cadastrado!";
+            $this->FuncionarioId = $Retorno->FuncionarioId = $this->db->insert_id();
         }
         else{
             $Retorno->Status = false;

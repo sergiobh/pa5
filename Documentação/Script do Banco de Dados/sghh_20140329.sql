@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost_sghh
-Source Server Version : 50525
+Source Server         : MYSQL_Localhost
+Source Server Version : 50616
 Source Host           : localhost:3306
 Source Database       : sghh
 
 Target Server Type    : MYSQL
-Target Server Version : 50525
+Target Server Version : 50616
 File Encoding         : 65001
 
-Date: 2014-03-15 15:07:42
+Date: 2014-03-29 19:59:52
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -28,13 +28,15 @@ CREATE TABLE `funcionario` (
   PRIMARY KEY (`FuncionarioId`),
   KEY `SetorId` (`SetorId`),
   CONSTRAINT `funcionario_ibfk_1` FOREIGN KEY (`SetorId`) REFERENCES `setor` (`SetorId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of funcionario
 -- ----------------------------
-INSERT INTO `funcionario` VALUES ('0', 'Geral', '0', '00000000000', '11111111');
 INSERT INTO `funcionario` VALUES ('1', 'Sérgio Macedo', '0', '11111111111', 'e10adc3949ba59abbe56e057f20f883e');
+INSERT INTO `funcionario` VALUES ('3', 'Geral', '0', '00000000000', '11111111');
+INSERT INTO `funcionario` VALUES ('9', 'fabio', '8', '04307234669', 'sem acesso');
+INSERT INTO `funcionario` VALUES ('10', 'enrique', '12', '04564567899', 'sem acesso');
 
 -- ----------------------------
 -- Table structure for leito
@@ -139,12 +141,40 @@ CREATE TABLE `setor` (
   PRIMARY KEY (`SetorId`),
   KEY `FuncionarioId` (`FuncionarioId`),
   CONSTRAINT `setor_ibfk_1` FOREIGN KEY (`FuncionarioId`) REFERENCES `funcionario` (`FuncionarioId`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of setor
 -- ----------------------------
-INSERT INTO `setor` VALUES ('0', 'Geral', '0');
+INSERT INTO `setor` VALUES ('1', 'Recepção', '1');
+INSERT INTO `setor` VALUES ('2', 'Camareira', '1');
+INSERT INTO `setor` VALUES ('6', 'Geral', '0');
+INSERT INTO `setor` VALUES ('7', 'Desenvolvimento', '1');
+INSERT INTO `setor` VALUES ('8', 'BI', '1');
+INSERT INTO `setor` VALUES ('9', 'SO', '1');
+INSERT INTO `setor` VALUES ('10', 'CORP', '1');
+INSERT INTO `setor` VALUES ('11', 'DB', '1');
+INSERT INTO `setor` VALUES ('12', 'Importado via Xml', '1');
+
+-- ----------------------------
+-- Table structure for setorfuncionario
+-- ----------------------------
+DROP TABLE IF EXISTS `setorfuncionario`;
+CREATE TABLE `setorfuncionario` (
+  `SetorFuncionarioId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `SetorId` int(10) unsigned NOT NULL,
+  `FuncionarioId` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`SetorFuncionarioId`),
+  KEY `SetorId` (`SetorId`),
+  KEY `FuncionarioId` (`FuncionarioId`),
+  CONSTRAINT `setorfuncionario_ibfk_2` FOREIGN KEY (`FuncionarioId`) REFERENCES `funcionario` (`FuncionarioId`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `setorfuncionario_ibfk_1` FOREIGN KEY (`SetorId`) REFERENCES `setor` (`SetorId`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of setorfuncionario
+-- ----------------------------
+INSERT INTO `setorfuncionario` VALUES ('7', '8', '9');
 
 -- ----------------------------
 -- Table structure for telefone
@@ -174,10 +204,11 @@ CREATE TABLE `ticket` (
   `StatusId` int(10) unsigned NOT NULL,
   `DH_Solicitacao` datetime NOT NULL,
   `Descricao` varchar(200) DEFAULT NULL,
-  `DH_Previsao` datetime NOT NULL,
+  `DH_Previsao` datetime DEFAULT NULL,
   `DH_Baixa` datetime DEFAULT NULL,
   `Resultado` varchar(200) DEFAULT NULL,
   `SetorId` int(10) unsigned DEFAULT NULL,
+  `AtendenteId` int(10) unsigned DEFAULT NULL,
   `PrioridadeId` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`TicketId`),
   KEY `tipoid` (`TipoId`),
@@ -185,16 +216,20 @@ CREATE TABLE `ticket` (
   KEY `statusid` (`StatusId`),
   KEY `SetorId` (`SetorId`),
   KEY `PrioridadeId` (`PrioridadeId`),
+  KEY `AtendenteId` (`AtendenteId`),
+  CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`TipoId`) REFERENCES `ticket_tipo` (`tipoid`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `ticket_ibfk_2` FOREIGN KEY (`FuncionarioId`) REFERENCES `funcionario` (`FuncionarioId`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `ticket_ibfk_3` FOREIGN KEY (`StatusId`) REFERENCES `ticket_status` (`statusid`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `ticket_ibfk_4` FOREIGN KEY (`SetorId`) REFERENCES `setor` (`SetorId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `ticket_ibfk_5` FOREIGN KEY (`PrioridadeId`) REFERENCES `ticket_prioridade` (`PrioridadeId`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`tipoid`) REFERENCES `ticket_tipo` (`tipoid`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `ticket_ibfk_2` FOREIGN KEY (`funcionarioid`) REFERENCES `funcionario` (`FuncionarioId`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `ticket_ibfk_3` FOREIGN KEY (`statusid`) REFERENCES `ticket_status` (`statusid`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `ticket_ibfk_4` FOREIGN KEY (`SetorId`) REFERENCES `setor` (`SetorId`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `ticket_ibfk_6` FOREIGN KEY (`AtendenteId`) REFERENCES `funcionario` (`FuncionarioId`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of ticket
 -- ----------------------------
+INSERT INTO `ticket` VALUES ('2', '1', '10', '1', '2014-03-29 19:46:02', 'a pagina nao carrega estou com erro critico', null, null, null, '8', '9', '3');
+INSERT INTO `ticket` VALUES ('3', '1', '10', '1', '2014-03-29 19:46:02', 'a pagina nao carrega estou com erro critico', null, null, null, '8', '9', '3');
 
 -- ----------------------------
 -- Table structure for ticket_categoria
@@ -204,11 +239,15 @@ CREATE TABLE `ticket_categoria` (
   `CategoriaId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Nome` varchar(50) NOT NULL,
   PRIMARY KEY (`CategoriaId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of ticket_categoria
 -- ----------------------------
+INSERT INTO `ticket_categoria` VALUES ('1', 'BI');
+INSERT INTO `ticket_categoria` VALUES ('2', 'SO');
+INSERT INTO `ticket_categoria` VALUES ('3', 'CORP');
+INSERT INTO `ticket_categoria` VALUES ('4', 'DB');
 
 -- ----------------------------
 -- Table structure for ticket_prioridade
@@ -267,10 +306,14 @@ CREATE TABLE `ticket_tipo` (
   KEY `PriodidadeId` (`PriodidadeId`),
   KEY `SetorId` (`SetorId`),
   CONSTRAINT `ticket_tipo_ibfk_3` FOREIGN KEY (`SetorId`) REFERENCES `setor` (`SetorId`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `ticket_tipo_ibfk_1` FOREIGN KEY (`categoriaid`) REFERENCES `ticket_categoria` (`categoriaid`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `ticket_tipo_ibfk_1` FOREIGN KEY (`CategoriaId`) REFERENCES `ticket_categoria` (`CategoriaId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `ticket_tipo_ibfk_2` FOREIGN KEY (`PriodidadeId`) REFERENCES `ticket_prioridade` (`PrioridadeId`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of ticket_tipo
 -- ----------------------------
+INSERT INTO `ticket_tipo` VALUES ('1', 'Outros BI', '1', '8', '3', '12');
+INSERT INTO `ticket_tipo` VALUES ('2', 'Outros SO', '2', '9', '3', '12');
+INSERT INTO `ticket_tipo` VALUES ('3', 'Outros CORP', '3', '10', '3', '12');
+INSERT INTO `ticket_tipo` VALUES ('4', 'Outros DB', '4', '11', '3', '12');
