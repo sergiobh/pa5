@@ -36,7 +36,6 @@ class Ticket_xml extends CI_Controller {
 			
 			$xml_objet = $this->converteXMLtoObject ( $ticketString );
 			
-			// echo '<pre>';print_r($xml_objet);exit;
 			/*
 			 * Xml Model -> Salvar Xml
 			 */

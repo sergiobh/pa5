@@ -22,115 +22,47 @@ class XmlMod extends CI_Model {
 	}
 	public function salvaXml() {
 		$this->load->model ( 'TicketMod' );
-		$this->load->model ( 'FuncionarioMod' );
-		$this->load->model ( 'SetorMod' );
 		$this->load->model ( 'SetorFuncionarioMod' );
 		$this->load->model ( 'TipoTicketMod' );
 		
 		/*
 		 * Instancia Origem
 		 */
-		if (! $this->SetorMod->setNome ( $this->xmlObject->origem )) {
-			$this->xmlBreak = true;
-			$this->criaMsgErro ( $this->SetorMod->getErroMsg (), array () );
-			// Força a parada do sistema e imprime o erro
-			$this->getXmlErro ();
-		}
-		
-		if (! $this->SetorMod->getSetor ()) {
-			$this->xmlBreak = true;
-			$this->criaMsgErro ( $this->SetorMod->getErroMsg (), array () );
-			// Força a parada do sistema e imprime o erro
-			$this->getXmlErro ();
-		}
+		$SetorId = $this->getSetorId ( $this->xmlObject->origem );
 		
 		/*
 		 * Instanciar Atendente
 		 */
-		$nome = $this->xmlObject->incidente->atendente->nome;
-		$cpf = $this->xmlObject->incidente->atendente->cpf;
-		$senha = 'sem acesso';
-		$AtendenteSetorId = $this->SetorMod->getSetorId ();
-		
-		$this->FuncionarioMod->setFuncionario ( $nome, $cpf, $senha, $AtendenteSetorId );
-		
-		$RetornoSalvaCadastro = $this->FuncionarioMod->SalvarCadastro ();
-		
-		if (! isset ( $RetornoSalvaCadastro->FuncionarioId )) {
-			$this->xmlBreak = true;
-			$this->criaMsgErro ( $RetornoSalvaCadastro->Msg, array () );
-			// Força a parada do sistema e imprime o erro
-			$this->getXmlErro ();
-		}
-		
-		$AtendenteFuncionarioId = $this->FuncionarioMod->FuncionarioId;
+		$AtendenteNome = $this->xmlObject->incidente->atendente->nome;
+		$AtendenteCpf = $this->xmlObject->incidente->atendente->cpf;
+		$AtendenteSetorId = $SetorId;
+		$AtendenteFuncionarioId = $this->getFuncionarioId ( $AtendenteNome, $AtendenteCpf, $AtendenteSetorId );
 		
 		/*
 		 * Grava Vinculo Funcionario e Setor
 		 */
-		if (! $this->SetorFuncionarioMod->setSetorId ( $AtendenteSetorId )) {
-			$this->xmlBreak = true;
-			$this->criaMsgErro ( $this->SetorFuncionarioMod->getErroMsg (), array () );
-			// Força a parada do sistema e imprime o erro
-			$this->getXmlErro ();
-		}
-		
-		if (! $this->SetorFuncionarioMod->setFuncionarioId ( $AtendenteFuncionarioId )) {
-			$this->xmlBreak = true;
-			$this->criaMsgErro ( $this->SetorFuncionarioMod->getErroMsg (), array () );
-			// Força a parada do sistema e imprime o erro
-			$this->getXmlErro ();
-		}
-		
-		if (! $this->SetorFuncionarioMod->setVinculo ()) {
-			$this->xmlBreak = true;
-			$this->criaMsgErro ( $this->SetorFuncionarioMod->getErroMsg (), array () );
-			// Força a parada do sistema e imprime o erro
-			$this->getXmlErro ();
-		}
+		$this->setSetorFuncionario ( $AtendenteSetorId, $AtendenteFuncionarioId );
 		
 		/*
 		 * Instanciar Solicitante
 		 */
-		$nome = $this->xmlObject->incidente->solicitante->nome;
-		$cpf = $this->xmlObject->incidente->solicitante->cpf;
-		$senha = 'sem acesso';
+		$SolicitanteNome = $this->xmlObject->incidente->solicitante->nome;
+		$SolicitanteCpf = $this->xmlObject->incidente->solicitante->cpf;
 		$SolicitanteSetorId = 12;
-		
-		$this->FuncionarioMod->setFuncionario ( $nome, $cpf, $senha, $SolicitanteSetorId );
-		$RetornoSalvaCadastro = $this->FuncionarioMod->SalvarCadastro ();
-		
-		if (isset ( $RetornoSalvaCadastro->FuncionarioId )) {
-			$SolicitanteFuncionarioId = $RetornoSalvaCadastro->FuncionarioId;
-		} else {
-			$this->xmlBreak = true;
-			$this->criaMsgErro ( $RetornoSalvaCadastro->Msg, array () );
-			// Força a parada do sistema e imprime o erro
-			$this->getXmlErro ();
-		}
+		$SolicitanteFuncionarioId = $this->getFuncionarioId ( $SolicitanteNome, $SolicitanteCpf, $SolicitanteSetorId );
 		
 		/*
 		 * Buscar Tipo de ticket
 		 */
-		$this->TipoTicketMod->setNome ( "Outros " . $this->xmlObject->origem );
-		$this->TipoTicketMod->setSetorId ( $AtendenteSetorId );
-		
-		if (! $RetornoTipoTicket = $this->TipoTicketMod->getTipoTicket ()) {
-			$this->xmlBreak = true;
-			$this->criaMsgErro ( $RetornoTipoTicket->erroMsg, array () );
-			// Força a parada do sistema e imprime o erro
-			$this->getXmlErro ();
-		}
-		
-		$TipoId = $this->TipoTicketMod->getTipoId ();
-		$PrioridadeId = $this->TipoTicketMod->getPrioridadeId ();
+		$TipoTicketMod = $this->getTipoTicket ( $AtendenteSetorId );
 		
 		/*
 		 * Instanciar Ticket
 		 */
+		$TipoId = $TipoTicketMod->getTipoId ();
+		$PrioridadeId = $TipoTicketMod->getPrioridadeId ();
 		$Descricao = $this->xmlObject->incidente->titulo . " " . $this->xmlObject->incidente->descricao;
-	
-		$DH_Abertura = date ( 'Y-m-d H:i:s', (string)$this->xmlObject->incidente->abertura );
+		$DH_Abertura = date ( 'Y-m-d H:i:s', ( string ) $this->xmlObject->incidente->abertura );
 		
 		$this->TicketMod->setTipoId ( $TipoId );
 		$this->TicketMod->setFuncionarioId ( $SolicitanteFuncionarioId );
@@ -149,6 +81,77 @@ class XmlMod extends CI_Model {
 		}
 		
 		echo 'Ticket gravado com sucesso!!!';
+	}
+	private function getSetorId($Origem) {
+		$this->load->model ( 'SetorMod' );
+		
+		if (! $this->SetorMod->setNome ( $Origem )) {
+			$this->xmlBreak = true;
+			$this->criaMsgErro ( $this->SetorMod->getErroMsg (), array () );
+			// Força a parada do sistema e imprime o erro
+			$this->getXmlErro ();
+		}
+		
+		if (! $this->SetorMod->getSetor ()) {
+			$this->xmlBreak = true;
+			$this->criaMsgErro ( $this->SetorMod->getErroMsg (), array () );
+			// Força a parada do sistema e imprime o erro
+			$this->getXmlErro ();
+		}
+		
+		return $this->SetorMod->getSetorId ();
+	}
+	private function getFuncionarioId($Nome, $Cpf, $SetorId) {
+		$this->load->model ( 'FuncionarioMod' );
+		$Senha = 'sem acesso';
+		
+		$this->FuncionarioMod->setFuncionario ( $Nome, $Cpf, $Senha, $SetorId );
+		
+		$RetornoSalvaCadastro = $this->FuncionarioMod->SalvarCadastro ();
+		
+		if (! isset ( $RetornoSalvaCadastro->FuncionarioId )) {
+			$this->xmlBreak = true;
+			$this->criaMsgErro ( $RetornoSalvaCadastro->Msg, array () );
+			// Força a parada do sistema e imprime o erro
+			$this->getXmlErro ();
+		}
+		
+		return $this->FuncionarioMod->FuncionarioId;
+	}
+	private function setSetorFuncionario($SetorId, $FuncionarioId) {
+		if (! $this->SetorFuncionarioMod->setSetorId ( $SetorId )) {
+			$this->xmlBreak = true;
+			$this->criaMsgErro ( $this->SetorFuncionarioMod->getErroMsg (), array () );
+			// Força a parada do sistema e imprime o erro
+			$this->getXmlErro ();
+		}
+		
+		if (! $this->SetorFuncionarioMod->setFuncionarioId ( $FuncionarioId )) {
+			$this->xmlBreak = true;
+			$this->criaMsgErro ( $this->SetorFuncionarioMod->getErroMsg (), array () );
+			// Força a parada do sistema e imprime o erro
+			$this->getXmlErro ();
+		}
+		
+		if (! $this->SetorFuncionarioMod->setVinculo ()) {
+			$this->xmlBreak = true;
+			$this->criaMsgErro ( $this->SetorFuncionarioMod->getErroMsg (), array () );
+			// Força a parada do sistema e imprime o erro
+			$this->getXmlErro ();
+		}
+	}
+	private function getTipoTicket($AtendenteSetorId) {
+		$this->TipoTicketMod->setNome ( "Outros " . $this->xmlObject->origem );
+		$this->TipoTicketMod->setSetorId ( $AtendenteSetorId );
+		
+		if (! $RetornoTipoTicket = $this->TipoTicketMod->getTipoTicket ()) {
+			$this->xmlBreak = true;
+			$this->criaMsgErro ( $RetornoTipoTicket->erroMsg, array () );
+			// Força a parada do sistema e imprime o erro
+			$this->getXmlErro ();
+		}
+		
+		return $this->TipoTicketMod;
 	}
 	private function validaXml() {
 		$msg = array ();
