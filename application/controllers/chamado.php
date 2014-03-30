@@ -39,5 +39,30 @@ class Chamado extends CI_Controller {
 		// $this->load->view('quarto/selectAndar', $Dados);
 		echo json_encode ( $Dados );
 	}
+	public function editar() {
+		$this->CheckLogado ();
+		
+		$TicketId = $this->uri->segment ( 3 );
+				
+		$Dados['TicketId'] = $TicketId; 
+		
+		$Dados ['View'] = 'chamado/editar';
+		$this->load->view ( 'body/index', $Dados );
+	}
+	
+	public function carregaEditar(){
+		$this->CheckLogado ();
+		
+		$TicketId = $this->input->get ( "TicketId" );
+		
+		$this->load->model ( "TicketMod" );
+				
+		if (! $this->TicketMod->setTicketId ( $TicketId )) {
+			echo $this->TicketMod->getErroMsg();
+			exit;
+		}
+		
+		echo $this->TicketMod->getTicket();
+	}
 }
 ?>

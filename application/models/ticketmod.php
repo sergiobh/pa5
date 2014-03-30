@@ -20,8 +20,15 @@ class TicketMod extends CI_Model {
 	public function getTicketId() {
 		return $this->TicketId;
 	}
-	private function setTicketId($TicketId) {
+	public function setTicketId($TicketId) {
+		if (! is_numeric ( $TicketId ) || empty ( $TicketId )) {
+			$this->erroBreak = true;
+			$this->erroMsg = "TicketId inválido!";
+			return false;
+		}
+		
 		$this->TicketId = $TicketId;
+		return true;
 	}
 	public function getTipoId() {
 		return $this->TipoId;
@@ -70,6 +77,9 @@ class TicketMod extends CI_Model {
 	}
 	public function setPrioridadeId($PrioridadeId) {
 		$this->PrioridadeId = $PrioridadeId;
+	}
+	public function getErroMsg() {
+		return $this->erroMsg;
 	}
 	public function setTicket() {
 		$columnAtendenteId = ($this->AtendenteId != '') ? ',AtendenteId' : '';
@@ -127,8 +137,8 @@ class TicketMod extends CI_Model {
 		return json_encode ( $dados );
 	}
 	public function getTickets() {
-		$this->setFuncionarioId($_SESSION ['Funcionario']->FuncionarioId);
-		$this->setAtendenteId($_SESSION ['Funcionario']->FuncionarioId);
+		$this->setFuncionarioId ( $_SESSION ['Funcionario']->FuncionarioId );
+		$this->setAtendenteId ( $_SESSION ['Funcionario']->FuncionarioId );
 		
 		$sql = "
 				SELECT
@@ -147,8 +157,8 @@ class TicketMod extends CI_Model {
 				WHERE
 					T.StatusId = $this->StatusId
 					AND (
-						T.FuncionarioId = ".$this->getFuncionarioId()."
-						OR T.AtendenteId = ".$this->getAtendenteId()."
+						T.FuncionarioId = " . $this->getFuncionarioId () . "
+						OR T.AtendenteId = " . $this->getAtendenteId () . "
 					) 
 				";
 		
@@ -158,6 +168,52 @@ class TicketMod extends CI_Model {
 		
 		if (count ( $dados ) > 0) {
 			return $dados;
+		} else {
+			return false;
+		}
+	}
+	public function getTicket() {
+		$this->setFuncionarioId ( $_SESSION ['Funcionario']->FuncionarioId );
+		$this->setAtendenteId ( $_SESSION ['Funcionario']->FuncionarioId );
+		
+		$sql = "
+				SELECT
+					T.TicketId
+					,TT.CategoriaId
+					,T.TipoId
+					,FS.Nome AS Solicitente
+					,IF(ISNULL(FA.Nome), '-', FA.Nome ) AS Atendente
+					,T.StatusId
+					,T.Descricao
+					,T.Resultado
+					,T.PrioridadeId
+					,T.SetorId
+					,DATE_FORMAT( T.DH_Solicitacao , '%d/%m/%Y %H:%i:%s' ) AS DH_Solicitacao
+					,IF(ISNULL(T.DH_Previsao), '-', DATE_FORMAT( T.DH_Previsao , '%d/%m/%Y %H:%i:%s' )) AS DH_Previsao
+					,IF(ISNULL(T.DH_Baixa), '-', DATE_FORMAT( T.DH_Baixa , '%d/%m/%Y %H:%i:%s' )) AS DH_Baixa
+				FROM
+					ticket T
+					INNER JOIN Funcionario FS ON FS.FuncionarioId = T.FuncionarioId
+					INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId
+					LEFT JOIN Funcionario FA ON FA.FuncionarioId = T.AtendenteId
+				WHERE
+					T.ticketId = " . $this->getTicketId () . "
+					AND (
+							T.FuncionarioId = " . $this->getFuncionarioId () . "
+							OR T.AtendenteId = " . $this->getAtendenteId () . "
+					)
+				";
+		
+		$query = $this->db->query ( $sql );
+		
+		$dados = $query->row ();
+		
+		if (is_object ( $dados )) {
+			
+			$retorno['Ticket'] = $dados;
+			$retorno['success'] = true;
+			
+			return json_encode($retorno);
 		} else {
 			return false;
 		}
