@@ -128,7 +128,7 @@ function submerterForm( ) {
 				// Efetuar o redirecionamento
 				setTimeout(
 					function(){
-						window.location = "<?php echo BASE_URL;?>/leito/listar"
+						window.location = "<?php echo BASE_URL;?>/chamado/listar"
 					},
 					4000
 				);

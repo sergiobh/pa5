@@ -350,3 +350,12 @@ th.header {
 .hide{
 	display: none;
 }
+
+.tbodyChamados .botao_editar{
+	float: left;
+	width: 20px;
+}
+.tbodyChamados .botao_exportar{
+	margin-left: 22px;
+	width: 20px;
+}

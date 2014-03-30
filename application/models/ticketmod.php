@@ -126,5 +126,41 @@ class TicketMod extends CI_Model {
 		
 		return json_encode ( $dados );
 	}
+	public function getTickets() {
+		$this->setFuncionarioId($_SESSION ['Funcionario']->FuncionarioId);
+		$this->setAtendenteId($_SESSION ['Funcionario']->FuncionarioId);
+		
+		$sql = "
+				SELECT
+					T.TicketId
+					,TC.Nome AS Categoria
+					,TT.Nome AS TipoSolicitacao
+					,DATE_FORMAT( T.DH_Solicitacao , '%d/%m/%Y %H:%i:%s' ) AS DH_Solicitacao
+					,T.Descricao
+					,IF(ISNULL(T.DH_Previsao), '-', T.DH_Previsao) AS DH_Previsao
+					,TP.Nome AS Prioridade
+				FROM 
+					ticket T
+					INNER JOIN ticket_tipo TT on TT.TipoId = T.TipoId
+					INNER JOIN ticket_categoria TC ON TC.CategoriaId = TT.CategoriaId
+					INNER JOIN ticket_prioridade TP on TP.PrioridadeId = T.PrioridadeId
+				WHERE
+					T.StatusId = $this->StatusId
+					AND (
+						T.FuncionarioId = ".$this->getFuncionarioId()."
+						OR T.AtendenteId = ".$this->getAtendenteId()."
+					) 
+				";
+		
+		$query = $this->db->query ( $sql );
+		
+		$dados = $query->result ();
+		
+		if (count ( $dados ) > 0) {
+			return $dados;
+		} else {
+			return false;
+		}
+	}
 }
 ?>
