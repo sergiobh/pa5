@@ -71,7 +71,10 @@ class TicketMod extends CI_Model {
 	public function setPrioridadeId($PrioridadeId) {
 		$this->PrioridadeId = $PrioridadeId;
 	}
-	public function setTipoTicket() {
+	public function setTicket() {
+		$columnAtendenteId = ($this->AtendenteId != '') ? ',AtendenteId' : '';
+		$valueAtendenteId = ($this->AtendenteId != '') ? ',' . $this->AtendenteId : '';
+		
 		$sql = "
 				INSERT INTO
 				ticket(
@@ -81,7 +84,7 @@ class TicketMod extends CI_Model {
 					,DH_Solicitacao
 					,Descricao
 					,SetorId
-					,AtendenteId
+					$columnAtendenteId
 					,PrioridadeId
 				)
 				VALUES(
@@ -91,7 +94,7 @@ class TicketMod extends CI_Model {
 					,'" . $this->DH_Solicitacao . "'
 					,'" . $this->Descricao . "'
 					,$this->SetorId
-					,$this->AtendenteId
+					$valueAtendenteId
 					,$this->PrioridadeId
 				)
 				";
@@ -106,6 +109,22 @@ class TicketMod extends CI_Model {
 			
 			return false;
 		}
+	}
+	public function salvarCadastro() {
+		$this->setFuncionarioId ( $_SESSION ['Funcionario']->FuncionarioId );
+		$this->setStatusId ( 1 );
+		$this->setDH_Solicitacao ( date ( 'Y-m-d H:i:s' ) );
+		
+		$this->load->model ( "TipoTicketMod" );
+		$this->TipoTicketMod->setTipoId ( $this->TipoId );
+		$this->TipoTicketMod->getTipoTicket ();
+		$this->setSetorId ( $this->TipoTicketMod->getSetorId () );
+		$this->setPrioridadeId ( $this->TipoTicketMod->getPrioridadeId () );
+		
+		$dados ['msg'] = ($this->setTicket ()) ? 'Dados salvos com sucesso!' : 'Ocorreu um erro ao salvar, tente novamente!';
+		$dados ['success'] = true;
+		
+		return json_encode ( $dados );
 	}
 }
 ?>

@@ -73,7 +73,7 @@ class XmlMod extends CI_Model {
 		$this->TicketMod->setAtendenteId ( $AtendenteFuncionarioId );
 		$this->TicketMod->setPrioridadeId ( $PrioridadeId );
 		
-		if (! $this->TicketMod->setTipoTicket ()) {
+		if (! $this->TicketMod->setTicket ()) {
 			$this->xmlBreak = true;
 			$this->criaMsgErro ( $this->TicketMod->erroMsg, array () );
 			// Força a parada do sistema e imprime o erro

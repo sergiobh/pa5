@@ -3,25 +3,31 @@ if (! defined ( 'BASEPATH' ))
 	exit ( 'No direct script access allowed' );
 class Ticket_xml extends CI_Controller {
 	public function importar() {
+		$this->CheckLogado ();
+		
 		$Dados ['Script'] [] = 'jquery/bootstrap-filestyle.min.js';
 		
 		$Dados ['View'] = 'ticket_xml/importar';
 		$this->load->view ( 'body/index', $Dados );
 	}
 	public function loadxml() {
+		$this->CheckLogado ();
+		
 		$config ['upload_path'] = './public/uploads/';
 		$config ['allowed_types'] = 'xml';
 		$config ['max_size'] = '1024';
 		
 		$this->load->library ( 'upload', $config );
-						
-		if (! $this->upload->do_upload ( "ticketFile" )) {
 		
+		if (! $this->upload->do_upload ( "ticketFile" )) {
+			
 			$data = array (
 					'error' => $this->upload->display_errors () 
 			);
-
-			echo '<pre>';print_r($data);exit;
+			
+			echo '<pre>';
+			print_r ( $data );
+			exit ();
 			
 			$Dados ['Script'] [] = 'jquery/bootstrap-filestyle.min.js';
 			
@@ -40,10 +46,10 @@ class Ticket_xml extends CI_Controller {
 			 * Xml Model -> Salvar Xml
 			 */
 			$this->load->model ( 'XmlMod' );
-			$this->XmlMod->setXml ( $xml_objet );	
+			$this->XmlMod->setXml ( $xml_objet );
 			$this->XmlMod->salvaXml ();
 			
-			$this->removeFile($file);
+			$this->removeFile ( $file );
 		}
 	}
 	private function converteXMLtoObject($xml) {
@@ -65,8 +71,8 @@ class Ticket_xml extends CI_Controller {
 		
 		return $string;
 	}
-	private function removeFile($url){
-		@unlink($url);
+	private function removeFile($url) {
+		@unlink ( $url );
 	}
 }
 

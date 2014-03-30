@@ -55,7 +55,10 @@ class TipoTicketMod extends CI_Model {
 	public function setSLA($SLA) {
 		$this->SLA = $SLA;
 	}
-	public function getTipoTicket() {
+	public function getTipoTicket($ReturnObject = true) {
+		$select = array ();
+		$order = array ();
+		
 		if ($this->TipoId != '') {
 			$where [] = "tipoid = " . $this->TipoId;
 		}
@@ -68,6 +71,12 @@ class TipoTicketMod extends CI_Model {
 		if ($this->SetorId != '') {
 			$where [] = "setorid = " . $this->SetorId;
 		}
+		if ($this->CategoriaId != '') {
+			$select [] = "tipoid";
+			$select [] = "nome";
+			$where [] = "categoriaId = " . $this->CategoriaId;
+			$order [] = "nome";
+		}
 		
 		if ($where === '') {
 			$this->erroBreak = true;
@@ -75,40 +84,41 @@ class TipoTicketMod extends CI_Model {
 			return false;
 		}
 		
+		$sql_select = implode ( ", ", $select );
+		$sql_select = ($sql_select != '') ? $sql_select : '*';
+		
 		$sql_where = implode ( " AND ", $where );
+		
+		$sql_order = implode ( ", ", $order );
+		$sql_order = ($sql_order != '') ? " ORDER BY " . $sql_order : '';
 		
 		$sql = "
 				SELECT
-					*
+					" . $sql_select . "
 				FROM 
 					ticket_tipo
 				WHERE
-					" . $sql_where;
+					" . $sql_where . $sql_order;
 		
 		$query = $this->db->query ( $sql );
 		
-		$dados = $query->result();
+		$dados = $query->result ();
+		$QtdRows = count ( $dados );
 		
-		if (count ( $dados ) > 0) {
-			$dado = $dados[0];
+		if ($QtdRows == 1 && $ReturnObject) {
+			$dado = $dados [0];
 			$this->populaTipoTicket ( $dado->TipoId, $dado->Nome, $dado->CategoriaId, $dado->SetorId, $dado->PriodidadeId, $dado->SLA );
 			
 			return true;
+		} else if ($QtdRows > 0) {
+			return $dados;
 		} else {
 			return false;
 		}
 	}
 	
-	/*public function setTipoTicket(){
-		$sql = "
-				INSERT INTO
-					ticket_tipo(
-						
-					)
-					VALUES(
-	
-					)
-				";
-	}*/
+	/*
+	 * public function setTipoTicket(){ $sql = " INSERT INTO ticket_tipo( ) VALUES( ) "; }
+	 */
 }
 ?>

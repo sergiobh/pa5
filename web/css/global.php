@@ -8,6 +8,9 @@ body{
     margin: 0;
 	background: url('<?php echo BASE_IMG;?>/web/imagens/site/background.png') 50% top repeat-y;
 }
+h2{
+	font-size: 26px !important;
+}
 .middle{
 	overflow: visible !important;
 	width: 999px;

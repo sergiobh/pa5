@@ -1,32 +1,32 @@
 <div class='titulo_page'>Cadastro de Funcionário</div>
-<div class = 'funcionario_cadastrar'>
-	<form class='formulario'>
-		<table cellspacing = "10" border = '0'>
-			<tr>
-				<td>Nome:</td>
-				<td><input type = 'text' maxlength = '40' id='Nome' name = 'nome' descricao = 'Nome'  obrigatorio = 'sim' /></td>
-			</tr>
-			<tr>
-				<td>CPF:</td>
-				<td><input type = 'text' maxlength = '11' id='Cpf' name = 'cpf' descricao = 'Cpf'  obrigatorio = 'sim' /></td>
-			</tr>
-			<tr>
-				<td>Grupo:</td>
-				<td><select id='GrupoId' name = 'grupoid' descricao = 'Grupo'  obrigatorio = 'sim' /></td>
-			</tr>
-			<tr>
-				<td>Senha:</td>
-				<td><input type = 'password' maxlength = '10' id='Senha' name = 'senha' descricao = 'Senha'  obrigatorio = 'sim' /></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>
-					<div class='retorno_ajax'></div>
-					<input class='botao_submit' type = 'button' value = 'Enviar' />
-					<input class='botao_reset' type = 'reset' value = 'Limpar' />
-				</td>
-			</tr>
-		</table>
+<div class='funcionario_cadastrar'>
+	<form action="" id="formFuncionarios" role="form" class="form-signin">
+		<h3 class="glyphicon glyphicon-th-large">FUNCION&Aacute;RIO</h3>
+		<BR /> <BR />
+		<div class="form-group">
+			<label>Nome:</label> <input type="text" id="inputNomeFunc" autofocus
+				name="inputNomeFunc" class="form-control" placeholder="Nome" />
+		</div>
+		<div class="form-group">
+			<label>Setor:</label> <select type="text" id="selectSetorFunc"
+				name="selectSetorFunc" class="form-control" placeholder="Setor">
+				<option value="">Selecione...</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label>CPF:</label> <input type="text" id="inputCpfFunc"
+				name="inputCpfFunc" class="form-control" placeholder="C.P.F" />
+		</div>
+		<div class="form-group">
+			<label>Senha:</label> <input type="password" maxlength="8"
+				id="inputsenhaFunc" name="inputsenhaFunc" class="form-control"
+				placeholder="Senha" /><br />
+		</div>
+		<div class="linha_botoes">
+			<button class="btn btn-sm btn btn-success btn-block botao_submit">Enviar</button>
+			<button class="btn btn-sm btn btn-danger btn-block botao_reset"
+				type="reset">Limpar</button>
+		</div>
 	</form>
 	<script type="text/javascript">
 		$(document).ready(function(){
