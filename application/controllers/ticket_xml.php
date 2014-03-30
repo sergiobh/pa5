@@ -14,13 +14,14 @@ class Ticket_xml extends CI_Controller {
 		$config ['max_size'] = '1024';
 		
 		$this->load->library ( 'upload', $config );
-		
+						
 		if (! $this->upload->do_upload ( "ticketFile" )) {
-			echo 'ta dando erro antes de upload, provavel chegou a 100';exit;
-			
+		
 			$data = array (
 					'error' => $this->upload->display_errors () 
 			);
+
+			echo '<pre>';print_r($data);exit;
 			
 			$Dados ['Script'] [] = 'jquery/bootstrap-filestyle.min.js';
 			
@@ -42,6 +43,8 @@ class Ticket_xml extends CI_Controller {
 			$this->load->model ( 'XmlMod' );
 			$this->XmlMod->setXml ( $xml_objet );	
 			$this->XmlMod->salvaXml ();
+			
+			$this->removeFile($file);
 		}
 	}
 	private function converteXMLtoObject($xml) {
@@ -62,6 +65,9 @@ class Ticket_xml extends CI_Controller {
 		$string = read_file ( $file );
 		
 		return $string;
+	}
+	private function removeFile($url){
+		@unlink($url);
 	}
 }
 
