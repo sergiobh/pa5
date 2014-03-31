@@ -257,19 +257,19 @@ class XmlMod extends CI_Model {
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->row ();
-
+		
 		if (is_object ( $dados )) {
 			
-			$ObjectXml['origem'] = $dados->Origem;
-			$ObjectXml['incidente']['atendente']['cpf'] = $dados->Atendente_CPF;
-			$ObjectXml['incidente']['atendente']['nome'] = $dados->Atendente_Nome;
-			$ObjectXml['incidente']['solicitante']['cpf'] = $dados->Solicitante_CPF;
-			$ObjectXml['incidente']['solicitante']['nome'] = $dados->Solicitante_Nome;
-			$ObjectXml['incidente']['descricao'] = $dados->Descricao;
-			$ObjectXml['incidente']['titulo'] = $dados->Titulo;
-			$ObjectXml['incidente']['abertura'] = $dados->DH_Solicitacao;
-
-			return $this->generate_valid_xml_from_array($ObjectXml, "helpdesk");
+			$ObjectXml ['origem'] = $dados->Origem;
+			$ObjectXml ['incidente'] ['atendente'] ['cpf'] = $dados->Atendente_CPF;
+			$ObjectXml ['incidente'] ['atendente'] ['nome'] = $dados->Atendente_Nome;
+			$ObjectXml ['incidente'] ['solicitante'] ['cpf'] = $dados->Solicitante_CPF;
+			$ObjectXml ['incidente'] ['solicitante'] ['nome'] = $dados->Solicitante_Nome;
+			$ObjectXml ['incidente'] ['descricao'] = $dados->Descricao;
+			$ObjectXml ['incidente'] ['titulo'] = $dados->Titulo;
+			$ObjectXml ['incidente'] ['abertura'] = $dados->DH_Solicitacao;
+			
+			return $this->generate_valid_xml_from_array ( $ObjectXml, "helpdesk" );
 		} else {
 			return false;
 		}
@@ -286,10 +286,10 @@ class XmlMod extends CI_Model {
 					$key = $node_name;
 				}
 				
-				$xml .= '<' . $key . '>' . "\n" . $this->generate_xml_from_array ( $value, $node_name ) . '</' . $key . '>' . "\n";
+				$xml .= '<' . $key . '>' . $this->generate_xml_from_array ( $value, $node_name ) . '</' . $key . '>' . "\n";
 			}
 		} else {
-			$xml = htmlspecialchars ( $array, ENT_QUOTES ) . "\n";
+			$xml = htmlspecialchars ( $array, ENT_QUOTES );
 		}
 		
 		return $xml;

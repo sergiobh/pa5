@@ -70,8 +70,6 @@ $Tabindex = 1;
 						<div class='submenu_item'>Cadastrar Tickets</div>
 					</a> <a href="<?php echo BASE_URL;?>/chamado/listar">
 						<div class='submenu_item submenu_primeiro'>Listar Tickets</div>
-					</a> <a href="<?php echo BASE_URL;?>/chamado/listar">
-						<div class='submenu_item submenu_primeiro'>Listar</div>
 					</a> <a href="<?php echo BASE_URL;?>/ticket_xml/importar">
 						<div class='submenu_item submenu_primeiro'>Importar XML</div>
 					</a>
