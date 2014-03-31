@@ -117,7 +117,7 @@ function montaLinks(TicketId){
 	var editar = '<div class="botao_editar"><a href='+urlEditar+' title="Editar ticket '+TicketId+'"><div class="glyphicon glyphicon-pencil"></div></a></div>';
 
 	var urlExportar = '<?php echo BASE_URL.'/ticket_xml/exportar/';?>'+TicketId;
-	var exportar = '<div class="botao_exportar"><a href='+urlExportar+' title="Exportar ticket '+TicketId+'"><div class="glyphicon glyphicon-download-alt"></div></a></div>';
+	var exportar = '<div class="botao_exportar"><a href='+urlExportar+' title="Exportar ticket '+TicketId+'" target="_blank"><div class="glyphicon glyphicon-download-alt"></div></a></div>';
 	
  	return carregaTD(editar+exportar);	
 }

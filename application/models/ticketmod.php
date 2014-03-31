@@ -154,14 +154,16 @@ class TicketMod extends CI_Model {
 					INNER JOIN ticket_tipo TT on TT.TipoId = T.TipoId
 					INNER JOIN ticket_categoria TC ON TC.CategoriaId = TT.CategoriaId
 					INNER JOIN ticket_prioridade TP on TP.PrioridadeId = T.PrioridadeId
+					LEFT JOIN setorfuncionario SF on SF.SetorId = T.SetorId and SF.FuncionarioId = 1
 				WHERE
 					T.StatusId = $this->StatusId
 					AND (
 						T.FuncionarioId = " . $this->getFuncionarioId () . "
 						OR T.AtendenteId = " . $this->getAtendenteId () . "
+						OR SF.SetorFuncionarioId IS NOT NULL
 					) 
 				";
-		
+
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();

@@ -1,6 +1,7 @@
 <?php
 class XmlMod extends CI_Model {
 	public $xmlObject;
+	private $TicketId;
 	private $xmlBreak;
 	private $xmlErro;
 	public function XmlMod() {
@@ -19,6 +20,12 @@ class XmlMod extends CI_Model {
 		 * Valida XML
 		 */
 		$this->validaXml ();
+	}
+	public function setTicketId($TicketId) {
+		$this->TicketId = $TicketId;
+	}
+	public function getTicketId() {
+		return $this->TicketId;
 	}
 	public function salvaXml() {
 		$this->load->model ( 'TicketMod' );
@@ -225,6 +232,76 @@ class XmlMod extends CI_Model {
 		
 		// Força a parada do sistema e imprime o erro
 		$this->getXmlErro ();
+	}
+	public function getTicket() {
+		$sql = "
+				SELECT
+					TC.Nome AS Origem
+					,FA.Cpf AS Atendente_CPF
+					,FA.Nome AS Atendente_Nome
+					,FS.Cpf AS Solicitante_CPF
+					,FS.Nome AS Solicitante_Nome
+					,T.Descricao
+					,TT.Nome AS Titulo
+					,UNIX_TIMESTAMP(T.DH_Solicitacao) AS DH_Solicitacao
+				FROM
+					ticket T
+					INNER JOIN funcionario FS ON FS.FuncionarioId = T.FuncionarioId
+					LEFT JOIN funcionario FA ON FA.FuncionarioId = T.AtendenteId
+					INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId
+					INNER JOIN ticket_categoria TC ON TC.CategoriaId = TT.CategoriaId
+				WHERE
+					T.ticketId = " . $this->getTicketId () . "
+				";
+		
+		$query = $this->db->query ( $sql );
+		
+		$dados = $query->row ();
+
+		if (is_object ( $dados )) {
+			
+			$ObjectXml['origem'] = $dados->Origem;
+			$ObjectXml['incidente']['atendente']['cpf'] = $dados->Atendente_CPF;
+			$ObjectXml['incidente']['atendente']['nome'] = $dados->Atendente_Nome;
+			$ObjectXml['incidente']['solicitante']['cpf'] = $dados->Solicitante_CPF;
+			$ObjectXml['incidente']['solicitante']['nome'] = $dados->Solicitante_Nome;
+			$ObjectXml['incidente']['descricao'] = $dados->Descricao;
+			$ObjectXml['incidente']['titulo'] = $dados->Titulo;
+			$ObjectXml['incidente']['abertura'] = $dados->DH_Solicitacao;
+
+			return $this->generate_valid_xml_from_array($ObjectXml, "helpdesk");
+		} else {
+			return false;
+		}
+	}
+	/*
+	 * private function geraXml($ObjectXml) { $xml = simplexml_load_string ( "<?xml version='1.0' encoding='utf-8'?><foo />" ); foreach ( $ObjectXml as $k => $v ) { $xml->addChild ( $k, $v ); } return $xml; }
+	 */
+	private function generate_xml_from_array($array, $node_name) {
+		$xml = '';
+		
+		if (is_array ( $array ) || is_object ( $array )) {
+			foreach ( $array as $key => $value ) {
+				if (is_numeric ( $key )) {
+					$key = $node_name;
+				}
+				
+				$xml .= '<' . $key . '>' . "\n" . $this->generate_xml_from_array ( $value, $node_name ) . '</' . $key . '>' . "\n";
+			}
+		} else {
+			$xml = htmlspecialchars ( $array, ENT_QUOTES ) . "\n";
+		}
+		
+		return $xml;
+	}
+	private function generate_valid_xml_from_array($array, $node_block = 'nodes', $node_name = 'node') {
+		$xml = '<?xml version="1.0" encoding="UTF-8" ?>' . "\n";
+		
+		$xml .= '<' . $node_block . '>' . "\n";
+		$xml .= $this->generate_xml_from_array ( $array, $node_name );
+		$xml .= '</' . $node_block . '>' . "\n";
+		
+		return $xml;
 	}
 }
 ?>

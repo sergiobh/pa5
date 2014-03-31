@@ -74,6 +74,26 @@ class Ticket_xml extends CI_Controller {
 	private function removeFile($url) {
 		@unlink ( $url );
 	}
+	public function exportar() {
+		$this->CheckLogado ();
+		
+		$TicketId = $this->uri->segment ( 3 );
+		
+		$this->load->model ( "XmlMod" );
+		
+		$this->XmlMod->setTicketId ( $TicketId );
+		$Xml = $this->XmlMod->getTicket ();
+		
+		if (! $Xml) {
+			echo '<h2>Xml inválido!!!</h2>';
+			exit ();
+		}
+		
+		$this->load->helper ( 'download' );
+		
+		$nameFile = 'xml_CORP_' . $TicketId . '.xml';
+		
+		force_download ( $nameFile, $Xml );
+	}
 }
-
 ?>
