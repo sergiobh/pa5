@@ -40,11 +40,14 @@
 	</table>
 </div>
 <script>
+var StartTicket = <?php echo $StartTicket;?>
+	
 $( document ).ready( function( ) {
 	listarChamados(<?php echo $StartTicket;?>);
 	
 	$('.item_chamado').click(function(){
-		listarChamados($(this).attr('statusid'));
+		StartTicket = $(this).attr('statusid')
+		listarChamados(StartTicket);
 		$('#StatusChamado').html($(this).html());
 	});
 });
@@ -131,9 +134,12 @@ function carregaTDTitle(dado){
 function montaLinks(TicketId){
 	var urlEditar = '<?php echo BASE_URL.'/chamado/editar/';?>'+TicketId;
 	var editar = '<div class="botao_editar"><a href='+urlEditar+' title="Editar ticket '+TicketId+'"><div class="glyphicon glyphicon-pencil"></div></a></div>';
-
-	var urlExportar = '<?php echo BASE_URL.'/ticket_xml/exportar/';?>'+TicketId;
-	var exportar = '<div class="botao_exportar"><a href='+urlExportar+' title="Exportar ticket '+TicketId+'" target="_blank"><div class="glyphicon glyphicon-download-alt"></div></a></div>';
+	var exportar = '';
+	
+	if(StartTicket != 1){
+		var urlExportar = '<?php echo BASE_URL.'/ticket_xml/exportar/';?>'+TicketId;
+		exportar = '<div class="botao_exportar"><a href='+urlExportar+' title="Exportar ticket '+TicketId+'" target="_blank"><div class="glyphicon glyphicon-download-alt"></div></a></div>';
+	}
 	
  	return carregaTD(editar+exportar);	
 }
