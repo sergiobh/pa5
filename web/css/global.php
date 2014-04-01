@@ -359,3 +359,8 @@ th.header {
 	margin-left: 22px;
 	width: 20px;
 }
+
+
+.linha_botoes .btn{
+	margin-right: 20px;
+}

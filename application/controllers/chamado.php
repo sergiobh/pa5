@@ -21,6 +21,11 @@ class Chamado extends CI_Controller {
 	public function listar() {
 		$this->CheckLogado ();
 		
+		$this->load->model("StatusTicketMod");
+		$StatusTickets = $this->StatusTicketMod->getStatusTicket();
+		
+		$Dados['StatusTickets'] = $StatusTickets;
+		
 		$Dados ['View'] = 'chamado/listar';
 		$this->load->view ( 'body/index', $Dados );
 	}

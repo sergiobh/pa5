@@ -14,7 +14,7 @@ class Ticket_xml extends CI_Controller {
 		$this->CheckLogado ();
 		
 		$config ['upload_path'] = './public/uploads/';
-		$config ['allowed_types'] = 'xml';
+		$config ['allowed_types'] = 'xml|XML';
 		$config ['max_size'] = '1024';
 		
 		$this->load->library ( 'upload', $config );

@@ -1,15 +1,23 @@
 <h2 class="glyphicon glyphicon-th-list">LISTA DE CHAMADOS</h2>
-<p></p>
+<br />
 <div class="linha_botoes">
-	<button class="btn btn-success">Aberto</button>
-	<button class="btn btn-warning">Aguardando Resposta</button>
-	<button class="btn btn-info">Em manutenção</button>
-	<button class="btn btn-danger">Fechado</button>
-	<button class="btn btn-primary">Cancelado</button>
-	<button class="btn btn-danger">Indeferido</button>
+<?php
+if ($StatusTickets) {
+	$StartTicket = '';
+	$StartTicketName = '';
+	
+	foreach ( $StatusTickets as $StatusTicket ) {
+		echo '<button class="item_chamado btn ' . $StatusTicket->TipoBotao . '" statusid=' . $StatusTicket->StatusId . ' >' . $StatusTicket->Nome . '</button> ';
+		if ($StartTicket === '') {
+			$StartTicket = $StatusTicket->StatusId;
+			$StartTicketName = $StatusTicket->Nome; 
+		}
+	}
+}
+?>
 </div>
 <h2 class="form-signin-heading">
-	Chamados <span id="StatusChamado">Aberto</span>
+	Chamados: <span id="StatusChamado"><?php echo $StartTicketName;?></span>
 </h2>
 <hr />
 
@@ -31,7 +39,12 @@
 </table>
 <script>
 $( document ).ready( function( ) {
-	listarChamados(1);
+	listarChamados(<?php echo $StartTicket;?>);
+	
+	$('.item_chamado').click(function(){
+		listarChamados($(this).attr('statusid'));
+		$('#StatusChamado').html($(this).html());
+	});
 });
 
 function listarChamados( StatusId ) {
@@ -61,8 +74,9 @@ function listarChamados( StatusId ) {
 							function(){
 								$.unblockUI();
 							},
-							4000
+							2000
 						);
+					$('.tbodyChamados').html('');
 				}
 			}
 			else{
