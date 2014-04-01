@@ -1,4 +1,4 @@
-<form class="form-signin" role="form" >
+<form class="form-signin functionario_login" role="form" >
 	<h2 class="form-signin-heading">Controle de Acesso</h2>
 	<div class="form-group">
 		<input type='number' class="form-control" placeholder="Cpf" autofocus maxlength='11' id='Cpf' name='cpf' />

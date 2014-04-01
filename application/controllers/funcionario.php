@@ -103,6 +103,6 @@ class Funcionario extends CI_Controller {
 
 
 		$Dados['View'] 					= 'funcionario/login';
-		$this->load->view('body/index', $Dados);
+		$this->load->view('body/basico', $Dados);
 	}
 }

@@ -360,7 +360,10 @@ th.header {
 	width: 20px;
 }
 
+.functionario_login {
+	margin-top: 120px !important;
+}
 
-.linha_botoes .btn{
+.chamados_listar .linha_botoes .btn{
 	margin-right: 20px;
 }

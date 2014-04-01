@@ -1,42 +1,44 @@
-<h2 class="glyphicon glyphicon-th-list">LISTA DE CHAMADOS</h2>
-<br />
-<div class="linha_botoes">
-<?php
-if ($StatusTickets) {
-	$StartTicket = '';
-	$StartTicketName = '';
-	
-	foreach ( $StatusTickets as $StatusTicket ) {
-		echo '<button class="item_chamado btn ' . $StatusTicket->TipoBotao . '" statusid=' . $StatusTicket->StatusId . ' >' . $StatusTicket->Nome . '</button> ';
-		if ($StartTicket === '') {
-			$StartTicket = $StatusTicket->StatusId;
-			$StartTicketName = $StatusTicket->Nome; 
+<div class='chamados_listar'>
+	<h2 class="glyphicon glyphicon-th-list">LISTA DE CHAMADOS</h2>
+	<br />
+	<div class="linha_botoes">
+	<?php
+	if ($StatusTickets) {
+		$StartTicket = '';
+		$StartTicketName = '';
+		
+		foreach ( $StatusTickets as $StatusTicket ) {
+			echo '<button class="item_chamado btn ' . $StatusTicket->TipoBotao . '" statusid=' . $StatusTicket->StatusId . ' >' . $StatusTicket->Nome . '</button> ';
+			if ($StartTicket === '') {
+				$StartTicket = $StatusTicket->StatusId;
+				$StartTicketName = $StatusTicket->Nome; 
+			}
 		}
 	}
-}
-?>
+	?>
+	</div>
+	<h2 class="form-signin-heading">
+		Chamados: <span id="StatusChamado"><?php echo $StartTicketName;?></span>
+	</h2>
+	<hr />
+	
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>Nº</th>
+				<th>CATEGORIA</th>
+				<th>TIPO SOLICITAÇÃO</th>
+				<th>DATA SOLICITAÇÃO</th>
+				<th>DESCRIÇÃO</th>
+				<th>PREVISÃO</th>
+				<th>PRIORIDADE</th>
+				<th><span class="glyphicon glyphicon-cog"></span></th>
+			</tr>
+		</thead>
+		<tbody class='tbodyChamados'>
+		</tbody>
+	</table>
 </div>
-<h2 class="form-signin-heading">
-	Chamados: <span id="StatusChamado"><?php echo $StartTicketName;?></span>
-</h2>
-<hr />
-
-<table class="table table-hover">
-	<thead>
-		<tr>
-			<th>Nº</th>
-			<th>CATEGORIA</th>
-			<th>TIPO SOLICITAÇÃO</th>
-			<th>DATA SOLICITAÇÃO</th>
-			<th>DESCRIÇÃO</th>
-			<th>PREVISÃO</th>
-			<th>PRIORIDADE</th>
-			<th><span class="glyphicon glyphicon-cog"></span></th>
-		</tr>
-	</thead>
-	<tbody class='tbodyChamados'>
-	</tbody>
-</table>
 <script>
 $( document ).ready( function( ) {
 	listarChamados(<?php echo $StartTicket;?>);
