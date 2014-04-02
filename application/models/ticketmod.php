@@ -295,7 +295,7 @@ class TicketMod extends CI_Model {
 			}
 			
 			// Se Em Manutenção
-			if (in_array ( $this->TicketGravado->StatusId, array (
+			if (in_array ( $this->StatusId, array (
 					4 
 			) )) {
 				$setUpdate [] = "DH_Previsao = '" . $this->criaDH_Previsao () . "'";
