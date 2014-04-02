@@ -69,7 +69,7 @@ class StatusTicketMod extends CI_Model {
 			if ($this->StatusId < 4) {
 				$Opcoes = $this->StatusId . ',4,6,7';
 			} else if ($this->StatusId == 4) {
-				$Opcoes = '5,6,7';
+				$Opcoes = '4,6,7';
 			} else {
 				$Opcoes = $this->StatusId;
 			}
