@@ -68,5 +68,23 @@ class Chamado extends CI_Controller {
 
 		echo $this->TicketMod->getTicket();
 	}
+	public function salvarEdicao(){
+		$TicketId = $this->input->post('TicketId');
+		$Descricao = $this->input->post('Descricao');
+		$PrioridadeId = $this->input->post('PrioridadeId');
+		$Resultado = $this->input->post('Resultado');
+		$StatusId = $this->input->post('StatusId');
+		$TipoSolicitacaoId = $this->input->post('TipoSolicitacaoId');
+		
+		$this->load->model("TicketMod");
+		$this->TicketMod->setTicketId($TicketId);
+		$this->TicketMod->setDescricao($Descricao);
+		$this->TicketMod->setPrioridadeId($PrioridadeId);
+		$this->TicketMod->setResultado($Resultado);
+		$this->TicketMod->setStatusId($StatusId);
+		$this->TicketMod->setTipoId($TipoSolicitacaoId);
+		
+		echo $this->TicketMod->salvarEdicao();
+	}
 }
 ?>

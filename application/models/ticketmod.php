@@ -12,6 +12,8 @@ class TicketMod extends CI_Model {
 	private $SetorId;
 	private $AtendenteId;
 	private $PrioridadeId;
+	private $Permissao;
+	private $TicketGravado;
 	private $erroBreak;
 	private $erroMsg;
 	public function TicketMod() {
@@ -77,6 +79,12 @@ class TicketMod extends CI_Model {
 	}
 	public function setPrioridadeId($PrioridadeId) {
 		$this->PrioridadeId = $PrioridadeId;
+	}
+	public function getResultado() {
+		return $this->Resultado;
+	}
+	public function setResultado($Resultado) {
+		$this->Resultado = $Resultado;
 	}
 	public function getErroMsg() {
 		return $this->erroMsg;
@@ -167,7 +175,7 @@ class TicketMod extends CI_Model {
 						OR SF.SetorFuncionarioId IS NOT NULL
 					) 
 				";
-
+		
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();
@@ -219,23 +227,160 @@ class TicketMod extends CI_Model {
 						OR SF.SetorFuncionarioId IS NOT NULL
 					)
 				";
-
+		
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->row ();
 		
 		if (is_object ( $dados )) {
 			
-			$retorno['Ticket'] = $dados;
-			$retorno['success'] = true;
+			$retorno ['Ticket'] = $dados;
+			$retorno ['success'] = true;
 			
-			return json_encode($retorno);
+			return json_encode ( $retorno );
 		} else {
-			$retorno['Ticket'] = false;
-			$retorno['success'] = true;
+			$retorno ['Ticket'] = false;
+			$retorno ['success'] = true;
 			
-			return json_encode($retorno);
+			return json_encode ( $retorno );
 		}
+	}
+	public function salvarEdicao() {
+		
+		// $this->Permissao = $this->getPermissao();
+		$TicketGravado = json_decode ( $this->getTicket () );
+		$this->TicketGravado = $TicketGravado->Ticket;
+		
+		$this->load->model("TipoTicketMod");
+		$this->TipoTicketMod->setTipoId ( $this->TipoId );
+		$this->TipoTicketMod->getTipoTicket ();
+		$this->setSetorId ( $this->TipoTicketMod->getSetorId () ); 
+		
+		$sql_set = $this->montaSetUpdate ();
+		
+		$sql = "
+				UPDATE
+					ticket
+				SET
+					" . $sql_set . "
+				WHERE
+					TicketId = " . $this->TicketId . "
+				";
+		
+		$this->db->query($sql);
+		
+		if($this->db->affected_rows() > 0){
+			$retorno["msg"] = "Dados salvos com sucesso!";
+		}
+		else{
+			$retorno["msg"] = "Altere pelo menos um dos campos!";
+		}
+		
+		$retorno ['success'] = true;
+		
+		return json_encode ( $retorno );
+	}
+	private function montaSetUpdate() {
+		$setUpdate = array ();
+		
+		if ($this->TicketGravado->Permissao == 'Chefe' || $this->TicketGravado->Permissao == 'Atendente') {
+			
+			// Se Aberto, Respondido ou Em Manutenção
+			if (in_array ( $this->TicketGravado->StatusId, array (
+					1,
+					3,
+					4 
+			) )) {
+				$setUpdate [] = "TipoId = " . $this->TipoId;
+				$setUpdate [] = "StatusId = " . $this->StatusId;
+			}
+			
+			// Se Em Manutenção
+			if (in_array ( $this->TicketGravado->StatusId, array (
+					4 
+			) )) {
+				$setUpdate [] = "DH_Previsao = '" . $this->criaDH_Previsao () . "'";
+			}
+			
+			// Fechado
+			if (in_array ( $this->StatusId, array (
+					5 
+			) )) {
+				$setUpdate [] = "DH_Baixa = '" . date ( 'Y-m-d H:i:s' ) . "'";
+			}
+			
+			// Em Aberto ou Em Manutenção
+			if (in_array ( $this->StatusId, array (
+					1,
+					4 
+			) ) && $this->Resultado != '') {
+				$this->StatusId = 2; // Recebe Aguardando Resposta
+			}
+			
+			$setUpdate [] = "Resultado = '" . $this->Resultado . "'";
+			$setUpdate [] = "SetorId = " . $this->SetorId;
+			$setUpdate [] = "AtendenteId = " . $this->AtendenteId;
+			$setUpdate [] = "PrioridadeId = " . $this->PrioridadeId;
+		} else if ($this->TicketGravado->Permissao == 'Solicitante') {
+			$setUpdate [] = "Descricao = '" . $this->Descricao . "'";
+			
+			// Se em aberto pode trocar Categoria e Tipo
+			if ($this->TicketGravado->StatusId == 1) {
+				$setUpdate [] = "TipoId = " . $this->TipoId;
+			}
+		}
+		
+		return implode ( ", ", $setUpdate );
+	}
+	public function getPermissao() {
+		$this->setFuncionarioId ( $_SESSION ['Funcionario']->FuncionarioId );
+		$this->setAtendenteId ( $_SESSION ['Funcionario']->FuncionarioId );
+		
+		$sql = "
+				SELECT
+					T.TicketId
+					,CASE
+						WHEN S.FuncionarioId IS NOT NULL THEN 'Chefe'
+						WHEN T.AtendenteId = " . $this->getFuncionarioId () . " THEN 'Atendente'
+						WHEN SF.SetorFuncionarioId IS NOT NULL THEN 'Setor'
+						WHEN T.FuncionarioId = " . $this->getFuncionarioId () . " THEN 'Solicitante'
+					END AS Permissao		
+				FROM
+					ticket T
+					LEFT JOIN Funcionario FA ON FA.FuncionarioId = T.AtendenteId					
+					LEFT JOIN setor S ON S.SetorId = T.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . "
+					LEFT JOIN setorfuncionario SF ON SF.SetorId = T.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . "
+				WHERE
+					T.ticketId = " . $this->getTicketId () . "
+					AND (
+						T.FuncionarioId = " . $this->getFuncionarioId () . "
+						OR T.AtendenteId = " . $this->getAtendenteId () . "
+						OR S.FuncionarioId IS NOT NULL
+						OR SF.SetorFuncionarioId IS NOT NULL
+					)		
+				";
+		
+		$query = $this->db->query ( $sql );
+		
+		$dados = $query->result ();
+		
+		if (count ( $dados ) > 0) {
+			return $dados [0]->Permissao;
+		} else {
+			return false;
+		}
+	}
+	private function criaDH_Previsao() {
+		$this->load->model ( "TipoTicketMod" );
+		$this->TipoTicketMod->setTipoId ( $this->TipoId );
+		
+		$SLA = $this->TipoTicketMod->buscaSla ();
+		
+		$mktime = mktime(date("H") + $SLA, date("i"), date("s"), date("m"), date("d"), date("Y"));
+
+		$this->DH_Previsao = date ( 'Y-m-d H:i:s' , $mktime);
+
+		return $this->DH_Previsao;
 	}
 }
 ?>

@@ -1,32 +1,61 @@
 <?php
-class PrioridadeMod extends CI_Model{
+class PrioridadeMod extends CI_Model {
 	private $PrioridadeId;
-	
-	public function getPrioridades(){
+	private $Permissao;
+	public function getPrioridadeId() {
+		return $this->PrioridadeId;
+	}
+	public function setPrioridadeId($PrioridadeId) {
+		$this->PrioridadeId = $PrioridadeId;
+	}
+	public function getPermissao() {
+		return $this->Permissao;
+	}
+	public function setPermissao($Permissao) {
+		$this->Permissao = $Permissao;
+	}
+	public function getPrioridades() {
+		$where = '';
+		
+		if ($this->Permissao != '') {
+			$where = $this->checkPermissao ();
+		}
+
+		$sql_where = (is_array($where)) ? ' WHERE '.implode ( " AND ", $where ) : '';
+
 		$sql = "
 				SELECT
 					TP.PrioridadeId
 					,TP.Nome
 				FROM
 					ticket_prioridade TP
+				".$sql_where."
 				";
 		
-		$query  = $this->db->query($sql);
+		$query = $this->db->query ( $sql );
 		
-		$dados = $query->result();
+		$dados = $query->result ();
 		
-		if(count($dados) > 0){
-			$retorno['Prioridades'] = $dados;
-			$retorno['success'] = true;
+		if (count ( $dados ) > 0) {
+			$retorno ['Prioridades'] = $dados;
+			$retorno ['success'] = true;
 			
-			return json_encode($retorno);
-		}
-		else{
-			$retorno['Prioridades'] = false;
-			$retorno['success'] = true;
+			return json_encode ( $retorno );
+		} else {
+			$retorno ['Prioridades'] = false;
+			$retorno ['success'] = true;
 			
-			return json_encode($retorno);
+			return json_encode ( $retorno );
 		}
+	}
+	private function checkPermissao() {
+		$Opcoes = '';
+		
+		if ($this->Permissao == 'Solicitante') {
+			$Opcoes[] = 'TP.PrioridadeId = ' . $this->PrioridadeId;
+		}
+		
+		return $Opcoes;
 	}
 }
 ?>

@@ -116,6 +116,26 @@ class TipoTicketMod extends CI_Model {
 			return false;
 		}
 	}
+	public function buscaSla(){
+		$sql = "
+				SELECT
+					Sla
+				FROM
+					ticket_tipo
+				WHERE
+					TipoId = ".$this->TipoId."
+				";
+		$query = $this->db->query ( $sql );
+		
+		$dados = $query->result ();
+		
+		if(count ( $dados )){
+			return $dados[0]->Sla;
+		}
+		else{
+			echo 'Query para buscar SLA falhou!!!';exit;
+		}
+	}
 	
 	/*
 	 * public function setTipoTicket(){ $sql = " INSERT INTO ticket_tipo( ) VALUES( ) "; }

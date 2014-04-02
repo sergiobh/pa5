@@ -2,8 +2,8 @@
 	<form class="form-signin" role="form">
 		<h2 class="form-signin-heading">Edição de Chamados</h2>
 		<div class="form-group">
-			<label>Status:</label><select id="StatusId"
-				name="StatusId" class="form-control">
+			<label>Status:</label><select id="StatusId" name="StatusId"
+				class="form-control">
 			</select>
 		</div>
 		<div class="form-group">
@@ -28,7 +28,7 @@
 			<label>Prioridade:</label><select id="PrioridadeId"
 				name="PrioridadeId" class="form-control">
 			</select>
-		</div>		
+		</div>
 		<div class="form-group">
 			<label>Data de Solicitação:</label><input id="DataSolicitacao"
 				name="DataSolicitacao" type="text" class="form-control"
@@ -51,8 +51,6 @@
 		<div class="linha_botoes">
 			<button class="btn btn-sm btn btn-success btn-block botao_submit">
 				Enviar</button>
-			<button class="btn btn-sm btn btn-danger btn-block botao_reset"
-				type="reset">Limpar</button>
 		</div>
 	</form>
 </div>
@@ -68,31 +66,6 @@ var Iniciando = true;
 $( document ).ready( function( ) {	
 	buscaTicket(<?php echo $TicketId;?>);
 
-	$( ".form-signin" ).submit( function( ) {
-		if( validator.form( ) ) {
-			submerterForm( );
-		}
-
-		return false;
-	} );
-
-	$('#selectCategoriaCadTicket').change(function(){
-		var CategoriaId = $(this).val();
-
-		if(CategoriaId == ''){
-			$('#tipoSolicitacao').html(TipoSolicitacaoDependendo);
-		}
-		else{
-			carregaTipoSolicitacao(CategoriaId);
-		}
-	});
-});
-
-function inicializa(){
-	executaPermissoes();
-	
-	carregaStatus();
-	
 	var validator = $( ".form-signin" ).validate( {
 		debug: true,
 		//onsubmit: false,
@@ -125,19 +98,46 @@ function inicializa(){
 			}
 		}
 	} );
+	
+	$( ".form-signin" ).submit( function( ) {
+		if( validator.form( ) ) {
+			submerterForm( );
+		}
+
+		return false;
+	} );
+
+	$('#selectCategoriaCadTicket').change(function(){
+		var CategoriaId = $(this).val();
+
+		if(CategoriaId == ''){
+			$('#tipoSolicitacao').html(TipoSolicitacaoDependendo);
+		}
+		else{
+			carregaTipoSolicitacao(CategoriaId);
+		}
+	});
+});
+
+function inicializa(){
+	executaPermissoes();
+	
+	carregaStatus();
 }
 function submerterForm( ) {
 	// Declaração de variaveis
-	var CategoriaId 	= $("#selectCategoriaCadTicket option:selected").val();
-	var TipoSolicitacaoId		= $("#tipoSolicitacao option:selected").val();
-	var Descricao = $("#descricaoTicket").val();
+	var StatusId = $("#StatusId option:selected").val();
+	var TipoSolicitacaoId = $("#TipoSolicitacaoId option:selected").val();
+	var Descricao = $("#Descricao").val();
+	var PrioridadeId = $("#PrioridadeId option:selected").val();
+	var Resultado = $("#Resultado").val();
 	
 	// Executa o POST usando metodo AJAX e retorando Json
 	var Url				= '<?php echo BASE_URL;?>/chamado/salvarEdicao';
 
-	var data 			= 'CategoriaId='+CategoriaId+'&TipoSolicitacaoId='+TipoSolicitacaoId+'&Descricao='+Descricao;
+	var data 			= 'TicketId='+Ticket.TicketId+'&StatusId='+StatusId+'&TipoSolicitacaoId='+TipoSolicitacaoId+'&Descricao='+Descricao+'&PrioridadeId='+PrioridadeId+'&Resultado='+Resultado;
 
-	$.blockUI({ message: '<h1>Salvando os dados...</h1>' });
+	$.blockUI({ message: '<h2>Salvando os dados...</h2>' });
 
 	$.ajax({
 		type: "POST",
@@ -146,9 +146,6 @@ function submerterForm( ) {
 		dataType: 'json',
 		success: function(retorno){
 			if(retorno.success){
-				// Se retorno do php Deu OK
-				//$('.retorno').html(retorno.msg);
-	
 				$.blockUI({ message: '<h3>'+retorno.msg+'</h3>' });
 
 				// Efetuar o redirecionamento
@@ -173,6 +170,8 @@ function submerterForm( ) {
 			exibeErroRecarregarPagina;
 		}
 	});
+
+	return false;
 }
 
 function limpaTipoSolicitacao(){
@@ -297,10 +296,12 @@ function carregaPrioridade(){
 	$.blockUI({ message: '<h2>Carregando as prioridades...</h2>' });
 	
 	var Url = '<?php echo BASE_URL;?>/prioridade/getPrioridades';
+	var data 	= 'PrioridadeId='+Ticket.PrioridadeId+'&Permissao='+Ticket.Permissao;
 	
 	$.ajax({
 		type: "get",
 		url: Url,
+		data: data,
 		dataType: 'json',
 		success: function(retorno){
 			var Dados = "";
@@ -407,10 +408,7 @@ function bloqueiaDescricao(){
 	$("#Descricao").attr("readonly",true);
 }
 function bloqueiaResultado() {
-	$("#resultado").attr("readonly",true);
-}
-function bloqueiaPrioridade(){
-	$("#PrioridadeId").attr("readonly",true);
+	$("#Resultado").attr("readonly",true);
 }
 function populaTicket(){
 	$('#CategoriaId option[value='+Ticket.CategoriaId+']').attr('selected','selected');
