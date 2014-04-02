@@ -1,6 +1,9 @@
 <?php
 class XmlMod extends CI_Model {
 	public $xmlObject;
+	private $SetorId;
+	private $TipoId;
+	private $PrioridadeId;
 	private $TicketId;
 	private $xmlBreak;
 	private $xmlErro;
@@ -9,8 +12,7 @@ class XmlMod extends CI_Model {
 	}
 	private function getXmlErro() {
 		if ($this->xmlBreak) {
-			echo $this->xmlErro;
-			exit ();
+			return $this->xmlErro;
 		}
 	}
 	public function setXml($object) {
@@ -28,21 +30,40 @@ class XmlMod extends CI_Model {
 		return $this->TicketId;
 	}
 	public function salvaXml() {
-		$this->load->model ( 'TicketMod' );
-		$this->load->model ( 'SetorFuncionarioMod' );
-		$this->load->model ( 'TipoTicketMod' );
-		
 		/*
 		 * Instancia Origem
 		 */
-		$SetorId = $this->getSetorId ( $this->xmlObject->origem );
+		$this->SetorId = $this->getSetorId ( $this->xmlObject->origem );
+
+		$this->load->model ( 'TipoTicketMod' );
+		
+		/*
+		 * Buscar Tipo de ticket
+		*/
+		$TipoTicketMod = $this->getTipoTicket ( $AtendenteSetorId );
+		$this->TipoId = $TipoTicketMod->getTipoId ();
+		$this->PrioridadeId = $TipoTicketMod->getPrioridadeId ();
+		
+		if ($this->xmlObject->incidente->count () > 1) {
+			foreach ( $this->xmlObject->incidente as $key => $ObjectIncidente ) {
+				$this->salvarIncidente ( $ObjectIncidente );
+			}
+		} else {
+			$this->salvarIncidente ( $this->xmlObject->incidente );
+		}
+		
+		return 'Ticket gravado com sucesso!!!';
+	}
+	private function salvarIncidente($xmlObject) {
+		$this->load->model ( 'TicketMod' );
+		$this->load->model ( 'SetorFuncionarioMod' );
 		
 		/*
 		 * Instanciar Atendente
 		 */
-		$AtendenteNome = $this->xmlObject->incidente->atendente->nome;
-		$AtendenteCpf = $this->xmlObject->incidente->atendente->cpf;
-		$AtendenteSetorId = $SetorId;
+		$AtendenteNome = $xmlObject->atendente->nome;
+		$AtendenteCpf = $xmlObject->atendente->cpf;
+		$AtendenteSetorId = $this->SetorId;
 		$AtendenteFuncionarioId = $this->getFuncionarioId ( $AtendenteNome, $AtendenteCpf, $AtendenteSetorId );
 		
 		/*
@@ -53,32 +74,25 @@ class XmlMod extends CI_Model {
 		/*
 		 * Instanciar Solicitante
 		 */
-		$SolicitanteNome = $this->xmlObject->incidente->solicitante->nome;
-		$SolicitanteCpf = $this->xmlObject->incidente->solicitante->cpf;
+		$SolicitanteNome = $xmlObject->solicitante->nome;
+		$SolicitanteCpf = $xmlObject->solicitante->cpf;
 		$SolicitanteSetorId = 12;
 		$SolicitanteFuncionarioId = $this->getFuncionarioId ( $SolicitanteNome, $SolicitanteCpf, $SolicitanteSetorId );
 		
 		/*
-		 * Buscar Tipo de ticket
-		 */
-		$TipoTicketMod = $this->getTipoTicket ( $AtendenteSetorId );
-		
-		/*
 		 * Instanciar Ticket
 		 */
-		$TipoId = $TipoTicketMod->getTipoId ();
-		$PrioridadeId = $TipoTicketMod->getPrioridadeId ();
-		$Descricao = $this->xmlObject->incidente->titulo . " " . $this->xmlObject->incidente->descricao;
-		$DH_Abertura = date ( 'Y-m-d H:i:s', ( string ) $this->xmlObject->incidente->abertura );
+		$Descricao = $xmlObject->titulo . " " . $xmlObject->descricao;
+		$DH_Abertura = date ( 'Y-m-d H:i:s', ( string ) $xmlObject->abertura );
 		
-		$this->TicketMod->setTipoId ( $TipoId );
+		$this->TicketMod->setTipoId ( $this->TipoId );
 		$this->TicketMod->setFuncionarioId ( $SolicitanteFuncionarioId );
 		$this->TicketMod->setStatusId ( 1 );
 		$this->TicketMod->setDH_Solicitacao ( $DH_Abertura );
 		$this->TicketMod->setDescricao ( $Descricao );
 		$this->TicketMod->setSetorId ( $AtendenteSetorId );
 		$this->TicketMod->setAtendenteId ( $AtendenteFuncionarioId );
-		$this->TicketMod->setPrioridadeId ( $PrioridadeId );
+		$this->TicketMod->setPrioridadeId ( $this->PrioridadeId );
 		
 		if (! $this->TicketMod->setTicket ()) {
 			$this->xmlBreak = true;
@@ -86,8 +100,6 @@ class XmlMod extends CI_Model {
 			// Força a parada do sistema e imprime o erro
 			$this->getXmlErro ();
 		}
-		
-		echo 'Ticket gravado com sucesso!!!';
 	}
 	private function getSetorId($Origem) {
 		$this->load->model ( 'SetorMod' );
@@ -148,6 +160,8 @@ class XmlMod extends CI_Model {
 		}
 	}
 	private function getTipoTicket($AtendenteSetorId) {
+		$this->load->model ( 'TipoTicketMod' );		
+		
 		$this->TipoTicketMod->setNome ( "Outros " . $this->xmlObject->origem );
 		$this->TipoTicketMod->setSetorId ( $AtendenteSetorId );
 		
@@ -169,50 +183,57 @@ class XmlMod extends CI_Model {
 			$msg [] = "Origem";
 		}
 		
-		if (! isset ( $this->xmlObject->incidente )) {
+		if (is_array ( $this->xmlObject->incidente )) {
+			foreach ( $this->xmlObject->incidente as $key => $ObjectIncidente ) {
+				$this->validaObjectIncidente ( $ObjectIncidente [$key] );
+			}
+		} else if (! isset ( $this->xmlObject->incidente )) {
 			$this->xmlBreak = true;
 			$msg [] = "Incidente";
 		} else {
-			if (! isset ( $this->xmlObject->incidente->atendente )) {
+			$this->validaObjectIncidente ( $this->xmlObject->incidente );
+		}
+	}
+	private function validaObjectIncidente($xmlObject) {
+		if (! isset ( $xmlObject->atendente )) {
+			$this->xmlBreak = true;
+			$msg [] = "Atendente";
+		} else {
+			if (! isset ( $xmlObject->atendente->cpf )) {
 				$this->xmlBreak = true;
-				$msg [] = "Atendente";
-			} else {
-				if (! isset ( $this->xmlObject->incidente->atendente->cpf )) {
-					$this->xmlBreak = true;
-					$msg [] = "CPF do Atendente";
-				}
-				
-				if (! isset ( $this->xmlObject->incidente->atendente->nome )) {
-					$this->xmlBreak = true;
-					$msg [] = "Nome do Atendente";
-				}
+				$msg [] = "CPF do Atendente";
 			}
-			if (! isset ( $this->xmlObject->incidente->solicitante )) {
+			
+			if (! isset ( $xmlObject->atendente->nome )) {
 				$this->xmlBreak = true;
-				$msg [] = "Solicitante";
-			} else {
-				if (! isset ( $this->xmlObject->incidente->solicitante->cpf )) {
-					$this->xmlBreak = true;
-					$msg [] = "CPF do Solicitante";
-				}
-				
-				if (! isset ( $this->xmlObject->incidente->solicitante->nome )) {
-					$this->xmlBreak = true;
-					$msg [] = "Nome do Solicitante";
-				}
+				$msg [] = "Nome do Atendente";
 			}
-			if (! isset ( $this->xmlObject->incidente->descricao )) {
+		}
+		if (! isset ( $xmlObject->solicitante )) {
+			$this->xmlBreak = true;
+			$msg [] = "Solicitante";
+		} else {
+			if (! isset ( $xmlObject->solicitante->cpf )) {
 				$this->xmlBreak = true;
-				$msg [] = "Descrição";
+				$msg [] = "CPF do Solicitante";
 			}
-			if (! isset ( $this->xmlObject->incidente->titulo )) {
+			
+			if (! isset ( $xmlObject->solicitante->nome )) {
 				$this->xmlBreak = true;
-				$msg [] = "Título";
+				$msg [] = "Nome do Solicitante";
 			}
-			if (! isset ( $this->xmlObject->incidente->abertura )) {
-				$this->xmlBreak = true;
-				$msg [] = "Abertura";
-			}
+		}
+		if (! isset ( $xmlObject->descricao )) {
+			$this->xmlBreak = true;
+			$msg [] = "Descrição";
+		}
+		if (! isset ( $xmlObject->titulo )) {
+			$this->xmlBreak = true;
+			$msg [] = "Título";
+		}
+		if (! isset ( $xmlObject->abertura )) {
+			$this->xmlBreak = true;
+			$msg [] = "Abertura";
 		}
 		
 		if ($this->xmlBreak) {

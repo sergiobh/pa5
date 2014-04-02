@@ -7,7 +7,7 @@
 		<button class="btn btn-sm btn btn-success btn-block botao_submit">Enviar</button>
 	</div>
 </form>
-
+<div class='RespostaXml'><?php echo (isset($RespostaXml)) ? $RespostaXml : '';?></div>
 <script>
 $(document).ready(function(){
 	$(":file").filestyle({classButton: "btn btn-primary", 'buttonText': 'Selecione...'});

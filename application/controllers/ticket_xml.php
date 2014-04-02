@@ -21,13 +21,9 @@ class Ticket_xml extends CI_Controller {
 		
 		if (! $this->upload->do_upload ( "ticketFile" )) {
 			
-			$data = array (
-					'error' => $this->upload->display_errors () 
+			$Dados = array (
+					'RespostaMsg' => $this->upload->display_errors () 
 			);
-			
-			echo '<pre>';
-			print_r ( $data );
-			exit ();
 			
 			$Dados ['Script'] [] = 'jquery/bootstrap-filestyle.min.js';
 			
@@ -47,9 +43,14 @@ class Ticket_xml extends CI_Controller {
 			 */
 			$this->load->model ( 'XmlMod' );
 			$this->XmlMod->setXml ( $xml_objet );
-			$this->XmlMod->salvaXml ();
+			$Dados['RespostaXml'] = $this->XmlMod->salvaXml ();
 			
 			$this->removeFile ( $file );
+				
+			$Dados ['Script'] [] = 'jquery/bootstrap-filestyle.min.js';
+				
+			$Dados ['View'] = 'ticket_xml/importar';
+			$this->load->view ( 'body/index', $Dados );
 		}
 	}
 	private function converteXMLtoObject($xml) {
