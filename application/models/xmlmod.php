@@ -40,7 +40,7 @@ class XmlMod extends CI_Model {
 		/*
 		 * Buscar Tipo de ticket
 		*/
-		$TipoTicketMod = $this->getTipoTicket ( $AtendenteSetorId );
+		$TipoTicketMod = $this->getTipoTicket ();
 		$this->TipoId = $TipoTicketMod->getTipoId ();
 		$this->PrioridadeId = $TipoTicketMod->getPrioridadeId ();
 		
@@ -159,11 +159,11 @@ class XmlMod extends CI_Model {
 			$this->getXmlErro ();
 		}
 	}
-	private function getTipoTicket($AtendenteSetorId) {
+	private function getTipoTicket() {
 		$this->load->model ( 'TipoTicketMod' );		
 		
 		$this->TipoTicketMod->setNome ( "Outros " . $this->xmlObject->origem );
-		$this->TipoTicketMod->setSetorId ( $AtendenteSetorId );
+		$this->TipoTicketMod->setSetorId ( $this->SetorId );
 		
 		if (! $RetornoTipoTicket = $this->TipoTicketMod->getTipoTicket ()) {
 			$this->xmlBreak = true;

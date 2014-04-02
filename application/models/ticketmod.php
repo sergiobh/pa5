@@ -251,10 +251,10 @@ class TicketMod extends CI_Model {
 		$TicketGravado = json_decode ( $this->getTicket () );
 		$this->TicketGravado = $TicketGravado->Ticket;
 		
-		$this->load->model("TipoTicketMod");
+		$this->load->model ( "TipoTicketMod" );
 		$this->TipoTicketMod->setTipoId ( $this->TipoId );
 		$this->TipoTicketMod->getTipoTicket ();
-		$this->setSetorId ( $this->TipoTicketMod->getSetorId () ); 
+		$this->setSetorId ( $this->TipoTicketMod->getSetorId () );
 		
 		$sql_set = $this->montaSetUpdate ();
 		
@@ -267,13 +267,12 @@ class TicketMod extends CI_Model {
 					TicketId = " . $this->TicketId . "
 				";
 		
-		$this->db->query($sql);
+		$this->db->query ( $sql );
 		
-		if($this->db->affected_rows() > 0){
-			$retorno["msg"] = "Dados salvos com sucesso!";
-		}
-		else{
-			$retorno["msg"] = "Altere pelo menos um dos campos!";
+		if ($this->db->affected_rows () > 0) {
+			$retorno ["msg"] = "Dados salvos com sucesso!";
+		} else {
+			$retorno ["msg"] = "Altere pelo menos um dos campos!";
 		}
 		
 		$retorno ['success'] = true;
@@ -321,6 +320,27 @@ class TicketMod extends CI_Model {
 			$setUpdate [] = "SetorId = " . $this->SetorId;
 			$setUpdate [] = "AtendenteId = " . $this->AtendenteId;
 			$setUpdate [] = "PrioridadeId = " . $this->PrioridadeId;
+		} else if ($this->TicketGravado->Permissao == 'Setor') {
+			if (in_array ( $this->TicketGravado->StatusId, array (
+					1 
+			) )) {
+				$setUpdate [] = "TipoId = " . $this->TipoId;
+				$setUpdate [] = "StatusId = " . $this->StatusId;
+			}
+			
+			// Se o Setor selecionar o Ticket para Em Manutenção, Cancelado, Indeferido
+			if (in_array ( $this->StatusId, array (
+					4 
+			) )) {
+				$this->setFuncionarioId ( $_SESSION ['Funcionario']->FuncionarioId );
+				
+				$setUpdate [] = "TipoId = " . $this->TipoId;
+				$setUpdate [] = "StatusId = " . $this->StatusId;
+				$setUpdate [] = "Resultado = '" . $this->Resultado . "'";
+				$setUpdate [] = "SetorId = " . $this->SetorId;
+				$setUpdate [] = "AtendenteId = " . $this->getFuncionarioId ();
+				$setUpdate [] = "PrioridadeId = " . $this->PrioridadeId;
+			}
 		} else if ($this->TicketGravado->Permissao == 'Solicitante') {
 			$setUpdate [] = "Descricao = '" . $this->Descricao . "'";
 			
@@ -376,10 +396,10 @@ class TicketMod extends CI_Model {
 		
 		$SLA = $this->TipoTicketMod->buscaSla ();
 		
-		$mktime = mktime(date("H") + $SLA, date("i"), date("s"), date("m"), date("d"), date("Y"));
-
-		$this->DH_Previsao = date ( 'Y-m-d H:i:s' , $mktime);
-
+		$mktime = mktime ( date ( "H" ) + $SLA, date ( "i" ), date ( "s" ), date ( "m" ), date ( "d" ), date ( "Y" ) );
+		
+		$this->DH_Previsao = date ( 'Y-m-d H:i:s', $mktime );
+		
 		return $this->DH_Previsao;
 	}
 }
