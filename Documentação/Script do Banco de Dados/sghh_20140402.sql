@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : MYSQL_Localhost
-Source Server Version : 50616
-Source Host           : localhost:3306
+Source Server         : localhost
+Source Server Version : 50525
+Source Host           : 127.0.0.1:3306
 Source Database       : sghh
 
 Target Server Type    : MYSQL
-Target Server Version : 50616
+Target Server Version : 50525
 File Encoding         : 65001
 
-Date: 2014-03-29 19:59:52
+Date: 2014-04-02 08:56:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -28,7 +28,7 @@ CREATE TABLE `funcionario` (
   PRIMARY KEY (`FuncionarioId`),
   KEY `SetorId` (`SetorId`),
   CONSTRAINT `funcionario_ibfk_1` FOREIGN KEY (`SetorId`) REFERENCES `setor` (`SetorId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of funcionario
@@ -37,6 +37,8 @@ INSERT INTO `funcionario` VALUES ('1', 'Sérgio Macedo', '0', '11111111111', 'e1
 INSERT INTO `funcionario` VALUES ('3', 'Geral', '0', '00000000000', '11111111');
 INSERT INTO `funcionario` VALUES ('9', 'fabio', '8', '04307234669', 'sem acesso');
 INSERT INTO `funcionario` VALUES ('10', 'enrique', '12', '04564567899', 'sem acesso');
+INSERT INTO `funcionario` VALUES ('11', 'Maria', '9', '01365229638', 'sem acesso');
+INSERT INTO `funcionario` VALUES ('12', 'João', '12', '01365229637', 'sem acesso');
 
 -- ----------------------------
 -- Table structure for leito
@@ -169,12 +171,18 @@ CREATE TABLE `setorfuncionario` (
   KEY `FuncionarioId` (`FuncionarioId`),
   CONSTRAINT `setorfuncionario_ibfk_2` FOREIGN KEY (`FuncionarioId`) REFERENCES `funcionario` (`FuncionarioId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `setorfuncionario_ibfk_1` FOREIGN KEY (`SetorId`) REFERENCES `setor` (`SetorId`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of setorfuncionario
 -- ----------------------------
 INSERT INTO `setorfuncionario` VALUES ('7', '8', '9');
+INSERT INTO `setorfuncionario` VALUES ('8', '10', '10');
+INSERT INTO `setorfuncionario` VALUES ('9', '8', '1');
+INSERT INTO `setorfuncionario` VALUES ('10', '9', '1');
+INSERT INTO `setorfuncionario` VALUES ('11', '10', '1');
+INSERT INTO `setorfuncionario` VALUES ('12', '11', '1');
+INSERT INTO `setorfuncionario` VALUES ('13', '9', '11');
 
 -- ----------------------------
 -- Table structure for telefone
@@ -217,19 +225,29 @@ CREATE TABLE `ticket` (
   KEY `SetorId` (`SetorId`),
   KEY `PrioridadeId` (`PrioridadeId`),
   KEY `AtendenteId` (`AtendenteId`),
-  CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`TipoId`) REFERENCES `ticket_tipo` (`tipoid`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`TipoId`) REFERENCES `ticket_tipo` (`TipoId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `ticket_ibfk_2` FOREIGN KEY (`FuncionarioId`) REFERENCES `funcionario` (`FuncionarioId`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `ticket_ibfk_3` FOREIGN KEY (`StatusId`) REFERENCES `ticket_status` (`statusid`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `ticket_ibfk_3` FOREIGN KEY (`StatusId`) REFERENCES `ticket_status` (`StatusId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `ticket_ibfk_4` FOREIGN KEY (`SetorId`) REFERENCES `setor` (`SetorId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `ticket_ibfk_5` FOREIGN KEY (`PrioridadeId`) REFERENCES `ticket_prioridade` (`PrioridadeId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `ticket_ibfk_6` FOREIGN KEY (`AtendenteId`) REFERENCES `funcionario` (`FuncionarioId`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of ticket
 -- ----------------------------
-INSERT INTO `ticket` VALUES ('2', '1', '10', '1', '2014-03-29 19:46:02', 'a pagina nao carrega estou com erro critico', null, null, null, '8', '9', '3');
-INSERT INTO `ticket` VALUES ('3', '1', '10', '1', '2014-03-29 19:46:02', 'a pagina nao carrega estou com erro critico', null, null, null, '8', '9', '3');
+INSERT INTO `ticket` VALUES ('19', '2', '12', '1', '2014-04-01 19:54:44', 'Instalação do Windows Erro no windows 1', null, null, null, '9', '11', '3');
+INSERT INTO `ticket` VALUES ('20', '2', '12', '1', '2014-04-01 19:56:36', 'Instalação do Windows 2 Erro no windows 2', null, null, null, '9', '11', '3');
+INSERT INTO `ticket` VALUES ('21', '3', '1', '1', '2014-03-31 19:27:39', 'Outros CORP Teste de envio de ticket', null, null, null, '10', '10', '3');
+INSERT INTO `ticket` VALUES ('22', '2', '12', '1', '2014-04-01 19:54:44', 'Instalação do Windows Erro no windows 1', null, null, null, '9', '11', '3');
+INSERT INTO `ticket` VALUES ('23', '2', '12', '1', '2014-04-01 19:56:36', 'Instalação do Windows 2 Erro no windows 2', null, null, null, '9', '11', '3');
+INSERT INTO `ticket` VALUES ('24', '2', '12', '1', '2014-04-01 19:54:44', 'Instalação do Windows Erro no windows 1', null, null, null, '9', '11', '3');
+INSERT INTO `ticket` VALUES ('25', '2', '12', '1', '2014-04-01 19:56:36', 'Instalação do Windows 2 Erro no windows 2', null, null, null, '9', '11', '3');
+INSERT INTO `ticket` VALUES ('26', '2', '12', '1', '2014-04-01 19:54:44', 'Instalação do Windows Erro no windows 1', null, null, null, '9', '11', '3');
+INSERT INTO `ticket` VALUES ('27', '2', '12', '1', '2014-04-01 19:56:36', 'Instalação do Windows 2 Erro no windows 2', null, null, null, '9', '11', '3');
+INSERT INTO `ticket` VALUES ('28', '2', '12', '1', '2014-04-01 19:54:44', 'Instalação do Windows Erro no windows 1', null, null, null, '9', '11', '3');
+INSERT INTO `ticket` VALUES ('29', '2', '12', '1', '2014-04-01 19:56:36', 'Instalação do Windows 2 Erro no windows 2', null, null, null, '9', '11', '3');
+INSERT INTO `ticket` VALUES ('30', '1', '1', '1', '1970-04-28 03:15:12', 'sei nao texto mmmmmmmmm', null, null, null, '8', '9', '3');
 
 -- ----------------------------
 -- Table structure for ticket_categoria
@@ -277,18 +295,19 @@ DROP TABLE IF EXISTS `ticket_status`;
 CREATE TABLE `ticket_status` (
   `StatusId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Nome` varchar(50) NOT NULL,
+  `TipoBotao` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`StatusId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of ticket_status
 -- ----------------------------
-INSERT INTO `ticket_status` VALUES ('1', 'Aberto');
-INSERT INTO `ticket_status` VALUES ('2', 'Aguardando Resposta');
-INSERT INTO `ticket_status` VALUES ('3', 'Em manutenção');
-INSERT INTO `ticket_status` VALUES ('4', 'Fechado');
-INSERT INTO `ticket_status` VALUES ('5', 'Cancelado');
-INSERT INTO `ticket_status` VALUES ('6', 'Indeferido');
+INSERT INTO `ticket_status` VALUES ('1', 'Aberto', 'btn-success');
+INSERT INTO `ticket_status` VALUES ('2', 'Aguardando Resposta', 'btn-warning');
+INSERT INTO `ticket_status` VALUES ('3', 'Em manutenção', 'btn-info');
+INSERT INTO `ticket_status` VALUES ('4', 'Fechado', 'btn-danger');
+INSERT INTO `ticket_status` VALUES ('5', 'Cancelado', 'btn-primary');
+INSERT INTO `ticket_status` VALUES ('6', 'Indeferido', 'btn-danger');
 
 -- ----------------------------
 -- Table structure for ticket_tipo
