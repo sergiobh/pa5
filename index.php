@@ -25,8 +25,8 @@ header('Content-Type: text/html; charset=utf-8');
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-	//define('ENVIRONMENT', 'development');
-	define('ENVIRONMENT', 'production');
+	define('ENVIRONMENT', 'development');
+	//define('ENVIRONMENT', 'production');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING

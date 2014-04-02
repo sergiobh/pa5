@@ -364,6 +364,17 @@ th.header {
 	margin-top: 120px !important;
 }
 
+.linha_botoes{
+	height: 40px;
+}
 .chamados_listar .linha_botoes .btn{
-	margin-right: 20px;
+	margin-right: 2px;
+}
+
+.ticketxml_importar .RespostaXml{
+	margin: 0 auto;
+    max-width: 330px;
+    padding: 15px;
+    font-weight: bold;
+    color: #FF0000;
 }

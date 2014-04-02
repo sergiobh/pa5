@@ -1,57 +1,60 @@
-<form class="form-signin" role="form">
-	<h2 class="form-signin-heading">Edição de Chamados</h2>
-	<div class="form-group">
-		<label>Categoria:</label> <select id="CategoriaId" name="CategoriaId"
-			autofocus class="form-control">
-		</select>
-	</div>
-	<div class="form-group">
-		<label>Tipo de solicitação:</label> <select id="TipoSolicitacaoId"
-			name="TipoSolicitacaoId" value="" class="form-control">
-		</select>
-	</div>
-	<div class="form-group">
-		<label>Descrição do Ticket:</label>
-		<textarea id="Descricao" name="Descricao" type="text" value=""
-			class="form-control"></textarea>
-	</div>
-	<div class="form-group">
-		<label>Resultado:</label>
-		<textarea id="Resultado" name="Resultado" type="text" value=""
-			class="form-control"></textarea>
-	</div>
-	<div class="form-group">
-		<label>Prioridade:</label><select id="PrioridadeId"
-			name="PrioridadeId" value="" class="form-control">
-		</select>
-	</div>
-	<div class="form-group">
-		<label>Data de Solicitação:</label><input id="DataSolicitacao"
-			name="DataSolicitacao" type="text" class="form-control" data="data"
-			readonly="readonly" />
-	</div>
-	<div class="form-group">
-		<label>Data da Previsão:</label><input id="DataPrevisao"
-			name="DataPrevisao" type="text" class="form-control" data="data"
-			value="" readonly="readonly" />
-	</div>
-	<div class="form-group">
-		<label>Data da Baixa:</label><input id="DataBaixa" name="DataBaixa"
-			type="text" class="form-control" data="data" value=""
-			readonly="readonly" />
-	</div>
-	<div class="form-group">
-		<label>Solicitante:</label><BR /> <input id="Solicitante"
-			name="Solicitante" type="text" class="form-control"
-			readonly="readonly" />
-	</div>
-	<div class="linha_botoes">
-		<button class="btn btn-sm btn btn-success btn-block botao_submit">
-			Enviar</button>
-		<button class="btn btn-sm btn btn-danger btn-block botao_reset"
-			type="reset">Limpar</button>
-	</div>
-</form>
+<div class='chamado_editar'>
+	<form class="form-signin" role="form">
+		<h2 class="form-signin-heading">Edição de Chamados</h2>
+		<div class="form-group">
+			<label>Status:</label><select id="StatusId"
+				name="StatusId" class="form-control">
+			</select>
+		</div>
+		<div class="form-group">
+			<label>Categoria:</label> <select id="CategoriaId" name="CategoriaId"
+				autofocus class="form-control">
+			</select>
+		</div>
+		<div class="form-group">
+			<label>Tipo de solicitação:</label> <select id="TipoSolicitacaoId"
+				name="TipoSolicitacaoId" class="form-control">
+			</select>
+		</div>
+		<div class="form-group">
+			<label>Descrição do Ticket:</label>
+			<textarea id="Descricao" name="Descricao" class="form-control"></textarea>
+		</div>
+		<div class="form-group">
+			<label>Resultado:</label>
+			<textarea id="Resultado" name="Resultado" class="form-control"></textarea>
+		</div>
+		<div class="form-group">
+			<label>Prioridade:</label><select id="PrioridadeId"
+				name="PrioridadeId" class="form-control">
+			</select>
+		</div>		
+		<div class="form-group">
+			<label>Data de Solicitação:</label><input id="DataSolicitacao"
+				name="DataSolicitacao" type="text" class="form-control"
+				readonly="readonly" />
+		</div>
+		<div class="form-group">
+			<label>Data da Previsão:</label><input id="DataPrevisao"
+				name="DataPrevisao" type="text" class="form-control"
+				readonly="readonly" />
+		</div>
+		<div class="form-group">
+			<label>Data da Baixa:</label><input id="DataBaixa" name="DataBaixa"
+				type="text" class="form-control" readonly="readonly" />
+		</div>
+		<div class="form-group">
+			<label>Solicitante:</label><BR /> <input id="Solicitante"
+				name="Solicitante" type="text" class="form-control"
+				readonly="readonly" />
+		</div>
+		<div class="linha_botoes">
+			<button class="btn btn-sm btn btn-success btn-block botao_submit">
+				Enviar</button>
+			<button class="btn btn-sm btn btn-danger btn-block botao_reset"
+				type="reset">Limpar</button>
+		</div>
+	</form>
 </div>
 <script type="text/javascript">
 var CategoriaSelecione = '<option value="">Categoria: (Selecione)</option>';
@@ -86,7 +89,9 @@ $( document ).ready( function( ) {
 });
 
 function inicializa(){
-	carregaCategorias();
+	executaPermissoes();
+	
+	carregaStatus();
 	
 	var validator = $( ".form-signin" ).validate( {
 		debug: true,
@@ -120,8 +125,6 @@ function inicializa(){
 			}
 		}
 	} );
-
-	populaTicket();
 }
 function submerterForm( ) {
 	// Declaração de variaveis
@@ -130,7 +133,7 @@ function submerterForm( ) {
 	var Descricao = $("#descricaoTicket").val();
 	
 	// Executa o POST usando metodo AJAX e retorando Json
-	var Url				= '<?php echo BASE_URL;?>/chamado/salvarCadastro';
+	var Url				= '<?php echo BASE_URL;?>/chamado/salvarEdicao';
 
 	var data 			= 'CategoriaId='+CategoriaId+'&TipoSolicitacaoId='+TipoSolicitacaoId+'&Descricao='+Descricao;
 
@@ -157,14 +160,17 @@ function submerterForm( ) {
 				);
 			}
 			else{
-				// Se php retornou erro irá salvar o retorno da div "retorno"
-				$('.retorno_ajax').html(retorno.msg);
-				$.unblockUI();
+				$.blockUI({ message: '<h3>'+retorno.msg+'</h3>' });
+				setTimeout(
+						function(){
+							$.unblockUI();
+						},
+						3000
+					);
 			}
 		},
 		error: function(){
-			$('.retorno_ajax').html('Ocorreu um erro no servidor. Tentar novamente!');
-			$.unblockUI();
+			exibeErroRecarregarPagina;
 		}
 	});
 }
@@ -178,7 +184,7 @@ function carregaTipoSolicitacao(CategoriaId){
 	var Url		= '<?php echo BASE_URL;?>/tiposolicitacao/getTipoSolicitacao';
 	var data 	= 'CategoriaId='+CategoriaId;
 
-	$.blockUI({ message: '<h1>Carregando os Tipos de Solicitação...</h1>' });
+	$.blockUI({ message: '<h2>Carregando os Tipos de Solicitação...</h2>' });
 
 	$.ajax({
 		type: "get",
@@ -195,27 +201,61 @@ function carregaTipoSolicitacao(CategoriaId){
 					Dados += '<option value="'+TipoSolicitacao[Reg].tipoid+'">'+TipoSolicitacao[Reg].nome+'</option>';
 				}
 
-				$('#tipoSolicitacao').html(TipoSolicitacaoSelecione + Dados);
+				$('#TipoSolicitacaoId').html(TipoSolicitacaoSelecione + Dados);
+
+				if(Iniciando){
+					carregaPrioridade();
+				}
+
 				$.unblockUI();
 			}
 			else{
-				$('.retorno_ajax').html('Ocorreu um erro no servidor. Favor recarregar a página!');
-				$.unblockUI();
+				exibeErroRecarregarPagina;
 			}
 		},
 		error: function(){
-			$('.retorno_ajax').html('Ocorreu um erro no servidor. Favor recarregar a página!');
-			
-			setTimeout(
-				function(){
-					$.unblockUI();
-				},
-				4000
-			);
+			exibeErroRecarregarPagina;
 		}
 	});
 }
+function carregaStatus(){
+	$.blockUI({ message: '<h2>Carregando os status...</h2>' });
+	
+	var Url = '<?php echo BASE_URL;?>/status/getStatus';
+	var data 	= 'StatusId='+Ticket.StatusId+'&Permissao='+Ticket.Permissao;
+	
+	$.ajax({
+		type: "get",
+		url: Url,
+		data: data,
+		dataType: 'json',
+		success: function(retorno){
+			var Dados = "";
+	
+			if(retorno.success){
+				var Status = retorno.Status;
+	
+				for(Reg in Status){
+					Dados += '<option value="'+Status[Reg].StatusId+'">'+Status[Reg].Nome+'</option>';
+				}
+	
+				$('#StatusId').html(Dados);
 
+				if(Iniciando){
+					carregaCategorias();
+				}
+				
+				$.unblockUI();
+			}
+			else{
+				exibeErroRecarregarPagina;
+			}
+		},
+		error: function(){
+			exibeErroRecarregarPagina;
+		}
+	});
+}
 function carregaCategorias(){
 	$.blockUI({ message: '<h2>Carregando as categorias...</h2>' });
 	
@@ -238,24 +278,57 @@ function carregaCategorias(){
 				$('#CategoriaId').html(CategoriaSelecione + Dados);
 
 				if(Iniciando){
-					$('#CategoriaId option[value='+Ticket.CategoriaId+']').attr('selected','selected');
+					carregaTipoSolicitacao(Ticket.CategoriaId);
 				}
 				
 				$.unblockUI();
 			}
 			else{
-				
-				$('.retorno_ajax').html('Ocorreu um erro no servidor. Favor recarregar a página!');
-				$.unblockUI();
+				exibeErroRecarregarPagina;
 			}
 		},
 		error: function(){
-			$('.retorno_ajax').html('Ocorreu um erro no servidor. Favor recarregar a página!');
-			$.unblockUI();
+			exibeErroRecarregarPagina;
 		}
 	});
-};
+}
+function carregaPrioridade(){
+	//PrioridadeId
+	$.blockUI({ message: '<h2>Carregando as prioridades...</h2>' });
+	
+	var Url = '<?php echo BASE_URL;?>/prioridade/getPrioridades';
+	
+	$.ajax({
+		type: "get",
+		url: Url,
+		dataType: 'json',
+		success: function(retorno){
+			var Dados = "";
+	
+			if(retorno.success){
+				var Prioridades = retorno.Prioridades;
 
+				for(Reg in Prioridades){
+					Dados += '<option value="'+Prioridades[Reg].PrioridadeId+'">'+Prioridades[Reg].Nome+'</option>';
+				}
+	
+				$('#PrioridadeId').html(Dados);
+
+				if(Iniciando){
+					populaTicket();
+				}
+				
+				$.unblockUI();
+			}
+			else{
+				exibeErroRecarregarPagina;
+			}
+		},
+		error: function(){
+			exibeErroRecarregarPagina;
+		}
+	});
+}
 function buscaTicket(TicketId){
 	$.blockUI({ message: '<h2>Carregando os dados do Chamado...</h2>' });
 	
@@ -271,36 +344,88 @@ function buscaTicket(TicketId){
 			var Dados = "";
 	
 			if(retorno.success){
+
+				if(! retorno.Ticket){
+					exibeErroRecarregarPagina('Usuário sem permissão para acesso!');
+
+					setTimeout(
+							function(){
+								 window.location = "<?php echo BASE_URL;?>/chamado/listar";
+							},
+							3000
+						);
+					return false;
+				}
 				
 				Ticket = retorno.Ticket;
-								
+				
 				$.unblockUI();
 				inicializa();
 			}
 			else{
-				
-				$('.retorno_ajax').html('Ocorreu um erro no servidor. Favor recarregar a página!');
-				$.unblockUI();			
+				exibeErroRecarregarPagina;
 			}
 		},
 		error: function(){
-			$('.retorno_ajax').html('Ocorreu um erro no servidor. Favor recarregar a página!');
-			$.unblockUI();
+			exibeErroRecarregarPagina;
 		}
 	});
 }
+function exibeErroRecarregarPagina(Msg){
+	if(Msg == ''){
+		Msg = 'Ocorreu um erro no servidor. Favor recarregar a página!';
+	}
+	
+	$.blockUI({ message: '<h3>'+Msg+'</h3>' });
+	setTimeout(
+			function(){
+				$.unblockUI();
+			},
+			3000
+		);
+}
+function executaPermissoes(){
+	if(! Ticket.Permissao){
+		exibeErroRecarregarPagina();
+		return false;
+	}
+
+	/*
+	/* Permissoes
+	*/
+	if(Ticket.Permissao == 'Chefe'){
+		bloqueiaDescricao();
+	}
+	else if(Ticket.Permissao == 'Atendente' || Ticket.Permissao == 'Setor'){
+		bloqueiaDescricao();
+	}
+	else if(Ticket.Permissao == 'Solicitante'){
+		bloqueiaResultado();
+	}
+}
+function bloqueiaDescricao(){
+	$("#Descricao").attr("readonly",true);
+}
+function bloqueiaResultado() {
+	$("#resultado").attr("readonly",true);
+}
+function bloqueiaPrioridade(){
+	$("#PrioridadeId").attr("readonly",true);
+}
 function populaTicket(){
-	//$("#TicketId").html(Ticket.TicketId);	
-	$("#TipoSolicitacaoId").html(Ticket.TipoId);
+	$('#CategoriaId option[value='+Ticket.CategoriaId+']').attr('selected','selected');
+	$('#TipoSolicitacaoId option[value='+Ticket.TipoId+']').attr('selected','selected');
 	$("#Solicitante").val(Ticket.Solicitente);
 	$("#Atendente").val(Ticket.Atendente);
 	$("#StatusId").val(Ticket.StatusId);
 	$("#Descricao").html(Ticket.Descricao);
 	$("#Resultado").html(Ticket.Resultado);
-	$("#PrioridadeId").val(Ticket.PrioridadeId);
+	$('#PrioridadeId option[value='+Ticket.PrioridadeId+']').attr('selected','selected');
 	$("#SetorId").val(Ticket.SetorId);
 	$("#DataSolicitacao").val(Ticket.DH_Solicitacao);
 	$("#DataPrevisao").val(Ticket.DH_Previsao);
 	$("#DataBaixa").val(Ticket.DH_Baixa);
+
+	Iniciando = false;
 }
 </script>

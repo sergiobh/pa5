@@ -151,15 +151,19 @@ class TicketMod extends CI_Model {
 					,TP.Nome AS Prioridade
 				FROM 
 					ticket T
-					INNER JOIN ticket_tipo TT on TT.TipoId = T.TipoId
+					INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId
 					INNER JOIN ticket_categoria TC ON TC.CategoriaId = TT.CategoriaId
-					INNER JOIN ticket_prioridade TP on TP.PrioridadeId = T.PrioridadeId
-					LEFT JOIN setorfuncionario SF on SF.SetorId = T.SetorId and SF.FuncionarioId = 1
+					INNER JOIN ticket_prioridade TP ON TP.PrioridadeId = T.PrioridadeId						
+					INNER JOIN Funcionario FS ON FS.FuncionarioId = T.FuncionarioId
+					LEFT JOIN Funcionario FA ON FA.FuncionarioId = T.AtendenteId					
+					LEFT JOIN setor S ON S.SetorId = T.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . "
+					LEFT JOIN setorfuncionario SF ON SF.SetorId = T.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . "
 				WHERE
 					T.StatusId = $this->StatusId
 					AND (
 						T.FuncionarioId = " . $this->getFuncionarioId () . "
 						OR T.AtendenteId = " . $this->getAtendenteId () . "
+						OR S.FuncionarioId IS NOT NULL
 						OR SF.SetorFuncionarioId IS NOT NULL
 					) 
 				";
@@ -193,19 +197,29 @@ class TicketMod extends CI_Model {
 					,DATE_FORMAT( T.DH_Solicitacao , '%d/%m/%Y %H:%i:%s' ) AS DH_Solicitacao
 					,IF(ISNULL(T.DH_Previsao), '-', DATE_FORMAT( T.DH_Previsao , '%d/%m/%Y %H:%i:%s' )) AS DH_Previsao
 					,IF(ISNULL(T.DH_Baixa), '-', DATE_FORMAT( T.DH_Baixa , '%d/%m/%Y %H:%i:%s' )) AS DH_Baixa
+					,CASE
+						WHEN S.FuncionarioId IS NOT NULL THEN 'Chefe'
+						WHEN T.AtendenteId = " . $this->getFuncionarioId () . " THEN 'Atendente'
+						WHEN SF.SetorFuncionarioId IS NOT NULL THEN 'Setor'
+						WHEN T.FuncionarioId = " . $this->getFuncionarioId () . " THEN 'Solicitante'
+					END AS Permissao
 				FROM
 					ticket T
-					INNER JOIN Funcionario FS ON FS.FuncionarioId = T.FuncionarioId
 					INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId
-					LEFT JOIN Funcionario FA ON FA.FuncionarioId = T.AtendenteId
+					INNER JOIN Funcionario FS ON FS.FuncionarioId = T.FuncionarioId
+					LEFT JOIN Funcionario FA ON FA.FuncionarioId = T.AtendenteId					
+					LEFT JOIN setor S ON S.SetorId = T.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . "
+					LEFT JOIN setorfuncionario SF ON SF.SetorId = T.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . "
 				WHERE
 					T.ticketId = " . $this->getTicketId () . "
 					AND (
-							T.FuncionarioId = " . $this->getFuncionarioId () . "
-							OR T.AtendenteId = " . $this->getAtendenteId () . "
+						T.FuncionarioId = " . $this->getFuncionarioId () . "
+						OR T.AtendenteId = " . $this->getAtendenteId () . "
+						OR S.FuncionarioId IS NOT NULL
+						OR SF.SetorFuncionarioId IS NOT NULL
 					)
 				";
-		
+
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->row ();
@@ -217,7 +231,10 @@ class TicketMod extends CI_Model {
 			
 			return json_encode($retorno);
 		} else {
-			return false;
+			$retorno['Ticket'] = false;
+			$retorno['success'] = true;
+			
+			return json_encode($retorno);
 		}
 	}
 }

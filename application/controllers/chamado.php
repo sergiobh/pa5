@@ -41,7 +41,6 @@ class Chamado extends CI_Controller {
 		
 		$Dados ["success"] = true;
 		
-		// $this->load->view('quarto/selectAndar', $Dados);
 		echo json_encode ( $Dados );
 	}
 	public function editar() {
@@ -66,7 +65,7 @@ class Chamado extends CI_Controller {
 			echo $this->TicketMod->getErroMsg();
 			exit;
 		}
-		
+
 		echo $this->TicketMod->getTicket();
 	}
 }
