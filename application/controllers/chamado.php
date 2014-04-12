@@ -50,6 +50,8 @@ class Chamado extends CI_Controller {
 				
 		$Dados['TicketId'] = $TicketId; 
 		
+		$Dados ['Script'] [] = 'jquery/bootstrap-filestyle.min.js';
+		
 		$Dados ['View'] = 'chamado/editar';
 		$this->load->view ( 'body/index', $Dados );
 	}
@@ -85,6 +87,20 @@ class Chamado extends CI_Controller {
 		$this->TicketMod->setTipoId($TipoSolicitacaoId);
 		
 		echo $this->TicketMod->salvarEdicao();
+	}
+	public function carregarHistorico(){
+		$TicketId = $this->input->get('TicketId');
+		
+		$this->load->model("HistoricoMod");
+		$this->HistoricoMod->setTicketId($TicketId);
+		
+		$Historicos = $this->HistoricoMod->getHistoricos();
+		
+		$Dados ["Historicos"] = $Historicos;
+		
+		$Dados ["success"] = true;
+		
+		echo json_encode ( $Dados );
 	}
 }
 ?>

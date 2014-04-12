@@ -1,13 +1,16 @@
 <form class="form-signin functionario_login" role="form" >
 	<h2 class="form-signin-heading">Controle de Acesso</h2>
 	<div class="form-group">
-		<input type='number' class="form-control" placeholder="Cpf" autofocus maxlength='11' id='Cpf' name='cpf' />
+		<label>CPF:</label><input type='number' class="form-control" placeholder="Cpf" autofocus maxlength='11' id='Cpf' name='cpf' />
 	</div>
 	<div class="form-group">
-		<input type='password' class="form-control" placeholder="Senha" maxlength='10' id='Senha' name='senha' />
+		<label>Senha:</label><input type='password' class="form-control" placeholder="Senha" maxlength='10' id='Senha' name='senha' />
 	</div>
-	<button class="btn btn-lg btn-success btn-block botao_submit">Logar</button>
-	
+	<div class="form-group">
+		<div class="linha_botoes">
+			<button class="btn btn-lg btn-success btn-block botao_submit">Logar</button>
+		</div>
+	</div>
 </form>
 <script type="text/javascript">
 $(document).ready(function(){

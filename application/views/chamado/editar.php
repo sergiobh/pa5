@@ -1,6 +1,8 @@
 <div class='chamado_editar'>
+	<?php $this->load->view ( 'chamado/historico' );?>
+
 	<form class="form-signin" role="form">
-		<h2 class="form-signin-heading">Edição de Chamados</h2>
+		<h2 class="form-signin-heading">Edição do Chamado</h2>
 		<div class="form-group">
 			<label>Status:</label><select id="StatusId" name="StatusId"
 				class="form-control">
@@ -17,12 +19,8 @@
 			</select>
 		</div>
 		<div class="form-group">
-			<label>Descrição do Ticket:</label>
+			<label>Acrescentar Observação:</label>
 			<textarea id="Descricao" name="Descricao" class="form-control"></textarea>
-		</div>
-		<div class="form-group">
-			<label>Resultado:</label>
-			<textarea id="Resultado" name="Resultado" class="form-control"></textarea>
 		</div>
 		<div class="form-group">
 			<label>Prioridade:</label><select id="PrioridadeId"
@@ -32,6 +30,11 @@
 		<div class="form-group">
 			<label>Data de Solicitação:</label><input id="DataSolicitacao"
 				name="DataSolicitacao" type="text" class="form-control"
+				readonly="readonly" />
+		</div>
+		<div class="form-group">
+			<label>Data do Aceite:</label><input id="DataAceite"
+				name="DataAceite" type="text" class="form-control"
 				readonly="readonly" />
 		</div>
 		<div class="form-group">
@@ -48,11 +51,16 @@
 				name="Solicitante" type="text" class="form-control"
 				readonly="readonly" />
 		</div>
-		<div class="linha_botoes">
-			<button class="btn btn-sm btn btn-success btn-block botao_submit">
-				Enviar</button>
+		<div class="form-group">
+			<div class="linha_botoes">
+				<button class="btn btn-sm btn btn-success btn-block botao_submit">
+					Enviar</button>
+			</div>
 		</div>
 	</form>
+
+	<?php $this->load->view ( 'chamado/anexo' );?>
+	
 </div>
 <script type="text/javascript">
 var CategoriaSelecione = '<option value="">Categoria: (Selecione)</option>';
@@ -130,12 +138,11 @@ function submerterForm( ) {
 	var TipoSolicitacaoId = $("#TipoSolicitacaoId option:selected").val();
 	var Descricao = $("#Descricao").val();
 	var PrioridadeId = $("#PrioridadeId option:selected").val();
-	var Resultado = $("#Resultado").val();
 	
 	// Executa o POST usando metodo AJAX e retorando Json
 	var Url				= '<?php echo BASE_URL;?>/chamado/salvarEdicao';
 
-	var data 			= 'TicketId='+Ticket.TicketId+'&StatusId='+StatusId+'&TipoSolicitacaoId='+TipoSolicitacaoId+'&Descricao='+Descricao+'&PrioridadeId='+PrioridadeId+'&Resultado='+Resultado;
+	var data 			= 'TicketId='+Ticket.TicketId+'&StatusId='+StatusId+'&TipoSolicitacaoId='+TipoSolicitacaoId+'&Descricao='+Descricao+'&PrioridadeId='+PrioridadeId;
 
 	$.blockUI({ message: '<h2>Salvando os dados...</h2>' });
 
@@ -401,14 +408,11 @@ function executaPermissoes(){
 		bloqueiaDescricao();
 	}
 	else if(Ticket.Permissao == 'Solicitante'){
-		bloqueiaResultado();
+		
 	}
 }
 function bloqueiaDescricao(){
 	$("#Descricao").attr("readonly",true);
-}
-function bloqueiaResultado() {
-	$("#Resultado").attr("readonly",true);
 }
 function populaTicket(){
 	$('#CategoriaId option[value='+Ticket.CategoriaId+']').attr('selected','selected');
@@ -417,9 +421,9 @@ function populaTicket(){
 	$("#Atendente").val(Ticket.Atendente);
 	$("#StatusId").val(Ticket.StatusId);
 	$("#Descricao").html(Ticket.Descricao);
-	$("#Resultado").html(Ticket.Resultado);
 	$('#PrioridadeId option[value='+Ticket.PrioridadeId+']').attr('selected','selected');
 	$("#SetorId").val(Ticket.SetorId);
+	$("#DataAceite").val(Ticket.DH_Aceite);
 	$("#DataSolicitacao").val(Ticket.DH_Solicitacao);
 	$("#DataPrevisao").val(Ticket.DH_Previsao);
 	$("#DataBaixa").val(Ticket.DH_Baixa);

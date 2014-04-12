@@ -89,6 +89,9 @@ class TicketMod extends CI_Model {
 	public function getErroMsg() {
 		return $this->erroMsg;
 	}
+	public function getErroBreak() {
+		return $this->erroBreak;
+	}
 	public function setTicket() {
 		$columnAtendenteId = ($this->AtendenteId != '') ? ',AtendenteId' : '';
 		$valueAtendenteId = ($this->AtendenteId != '') ? ',' . $this->AtendenteId : '';
@@ -100,7 +103,6 @@ class TicketMod extends CI_Model {
 					,FuncionarioId
 					,StatusId
 					,DH_Solicitacao
-					,Descricao
 					,SetorId
 					$columnAtendenteId
 					,PrioridadeId
@@ -110,7 +112,6 @@ class TicketMod extends CI_Model {
 					,$this->FuncionarioId
 					,$this->StatusId
 					,'" . $this->DH_Solicitacao . "'
-					,'" . $this->Descricao . "'
 					,$this->SetorId
 					$valueAtendenteId
 					,$this->PrioridadeId
@@ -120,6 +121,9 @@ class TicketMod extends CI_Model {
 		$this->db->query ( $sql );
 		
 		if ($this->db->affected_rows () > 0) {
+			
+			$this->setTicketId ( $this->db->insert_id () );
+			
 			return true;
 		} else {
 			$this->erroBreak = true;
@@ -139,7 +143,19 @@ class TicketMod extends CI_Model {
 		$this->setSetorId ( $this->TipoTicketMod->getSetorId () );
 		$this->setPrioridadeId ( $this->TipoTicketMod->getPrioridadeId () );
 		
-		$dados ['msg'] = ($this->setTicket ()) ? 'Dados salvos com sucesso!' : 'Ocorreu um erro ao salvar, tente novamente!';
+		if (! $this->setTicket ()) {
+			$dados ['msg'] = 'Ocorreu um erro ao salvar, tente novamente!';
+		} else {
+			$this->load->model ( "HistoricoMod" );
+			$this->HistoricoMod->setTicketId ( $this->getTicketId () );
+			$this->HistoricoMod->setTexto ( $this->getDescricao () );
+			$this->HistoricoMod->setHistoricoTipoId ( 1 ); // Mensagem do Solicitante
+			$this->HistoricoMod->setUsuarioId ( $this->getFuncionarioId () );
+			$this->HistoricoMod->setDH_Cadastro ( $this->getDH_Solicitacao () );
+			
+			$dados ['msg'] = ($this->HistoricoMod->setHistorico ()) ? 'Dados salvos com sucesso!' : 'Ocorreu um erro ao salvar, tente novamente!';
+		}
+		
 		$dados ['success'] = true;
 		
 		return json_encode ( $dados );
@@ -154,26 +170,30 @@ class TicketMod extends CI_Model {
 					,TC.Nome AS Categoria
 					,TT.Nome AS TipoSolicitacao
 					,DATE_FORMAT( T.DH_Solicitacao , '%d/%m/%Y %H:%i:%s' ) AS DH_Solicitacao
-					,T.Descricao
+					,TH.Texto AS Descricao
 					,IF(ISNULL(T.DH_Previsao), '-', T.DH_Previsao) AS DH_Previsao
 					,TP.Nome AS Prioridade
 				FROM 
 					ticket T
 					INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId
 					INNER JOIN ticket_categoria TC ON TC.CategoriaId = TT.CategoriaId
-					INNER JOIN ticket_prioridade TP ON TP.PrioridadeId = T.PrioridadeId						
+					INNER JOIN ticket_prioridade TP ON TP.PrioridadeId = T.PrioridadeId
+					INNER JOIN ticket_historico TH ON TH.TicketId = T.TicketId						
 					INNER JOIN Funcionario FS ON FS.FuncionarioId = T.FuncionarioId
 					LEFT JOIN Funcionario FA ON FA.FuncionarioId = T.AtendenteId					
 					LEFT JOIN setor S ON S.SetorId = T.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . "
 					LEFT JOIN setorfuncionario SF ON SF.SetorId = T.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . "
 				WHERE
 					T.StatusId = $this->StatusId
+					AND TH.HistoricoTipoId = 1
 					AND (
 						T.FuncionarioId = " . $this->getFuncionarioId () . "
 						OR T.AtendenteId = " . $this->getAtendenteId () . "
 						OR S.FuncionarioId IS NOT NULL
 						OR SF.SetorFuncionarioId IS NOT NULL
 					) 
+				GROUP BY
+					TH.TicketId
 				";
 		
 		$query = $this->db->query ( $sql );
@@ -198,11 +218,10 @@ class TicketMod extends CI_Model {
 					,FS.Nome AS Solicitente
 					,IF(ISNULL(FA.Nome), '-', FA.Nome ) AS Atendente
 					,T.StatusId
-					,T.Descricao
-					,T.Resultado
 					,T.PrioridadeId
 					,T.SetorId
 					,DATE_FORMAT( T.DH_Solicitacao , '%d/%m/%Y %H:%i:%s' ) AS DH_Solicitacao
+					,IF(ISNULL(T.DH_Aceite), '-', DATE_FORMAT( T.DH_Aceite , '%d/%m/%Y %H:%i:%s' )) AS DH_Aceite
 					,IF(ISNULL(T.DH_Previsao), '-', DATE_FORMAT( T.DH_Previsao , '%d/%m/%Y %H:%i:%s' )) AS DH_Previsao
 					,IF(ISNULL(T.DH_Baixa), '-', DATE_FORMAT( T.DH_Baixa , '%d/%m/%Y %H:%i:%s' )) AS DH_Baixa
 					,CASE

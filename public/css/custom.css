@@ -1,7 +1,11 @@
 .form-signin {
     margin: 0 auto;
-    max-width: 330px;
+    max-width: 600px;
     padding: 15px;
+}
+.form-signin .form-group {
+    margin: 0 auto;
+	max-width: 330px;
 }
 .btn-lg,
 .btn-sm{
@@ -16,7 +20,7 @@
 /*
 /* A partir daqui s�o atribui��es gerais para o Bootstrap
 */
-.linha_botoes{
+.linha_botoes {
 	margin-top: 10px;
 }
 .linha_botoes .botao_submit{
@@ -30,4 +34,5 @@ label.error{
 }
 h2.form-signin-heading{
 	margin-bottom: 24px;
+	text-align: center;
 }

@@ -18,11 +18,14 @@
 		<textarea id="descricaoTicket" name="descricaoTicket" type="text"
 			value="" class="form-control" placeholder="Descrição do Incidente"></textarea>
 	</div>
-	<div class="linha_botoes">
-		<button class="btn btn-sm btn btn-success btn-block botao_submit">
-			Enviar</button>
-		<button class="btn btn-sm btn btn-danger btn-block botao_reset"
-			type="reset">Limpar</button>
+	<div class="form-group">
+		<div class="linha_botoes">
+			<button class="btn btn-sm btn btn-success btn-block botao_submit">
+				Enviar</button>
+			<button class="btn btn-sm btn btn-danger btn-block botao_reset"
+				type="reset">Limpar</button>
+
+		</div>
 	</div>
 </form>
 </div>

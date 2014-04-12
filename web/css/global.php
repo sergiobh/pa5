@@ -52,7 +52,7 @@ h2{
 .middle .container{
     margin: 0 auto;
     min-height: 500px;
-    width: 800px;
+    width: 1024px;
 }
 .titulo_page{
 	text-align: center;
@@ -368,7 +368,7 @@ th.header {
 	height: 40px;
 }
 .chamados_listar .linha_botoes .btn{
-	margin-right: 2px;
+	margin-right: 30px;
 }
 
 .ticketxml_importar .RespostaXml{
@@ -377,4 +377,9 @@ th.header {
     padding: 15px;
     font-weight: bold;
     color: #FF0000;
+}
+
+
+.chamados_historicos{
+	margin-bottom: 40px;
 }
