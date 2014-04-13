@@ -1,5 +1,5 @@
 <div class='chamado_anexo'>
-	<form class="form-signin" role="form"
+	<form class="form-signin_upload" role="form"
 		action="<?php echo BASE_URL."/chamado/editar/".$TicketId;?>"
 		method="post" enctype="multipart/form-data">
 		<h2 class="form-signin-heading">Anexar Documentos ao Chamado</h2>
@@ -13,10 +13,27 @@
 			</div>
 		</div>
 	</form>
-	<div class='RespostaXml'><?php echo (isset($RespostaXml)) ? $RespostaXml : '';?></div>
+	<form class="form-signin" role="form">
+		<div class="form-group">
+			<div class='RespostaUpload' id='RespostaUpload'><?php echo (isset($RespostaMsg)) ? $RespostaMsg : '';?></div>
+		</div>
+	</form>
 </div>
 <script>
 $(document).ready(function(){
 	$(":file").filestyle({classButton: "btn btn-primary", 'buttonText': 'Selecione...'});
+
+	<?php if(isset($RespostaMsg)){ ?>	
+		$('html, body').animate({
+	        scrollTop: $("#RespostaUpload").offset().top
+	    }, 2000);
+		
+		setTimeout(
+				function(){
+					$("#RespostaUpload").html("");
+				},
+				5000
+			);
+	<?php } ?>
 });
 </script>

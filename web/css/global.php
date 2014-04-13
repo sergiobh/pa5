@@ -383,3 +383,8 @@ th.header {
 .chamados_historicos{
 	margin-bottom: 40px;
 }
+
+.RespostaUpload{
+	font-weight: bold;
+	color: #FF0000;	
+}

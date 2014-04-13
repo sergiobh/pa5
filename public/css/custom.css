@@ -1,9 +1,11 @@
-.form-signin {
+.form-signin,
+.form-signin_upload {
     margin: 0 auto;
     max-width: 600px;
     padding: 15px;
 }
-.form-signin .form-group {
+.form-signin .form-group, 
+.form-signin_upload  .form-group{
     margin: 0 auto;
 	max-width: 330px;
 }
