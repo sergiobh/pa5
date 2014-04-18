@@ -246,10 +246,10 @@ class TicketMod extends CI_Model {
 						OR SF.SetorFuncionarioId IS NOT NULL
 					)
 				";
-		
+
 		$query = $this->db->query ( $sql );
 		
-		$dados = $query->row ();
+		$dados = $query->row();
 		
 		if (is_object ( $dados )) {
 			

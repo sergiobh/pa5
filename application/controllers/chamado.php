@@ -131,7 +131,6 @@ class Chamado extends CI_Controller {
 	}
 	public function salvarEdicao() {
 		$TicketId = $this->input->post ( 'TicketId' );
-		$Descricao = $this->input->post ( 'Descricao' );
 		$PrioridadeId = $this->input->post ( 'PrioridadeId' );
 		$Resultado = $this->input->post ( 'Resultado' );
 		$StatusId = $this->input->post ( 'StatusId' );
@@ -139,7 +138,6 @@ class Chamado extends CI_Controller {
 		
 		$this->load->model ( "TicketMod" );
 		$this->TicketMod->setTicketId ( $TicketId );
-		$this->TicketMod->setDescricao ( $Descricao );
 		$this->TicketMod->setPrioridadeId ( $PrioridadeId );
 		$this->TicketMod->setResultado ( $Resultado );
 		$this->TicketMod->setStatusId ( $StatusId );
@@ -160,9 +158,6 @@ class Chamado extends CI_Controller {
 		$Dados ["success"] = true;
 		
 		echo json_encode ( $Dados );
-	}
-	public function salvarObservacao(){
-		
 	}
 }
 ?>

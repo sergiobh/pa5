@@ -15,25 +15,16 @@
 </div>
 <script type="text/javascript">
 $( document ).ready( function( ) {
-	var validator = $( ".form-signin" ).validate( {
+	var validator = $( ".form_observacao" ).validate( {
 		debug: true,
-		//onsubmit: false,
 		rules: ( "add", {
-			descricaoTicket: {
+			Descricao: {
 				required: true,
 				minlength: 5
 			}
 		}),
 		messages: {
-			selectCategoriaCadTicket: {
-				required: "Campo obrigatório"
-
-			},
-			tipoSolicitacao: {
-				required: "Campo obrigatório"
-
-			},
-			descricaoTicket: {
+			Descricao: {
 				required: "Campo obrigatório",
 				minlength: "Digite pelo menos 5 caracteres"
 
@@ -47,18 +38,12 @@ $( document ).ready( function( ) {
 		}
 
 		return false;
-	} );
-
-
-	/*function bloqueiaDescricao(){
-		$("#Descricao").attr("readonly",true);
-	}*/
-	
+	} );	
 });
 
 function submerterFormObservacao(){
 	// Executa o POST usando metodo AJAX e retorando Json
-	var Url				= '<?php echo BASE_URL;?>/chamado/salvarObservacao';
+	var Url				= '<?php echo BASE_URL;?>/historico/salvarObservacao';
 
 	var Descricao = $("#Descricao").val();
 	
@@ -75,12 +60,14 @@ function submerterFormObservacao(){
 			if(retorno.success){
 				$.blockUI({ message: '<h3>'+retorno.msg+'</h3>' });
 
+				limparCamposObservacao();
+				
 				// Efetuar o redirecionamento
 				setTimeout(
 					function(){
-						window.location = "<?php echo BASE_URL;?>/chamado/editar/"+Ticket.TicketId
+						listarHistorico();
 					},
-					4000
+					2000
 				);
 			}
 			else{
@@ -89,7 +76,7 @@ function submerterFormObservacao(){
 						function(){
 							$.unblockUI();
 						},
-						3000
+						2000
 					);
 			}
 		},
@@ -99,5 +86,9 @@ function submerterFormObservacao(){
 	});
 
 	return false;
+}
+
+function limparCamposObservacao(){
+	$("#Descricao").val("");
 }
 </script>

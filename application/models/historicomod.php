@@ -102,6 +102,8 @@ class HistoricoMod extends CI_Model {
 					LEFT JOIN Funcionario FA ON FA.FuncionarioId = TH.UsuarioId
 				WHERE
 					TH.TicketId = ".$this->TicketId."
+				ORDER BY
+					TH.HistoricoId
 				";
 
 		$query = $this->db->query ( $sql );
