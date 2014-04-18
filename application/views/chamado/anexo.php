@@ -35,5 +35,11 @@ $(document).ready(function(){
 				5000
 			);
 	<?php } ?>
+
+	$(".form-signin_upload").submit(function(){
+		if($(".input-large").val() == ""){
+			return false;
+		}	
+	});
 });
 </script>

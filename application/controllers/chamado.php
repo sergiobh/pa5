@@ -92,7 +92,7 @@ class Chamado extends CI_Controller {
 				return $Resposta;
 			}
 			
-			$HistoricoTipoId = ($TicketObj->Ticket == 'Solicitante') ? 3 : 4; 
+			$HistoricoTipoId = ($TicketObj->Ticket->Permissao == 'Solicitante') ? 3 : 4; 
 
 			/*
 			 * Upload do arquivo
@@ -160,6 +160,9 @@ class Chamado extends CI_Controller {
 		$Dados ["success"] = true;
 		
 		echo json_encode ( $Dados );
+	}
+	public function salvarObservacao(){
+		
 	}
 }
 ?>

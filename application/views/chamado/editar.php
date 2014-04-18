@@ -1,6 +1,4 @@
 <div class='chamado_editar'>
-	<?php $this->load->view ( 'chamado/historico' );?>
-
 	<form class="form-signin" role="form">
 		<h2 class="form-signin-heading">Edição do Chamado</h2>
 		<div class="form-group">
@@ -17,10 +15,6 @@
 			<label>Tipo de solicitação:</label> <select id="TipoSolicitacaoId"
 				name="TipoSolicitacaoId" class="form-control">
 			</select>
-		</div>
-		<div class="form-group">
-			<label>Acrescentar Observação:</label>
-			<textarea id="Descricao" name="Descricao" class="form-control"></textarea>
 		</div>
 		<div class="form-group">
 			<label>Prioridade:</label><select id="PrioridadeId"
@@ -59,8 +53,11 @@
 		</div>
 	</form>
 
+	<?php $this->load->view ( 'chamado/historico' );?>
+
+	<?php $this->load->view ( 'chamado/observacao' );?>
+
 	<?php $this->load->view ( 'chamado/anexo' );?>
-	
 </div>
 <script type="text/javascript">
 var CategoriaSelecione = '<option value="">Categoria: (Selecione)</option>';
@@ -85,10 +82,6 @@ $( document ).ready( function( ) {
 			tipoSolicitacao: {
 				required: true
 			},
-			descricaoTicket: {
-				required: true,
-				minlength: 5
-			}
 		} ),
 		messages: {
 			selectCategoriaCadTicket: {
@@ -97,11 +90,6 @@ $( document ).ready( function( ) {
 			},
 			tipoSolicitacao: {
 				required: "Campo obrigatório"
-
-			},
-			descricaoTicket: {
-				required: "Campo obrigatório",
-				minlength: "Digite pelo menos 5 caracteres"
 
 			}
 		}
@@ -136,13 +124,12 @@ function submerterForm( ) {
 	// Declaração de variaveis
 	var StatusId = $("#StatusId option:selected").val();
 	var TipoSolicitacaoId = $("#TipoSolicitacaoId option:selected").val();
-	var Descricao = $("#Descricao").val();
 	var PrioridadeId = $("#PrioridadeId option:selected").val();
 	
 	// Executa o POST usando metodo AJAX e retorando Json
 	var Url				= '<?php echo BASE_URL;?>/chamado/salvarEdicao';
 
-	var data 			= 'TicketId='+Ticket.TicketId+'&StatusId='+StatusId+'&TipoSolicitacaoId='+TipoSolicitacaoId+'&Descricao='+Descricao+'&PrioridadeId='+PrioridadeId;
+	var data 			= 'TicketId='+Ticket.TicketId+'&StatusId='+StatusId+'&TipoSolicitacaoId='+TipoSolicitacaoId+'&PrioridadeId='+PrioridadeId;
 
 	$.blockUI({ message: '<h2>Salvando os dados...</h2>' });
 
@@ -375,7 +362,7 @@ function buscaTicket(TicketId){
 			}
 		},
 		error: function(){
-			exibeErroRecarregarPagina;
+			exibeErroRecarregarPagina();
 		}
 	});
 }
@@ -402,17 +389,14 @@ function executaPermissoes(){
 	/* Permissoes
 	*/
 	if(Ticket.Permissao == 'Chefe'){
-		bloqueiaDescricao();
+
 	}
 	else if(Ticket.Permissao == 'Atendente' || Ticket.Permissao == 'Setor'){
-		bloqueiaDescricao();
+
 	}
 	else if(Ticket.Permissao == 'Solicitante'){
 		
 	}
-}
-function bloqueiaDescricao(){
-	$("#Descricao").attr("readonly",true);
 }
 function populaTicket(){
 	$('#CategoriaId option[value='+Ticket.CategoriaId+']').attr('selected','selected');
@@ -420,7 +404,6 @@ function populaTicket(){
 	$("#Solicitante").val(Ticket.Solicitente);
 	$("#Atendente").val(Ticket.Atendente);
 	$("#StatusId").val(Ticket.StatusId);
-	$("#Descricao").html(Ticket.Descricao);
 	$('#PrioridadeId option[value='+Ticket.PrioridadeId+']').attr('selected','selected');
 	$("#SetorId").val(Ticket.SetorId);
 	$("#DataAceite").val(Ticket.DH_Aceite);
