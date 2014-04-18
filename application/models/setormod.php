@@ -17,13 +17,13 @@ class SetorMod extends CI_Model {
 		$this->SetorId = $setorId;
 		return true;
 	}
-	public function getSetorId(){
+	public function getSetorId() {
 		return $this->SetorId;
 	}
 	public function setNome($nome) {
 		if (strlen ( $nome ) < 1) {
 			$this->erroBreak = true;
-			$this->erroMsg = "Campo Origem inválido!";
+			$this->erroMsg = "Campo Setor/Origem inválido!";
 			return false;
 		}
 		
@@ -34,13 +34,19 @@ class SetorMod extends CI_Model {
 	public function getNome() {
 		return $this->Nome;
 	}
+	public function getFuncionarioId() {
+		return $this->FuncionarioId;
+	}
+	public function setFuncionarioId($FuncionarioId) {
+		$this->FuncionarioId = $FuncionarioId;
+	}
 	public function getErroMsg() {
 		return $this->erroMsg;
 	}
 	public function getSetor() {
 		if (strlen ( $this->Nome ) < 1) {
 			$this->erroBreak = true;
-			$this->erroMsg = "Campo Origem não preenchido!";
+			$this->erroMsg = "Campo Setor/Origem não preenchido!";
 			return false;
 		}
 		
@@ -68,6 +74,70 @@ class SetorMod extends CI_Model {
 			$this->erroMsg = "Nenhum registro encontrado para o Setor!";
 			return false;
 		}
+	}
+	public function setSetor() {
+		if ($this->getSetor ()) {
+			$retorno ['success'] = false;
+			$retorno ['msg'] = 'Setor já cadastrado!';
+			
+			return $retorno;
+		}
+		
+		$sql = "
+				INSERT INTO
+					setor(
+						Nome
+						,FuncionarioId
+					)
+				VALUES(
+					'" . $this->Nome . "'
+					," . $this->FuncionarioId . "
+				)
+				";
+		
+		$this->db->query ( $sql );
+		
+		if ($this->db->affected_rows () > 0) {
+			
+			$this->setSetorId ( $this->db->insert_id () );
+			
+			$retorno ['success'] = true;
+			$retorno ['msg'] = 'Setor cadastrado com sucesso!';
+		} else {
+			$retorno ['success'] = false;
+			$retorno ['msg'] = "Favor recarregar a página!";
+		}
+		
+		return $retorno;
+	}
+	
+	public function getSetores(){
+		$sql = '
+				SELECT
+					S.SetorId
+					,S.Nome
+					,F.Nome AS "Gestor"
+				FROM
+					setor S
+					INNER JOIN funcionario F ON F.FuncionarioId = S.FuncionarioId
+				ORDER BY
+					S.Nome
+				';
+		
+		$query = $this->db->query ( $sql );
+		
+		$dados = $query->result ();
+		
+		if (count ( $dados ) > 0) {
+			$retorno['success'] = true;
+			$retorno['Setores'] = $dados;
+		}
+		else{
+			$retorno['success'] = false;
+			$retorno['Setores'] = false;
+		}
+
+		return $retorno;
 	}
 }
 ?>

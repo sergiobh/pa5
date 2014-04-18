@@ -133,4 +133,12 @@ class Funcionario extends CI_Controller {
 		
 		echo json_encode ( $this->FuncionarioMod->setEdicao () );
 	}
+	public function getFuncionarios() {
+		$this->load->model ( "FuncionarioMod" );
+
+		$retorno['success'] = true;
+		$retorno['Funcionarios'] = $this->FuncionarioMod->Listar ();
+		
+		echo json_encode ( $retorno );
+	}
 }

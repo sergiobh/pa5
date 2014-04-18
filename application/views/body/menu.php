@@ -1,5 +1,7 @@
 <?php
 $Tabindex = 1;
+
+$this->load->library ( "PermissaoLib" );
 ?>
 <div class='menu_header'>
 	<div class='menu_content'>
@@ -67,12 +69,19 @@ $Tabindex = 1;
 			<div class='submenu menu<?php echo $Tabindex;?>'>
 				<div class='submenu_containt'>
 					<a href="<?php echo BASE_URL;?>/chamado/cadastrar">
-						<div class='submenu_item'>Cadastrar Tickets</div>
+						<div class='submenu_item submenu_primeiro'>Cadastrar Tickets</div>
 					</a> <a href="<?php echo BASE_URL;?>/chamado/listar">
-						<div class='submenu_item submenu_primeiro'>Listar Tickets</div>
+						<div class='submenu_item'>Listar Tickets</div>
 					</a> <a href="<?php echo BASE_URL;?>/ticket_xml/importar">
-						<div class='submenu_item submenu_primeiro'>Importar XML</div>
+						<div class='submenu_item'>Importar XML</div>
 					</a>
+					<?php if(PermissaoLib::checkAdmin()){ ?>
+						<a href="<?php echo BASE_URL;?>/setor/cadastrar">
+						<div class='submenu_item'>Cadastrar Setores</div>
+					</a><a href="<?php echo BASE_URL;?>/setor/listar">
+						<div class='submenu_item'>Listar Setores</div>
+					</a>
+					<?php } ?>
 				</div>
 			</div>
 		</div>

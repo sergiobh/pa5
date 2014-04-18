@@ -5,9 +5,7 @@
 			name="selectCategoriaCadTicket" autofocus class="form-control">
 		</select>
 	</div>
-
 	<div class="form-group">
-
 		<label>Tipo de solicitação:</label> <select id="tipoSolicitacao"
 			name="tipoSolicitacao" value="" class="form-control">
 
