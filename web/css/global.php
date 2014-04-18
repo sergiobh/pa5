@@ -24,7 +24,7 @@ h2{
 }
 .middle .header_page .logo{
 	background: url('<?php echo BASE_IMG;?>/web/imagens/site/logo.png') no-repeat;
-	width: 260px;
+	width: 321px;
 	height: 110px;
 }
 .middle .logout{
