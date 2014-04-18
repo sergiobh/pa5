@@ -4,6 +4,10 @@
 		<h3 class="glyphicon glyphicon-th-large">FUNCIONÁRIO</h3>
 		<BR /> <BR />
 		<div class="form-group">
+			<input type="hidden" id="inputFuncId"
+				name="inputFuncId" class="form-control" value="<?php echo $FuncionarioId;?>" />
+		</div>
+		<div class="form-group">
 			<label>Nome:</label> <input type="text" id="inputNomeFunc" autofocus
 				name="inputNomeFunc" class="form-control" titulo="Nome"
 				placeholder="Nome" />
@@ -16,7 +20,7 @@
 		<div class="form-group">
 			<label>Senha:</label> <input type="password" maxlength="8"
 				id="inputsenhaFunc" name="inputsenhaFunc" class="form-control"
-				titulo="Senha" placeholder="Senha" /><br />
+				titulo="Senha" placeholder="Alterar senha" /><br />
 		</div>
 		<div class="form-group">
 			<div class="linha_botoes">
@@ -30,6 +34,8 @@
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
+	getFuncionario();
+
 	var validator = $(".form-signin_func").validate({
 		debug: true,
 		rules: ( "add", {
@@ -44,7 +50,6 @@ $(document).ready(function(){
 				maxlength: 11,
 			},
 			inputsenhaFunc: {
-				required: true,
 				minlength: 6,
 				maxlength: 8
 			}
@@ -68,7 +73,6 @@ $(document).ready(function(){
 	            maxlength: "Digite pelo menos 11 caracteres",
 	        },
 	        inputsenhaFunc:{
-	            required: "Campo obrigatório",
 	            minlength: "Digite pelo menos 6 caracteres",
 	            maxlength: "Digite no máximo 8 caracteres"
 	        }
@@ -86,14 +90,15 @@ $(document).ready(function(){
 
 function submerterFormFunc() {
 	// Declaração de variaveis
+	var FuncionarioId 	= $("#inputFuncId").val();
 	var Nome 	= $("#inputNomeFunc").val();
 	var Cpf		= $("#inputCpfFunc").val();
 	var Senha = $("#inputsenhaFunc").val();
 	
 	// Executa o POST usando metodo AJAX e retorando Json
-	var Url				= '<?php echo BASE_URL;?>/funcionario/salvarCadastro';
+	var Url				= '<?php echo BASE_URL;?>/funcionario/salvarEdicao';
 
-	var data 			= 'Nome='+Nome+'&Cpf='+Cpf+'&Senha='+Senha;
+	var data 			= 'FuncionarioId='+FuncionarioId+'&Nome='+Nome+'&Cpf='+Cpf+'&Senha='+Senha;
 
 	$.blockUI({ message: '<h2>Salvando os dados...</h2>' });
 
@@ -124,5 +129,67 @@ function submerterFormFunc() {
 			$.unblockUI();
 		}
 	});
+}
+
+function getFuncionario(){
+	var funcionarioId = $("#inputFuncId").val();
+
+	// Executa o POST usando metodo AJAX e retorando Json
+	var Url				= '<?php echo BASE_URL;?>/funcionario/getFuncionario';
+
+	var data 			= 'FuncionarioId='+funcionarioId;
+
+	$.blockUI({ message: '<h3>Carregando os dados...</h3>' });
+
+	$.ajax({
+		type: "POST",
+		url: Url,
+		data: data,
+		dataType: 'json',
+		success: function(retorno){
+			if(retorno.success){
+				if(retorno.Funcionario){
+					carregaDados(retorno.Funcionario);
+					$.unblockUI();
+				}
+				else{
+					$.blockUI({ message: '<h3>Funcionário não encontrado!</h3>' });
+					setTimeout(
+						function(){
+							$.unblockUI();
+						},
+						3000
+					);
+				}
+			}
+			else{
+				$.blockUI({ message: '<h3>'+retorno.msg+'</h3>' });
+				// Efetuar o redirecionamento
+				setTimeout(
+					function(){
+						window.location = "<?php echo BASE_URL;?>/funcionario/listar"
+					},
+					4000
+				);
+			}
+		},
+		error: function(){
+			$.blockUI({ message: '<h3>Ocorreu um erro no servidor. Tentar novamente!</h3>' });
+
+			// Efetuar o redirecionamento
+			setTimeout(
+				function(){
+					window.location = "<?php echo BASE_URL;?>/funcionario/listar"
+				},
+				3000
+			);
+		}
+	});
+}
+
+function carregaDados(Funcionario){
+	$("#inputNomeFunc").val(Funcionario.Nome);
+	$("#inputCpfFunc").val(Funcionario.Cpf);
+	$("#inputsenhaFunc").val();
 }
 </script>
