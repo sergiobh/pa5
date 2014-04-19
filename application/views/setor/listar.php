@@ -59,7 +59,7 @@ function populaGridSetores(Setores){
 			html += carregaTD(Setores[Reg].SetorId);
 			html += carregaTD(Setores[Reg].Nome);
 			html += carregaTD(Setores[Reg].Gestor);
-			html += montaLinks(Setores[Reg].FuncionarioId);		
+			html += montaLinks(Setores[Reg].SetorId);		
 		html +=fechaTR();
 	}
 

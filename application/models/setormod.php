@@ -5,6 +5,7 @@ class SetorMod extends CI_Model {
 	private $FuncionarioId;
 	private $erroBreak;
 	private $erroMsg;
+	private $TipoRetorno;
 	public function SetorMod() {
 		$this->erroBreak = false;
 	}
@@ -43,32 +44,55 @@ class SetorMod extends CI_Model {
 	public function getErroMsg() {
 		return $this->erroMsg;
 	}
-	public function getSetor() {
-		if (strlen ( $this->Nome ) < 1) {
+	public function setTipoRetorno($TipoRetorno) {
+		$this->TipoRetorno = $TipoRetorno;
+	}
+	public function getSetor($checkExistente = false) {
+		$where = array ();
+		
+		if ($this->SetorId != '') {
+			$condicao = ($checkExistente) ? ' != ' : ' = ';
+			$where [] = "S.SetorId " . $condicao . $this->SetorId;
+		}
+		
+		if ($this->Nome != '') {
+			$where [] = "S.nome = '" . $this->Nome . "'";
+		}
+		
+		if (count ( $where ) == 0) {
 			$this->erroBreak = true;
 			$this->erroMsg = "Campo Setor/Origem não preenchido!";
 			return false;
 		}
 		
+		$sql_where = implode ( " AND ", $where );
+		
 		$sql = "
                     SELECT
-                        S.*
+                        S.SetorId
+                        ,S.Nome
+                        ,S.FuncionarioId
                     FROM
                         setor S
                     WHERE
-                        S.nome = '" . $this->Nome . "'
+                        $sql_where
                     ";
-		
+
 		$query = $this->db->query ( $sql );
 		
-		$dados = $query->result ();
+		$dados = $query->row ();
 		
-		if (count ( $dados ) > 0) {
-			$this->SetorId = $dados [0]->SetorId;
-			$this->Nome = $dados [0]->Nome;
-			$this->FuncionarioId = $dados [0]->FuncionarioId;
+		if (is_object ( $dados )) {
 			
-			return true;
+			if ($this->TipoRetorno == 'Obj') {
+				return $dados;
+			} else {
+				$this->SetorId = $dados->SetorId;
+				$this->Nome = $dados->Nome;
+				$this->FuncionarioId = $dados->FuncionarioId;
+				
+				return true;
+			}
 		} else {
 			$this->erroBreak = true;
 			$this->erroMsg = "Nenhum registro encontrado para o Setor!";
@@ -110,8 +134,7 @@ class SetorMod extends CI_Model {
 		
 		return $retorno;
 	}
-	
-	public function getSetores(){
+	public function getSetores() {
 		$sql = '
 				SELECT
 					S.SetorId
@@ -129,14 +152,43 @@ class SetorMod extends CI_Model {
 		$dados = $query->result ();
 		
 		if (count ( $dados ) > 0) {
-			$retorno['success'] = true;
-			$retorno['Setores'] = $dados;
+			$retorno ['success'] = true;
+			$retorno ['Setores'] = $dados;
+		} else {
+			$retorno ['success'] = false;
+			$retorno ['Setores'] = false;
 		}
-		else{
-			$retorno['success'] = false;
-			$retorno['Setores'] = false;
+		
+		return $retorno;
+	}
+	public function setEdicao() {
+		if ($this->getSetor ( true )) {
+			$retorno ['success'] = false;
+			$retorno ['msg'] = "Setor já cadastrado!";
+			
+			return $retorno;
 		}
-
+		
+		$sql = "
+				UPDATE
+					setor
+				SET
+					Nome = '" . $this->Nome . "'
+					,FuncionarioId = " . $this->FuncionarioId . "
+				WHERE
+					SetorId = " . $this->SetorId . "
+				";
+		
+		$this->db->query ( $sql );
+		
+		if ($this->db->affected_rows () > 0) {
+			$retorno ['success'] = true;
+			$retorno ['msg'] = "Dados salvos com sucesso!";
+		} else {
+			$retorno ['success'] = true;
+			$retorno ['msg'] = "Nenhum campo foi alterado!";
+		}
+		
 		return $retorno;
 	}
 }

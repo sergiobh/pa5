@@ -1,22 +1,26 @@
 <?php
 class TipoTicketMod extends CI_Model {
 	private $TipoId;
+	private $Nivel;
 	private $Nome;
 	private $CategoriaId;
 	private $SetorId;
-	private $PriodidadeId;
+	private $PrioridadeId;
 	private $SLA;
 	private $erroBreak;
 	private $erroMsg;
-	public function TipoTicket() {
+	public function TipoTicketMod() {
 		$this->erroBreak = false;
+		
+		// Nivel padrao se não for alterado!
+		$this->Nivel = 1;
 	}
-	private function populaTipoTicket($TipoId, $Nome, $CategoriaId, $SetorId, $PriodidadeId, $SLA) {
+	private function populaTipoTicket($TipoId, $Nome, $CategoriaId, $SetorId, $PrioridadeId, $SLA) {
 		$this->TipoId = $TipoId;
 		$this->Nome = $Nome;
 		$this->CategoriaId = $CategoriaId;
 		$this->SetorId = $SetorId;
-		$this->PriodidadeId = $PriodidadeId;
+		$this->PrioridadeId = $PrioridadeId;
 		$this->SLA = $SLA;
 	}
 	public function getTipoId() {
@@ -24,6 +28,12 @@ class TipoTicketMod extends CI_Model {
 	}
 	public function setTipoId($TipoId) {
 		$this->TipoId = $TipoId;
+	}
+	public function getNivel() {
+		return $this->Nivel;
+	}
+	public function setNivel($Nivel) {
+		$this->Nivel = $Nivel;
 	}
 	public function getNome() {
 		return $this->Nome;
@@ -44,7 +54,7 @@ class TipoTicketMod extends CI_Model {
 		$this->SetorId = $SetorId;
 	}
 	public function getPrioridadeId() {
-		return $this->PriodidadeId;
+		return $this->PrioridadeId;
 	}
 	public function setPrioridadeId($PrioridadeId) {
 		$this->PrioridadeId = $PrioridadeId;
@@ -59,23 +69,29 @@ class TipoTicketMod extends CI_Model {
 		$select = array ();
 		$order = array ();
 		
+		$select [] = "TT.TipoId";
+		$select [] = "TT.Nome";
+		
+		$where [] = "TTN.Nivel = " . $this->Nivel;
+		
 		if ($this->TipoId != '') {
-			$where [] = "tipoid = " . $this->TipoId;
-		}
-		if ($this->TipoId != '') {
-			$where [] = "tipoid = " . $this->TipoId;
+			$where [] = "TT.TipoId = " . $this->TipoId;
 		}
 		if ($this->Nome != '') {
-			$where [] = "nome = '" . $this->Nome . "'";
+			$where [] = "TT.Nome = '" . $this->Nome . "'";
 		}
 		if ($this->SetorId != '') {
-			$where [] = "setorid = " . $this->SetorId;
+			$where [] = "TTN.SetorId = " . $this->SetorId;
 		}
 		if ($this->CategoriaId != '') {
-			$select [] = "tipoid";
-			$select [] = "nome";
-			$where [] = "categoriaId = " . $this->CategoriaId;
-			$order [] = "nome";
+			$where [] = "TT.CategoriaId = " . $this->CategoriaId;
+			$order [] = "TT.Nome";
+		}
+		else{
+			$select [] = "TT.PrioridadeId";
+			$select [] = "TT.SLA";
+			$select [] = "TTN.SetorId";
+			$select [] = "TTN.Nivel";
 		}
 		
 		if ($where === '') {
@@ -83,9 +99,9 @@ class TipoTicketMod extends CI_Model {
 			$this->erroMsg = "Nenhum campo filtrado para Tipo ticket";
 			return false;
 		}
+
 		
 		$sql_select = implode ( ", ", $select );
-		$sql_select = ($sql_select != '') ? $sql_select : '*';
 		
 		$sql_where = implode ( " AND ", $where );
 		
@@ -93,13 +109,14 @@ class TipoTicketMod extends CI_Model {
 		$sql_order = ($sql_order != '') ? " ORDER BY " . $sql_order : '';
 		
 		$sql = "
-				SELECT
+				SELECT					
 					" . $sql_select . "
 				FROM 
-					ticket_tipo
+					ticket_tipo TT
+					INNER JOIN ticket_tiponivel TTN ON TTN.TipoId = TT.TipoId
 				WHERE
 					" . $sql_where . $sql_order;
-		
+
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();
@@ -107,7 +124,7 @@ class TipoTicketMod extends CI_Model {
 		
 		if ($QtdRows == 1 && $ReturnObject) {
 			$dado = $dados [0];
-			$this->populaTipoTicket ( $dado->TipoId, $dado->Nome, $dado->CategoriaId, $dado->SetorId, $dado->PriodidadeId, $dado->SLA );
+			$this->populaTipoTicket ( $dado->TipoId, $dado->Nome, $dado->CategoriaId, $dado->SetorId, $dado->PrioridadeId, $dado->SLA );
 			
 			return true;
 		} else if ($QtdRows > 0) {
@@ -116,29 +133,25 @@ class TipoTicketMod extends CI_Model {
 			return false;
 		}
 	}
-	public function buscaSla(){
+	public function buscaSla() {
 		$sql = "
 				SELECT
 					Sla
 				FROM
 					ticket_tipo
 				WHERE
-					TipoId = ".$this->TipoId."
+					TipoId = " . $this->TipoId . "
 				";
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();
 		
-		if(count ( $dados )){
-			return $dados[0]->Sla;
-		}
-		else{
-			echo 'Query para buscar SLA falhou!!!';exit;
+		if (count ( $dados )) {
+			return $dados [0]->Sla;
+		} else {
+			echo 'Query para buscar SLA falhou!!!';
+			exit ();
 		}
 	}
-	
-	/*
-	 * public function setTipoTicket(){ $sql = " INSERT INTO ticket_tipo( ) VALUES( ) "; }
-	 */
 }
 ?>

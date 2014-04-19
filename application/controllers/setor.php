@@ -48,19 +48,14 @@ class Setor extends CI_Controller {
 	public function getEditar() {
 		$this->CheckLogado ();
 		
-		$SetorId = $this->uri->segment ( 3 );
+		$SetorId = $this->input->get ( "SetorId" );
 		
 		$this->load->model ( "SetorMod" );
-		$this->SetorMod->SetorId = $SetorId;
-		$Setor = $this->SetorMod->getSetor ();
+		$this->SetorMod->setSetorId ( $SetorId );
+		$this->SetorMod->setTipoRetorno ( 'Obj' );
 		
-		$Status = (isset ( $Setor->Status )) ? $Setor->Status : 0;
-		
-		$Status = $this->SetorMod->getStatusAll ( $Status );
-		
-		$Dados ['Setor'] = $Setor;
-		$Dados ['Status'] = $Status;
-		
+		$Dados ['Setor'] = $this->SetorMod->getSetor ();
+		$Dados ['msg'] = $this->SetorMod->getErroMsg ();
 		$Dados ['success'] = true;
 		
 		echo json_encode ( $Dados );
@@ -69,16 +64,15 @@ class Setor extends CI_Controller {
 		$this->CheckLogado ();
 		
 		$SetorId = $this->input->post ( "SetorId" );
-		$QuartoId = $this->input->post ( "QuartoId" );
-		$Identificacao = $this->input->post ( "Identificacao" );
-		$Status = $this->input->post ( "Status" );
+		$Nome = $this->input->post ( "Nome" );
+		$GestorId = $this->input->post ( "GestorId" );
 		
 		$this->load->model ( "SetorMod" );
-		$this->SetorMod->SetorId = $SetorId;
-		$this->SetorMod->QuartoId = $QuartoId;
-		$this->SetorMod->Identificacao = $Identificacao;
-		$this->SetorMod->Status = $Status;
-		$this->SetorMod->setEdicao ();
+		$this->SetorMod->setSetorId ( $SetorId );
+		$this->SetorMod->setNome ( $Nome );
+		$this->SetorMod->setFuncionarioId ( $GestorId );
+		
+		echo json_encode ( $this->SetorMod->setEdicao () );
 	}
 	public function montaGrid() {
 		$this->CheckLogado ();

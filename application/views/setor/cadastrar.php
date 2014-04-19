@@ -5,8 +5,7 @@
 		<BR /> <BR />
 		<div class="form-group">
 			<label>Nome:</label><input type="text" id="inputNomeSetor"
-				name="inputNomeSetor" value="" class="form-control" preenchido="N"
-				requerido="requerido" titulo="Nome" placeholder="Nome"
+				name="inputNomeSetor" class="form-control" placeholder="Nome"
 				maxlength="40" />
 		</div>
 		<div class="form-group">
@@ -36,7 +35,7 @@ $(document).ready(function(){
 		rules: ( "add", {
 			inputNomeSetor: {
 				required: true,
-				minlength: 3,
+				minlength: 2,
 				maxlength: 40
 			},
 			selectGestorSetor: {
