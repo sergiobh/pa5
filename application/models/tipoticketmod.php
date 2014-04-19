@@ -9,11 +9,14 @@ class TipoTicketMod extends CI_Model {
 	private $SLA;
 	private $erroBreak;
 	private $erroMsg;
+	private $ReturnObject;
 	public function TipoTicketMod() {
 		$this->erroBreak = false;
 		
 		// Nivel padrao se não for alterado!
 		$this->Nivel = 1;
+		
+		$this->ReturnObject = true;
 	}
 	private function populaTipoTicket($TipoId, $Nome, $CategoriaId, $SetorId, $PrioridadeId, $SLA) {
 		$this->TipoId = $TipoId;
@@ -65,7 +68,10 @@ class TipoTicketMod extends CI_Model {
 	public function setSLA($SLA) {
 		$this->SLA = $SLA;
 	}
-	public function getTipoTicket($ReturnObject = true) {
+	public function setReturnObject($ReturnObject){
+		$this->ReturnObject = $ReturnObject;
+	}
+	public function getTipoTicket() {
 		$select = array ();
 		$order = array ();
 		
@@ -83,11 +89,13 @@ class TipoTicketMod extends CI_Model {
 		if ($this->SetorId != '') {
 			$where [] = "TTN.SetorId = " . $this->SetorId;
 		}
+
 		if ($this->CategoriaId != '') {
 			$where [] = "TT.CategoriaId = " . $this->CategoriaId;
 			$order [] = "TT.Nome";
 		}
 		else{
+			$select [] = "TT.CategoriaId";
 			$select [] = "TT.PrioridadeId";
 			$select [] = "TT.SLA";
 			$select [] = "TTN.SetorId";
@@ -99,7 +107,6 @@ class TipoTicketMod extends CI_Model {
 			$this->erroMsg = "Nenhum campo filtrado para Tipo ticket";
 			return false;
 		}
-
 		
 		$sql_select = implode ( ", ", $select );
 		
@@ -122,7 +129,7 @@ class TipoTicketMod extends CI_Model {
 		$dados = $query->result ();
 		$QtdRows = count ( $dados );
 		
-		if ($QtdRows == 1 && $ReturnObject) {
+		if ($QtdRows == 1 && $this->ReturnObject) {
 			$dado = $dados [0];
 			$this->populaTipoTicket ( $dado->TipoId, $dado->Nome, $dado->CategoriaId, $dado->SetorId, $dado->PrioridadeId, $dado->SLA );
 			

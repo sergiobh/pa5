@@ -2,6 +2,7 @@
 class StatusTicketMod extends CI_Model {
 	private $StatusId;
 	private $Permissao;
+	private $Nivel;
 	private $Nome;
 	private $TipoBotao;
 	public function getStatusId() {
@@ -24,6 +25,12 @@ class StatusTicketMod extends CI_Model {
 	}
 	public function setPermissao($Permissao) {
 		$this->Permissao = $Permissao;
+	}
+	public function getNivel(){
+		return $this->Nivel;
+	}
+	public function setNivel($Nivel){
+		$this->Nivel = $Nivel;
 	}
 	public function getStatusTicket() {
 		$where = '';
@@ -55,7 +62,10 @@ class StatusTicketMod extends CI_Model {
 	private function checkPermissao() {
 		$Opcoes = '';
 		
-		if ($this->Permissao == 'Solicitante') {
+		if($this->Nivel > 1){
+			$Opcoes = $this->StatusId;
+		}
+		else if ($this->Permissao == 'Solicitante') {
 			$Opcoes = $this->StatusId;
 		} else if ($this->Permissao == 'Setor') {
 			if ($this->StatusId == 1) {

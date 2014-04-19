@@ -8,10 +8,12 @@ class Prioridade extends CI_Controller{
 		
 		$PrioridadeId = $this->input->get("PrioridadeId");
 		$Permissao = $this->input->get("Permissao");
+		$Nivel = $this->input->get("Nivel");
 		
 		$this->load->model('PrioridadeMod');
 		$this->PrioridadeMod->setPrioridadeId($PrioridadeId);
 		$this->PrioridadeMod->setPermissao($Permissao);
+		$this->PrioridadeMod->setNivel($Nivel);
 		echo $this->PrioridadeMod->getPrioridades();
 	}
 	

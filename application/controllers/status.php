@@ -8,10 +8,12 @@ class Status extends CI_Controller {
 		
 		$StatusId = $this->input->get("StatusId");
 		$Permissao = $this->input->get("Permissao");
+		$Nivel = $this->input->get("Nivel");
 	
 		$this->load->model ( 'StatusTicketMod' );
 		$this->StatusTicketMod->setStatusId($StatusId);
 		$this->StatusTicketMod->setPermissao($Permissao);
+		$this->StatusTicketMod->setNivel($Nivel);
 		$Status = $this->StatusTicketMod->getStatusTicket ();
 		
 		$retorno ['success'] = true;

@@ -191,7 +191,7 @@ function carregaTipoSolicitacao(CategoriaId){
 				var TipoSolicitacao = retorno.TipoSolicitacao;
 
 				for(Reg in TipoSolicitacao){
-					Dados += '<option value="'+TipoSolicitacao[Reg].tipoid+'">'+TipoSolicitacao[Reg].nome+'</option>';
+					Dados += '<option value="'+TipoSolicitacao[Reg].TipoId+'">'+TipoSolicitacao[Reg].Nome+'</option>';
 				}
 
 				$('#TipoSolicitacaoId').html(TipoSolicitacaoSelecione + Dados);
@@ -215,7 +215,7 @@ function carregaStatus(){
 	$.blockUI({ message: '<h2>Carregando os status...</h2>' });
 	
 	var Url = '<?php echo BASE_URL;?>/status/getStatus';
-	var data 	= 'StatusId='+Ticket.StatusId+'&Permissao='+Ticket.Permissao;
+	var data 	= 'StatusId='+Ticket.StatusId+'&Permissao='+Ticket.Permissao+'&Nivel='+Ticket.Nivel;
 	
 	$.ajax({
 		type: "get",
@@ -388,7 +388,7 @@ function executaPermissoes(){
 	/*
 	/* Permissoes
 	*/
-	if(Ticket.Permissao == 'Chefe'){
+	/*if(Ticket.Permissao == 'Chefe'){
 
 	}
 	else if(Ticket.Permissao == 'Atendente' || Ticket.Permissao == 'Setor'){
@@ -396,7 +396,7 @@ function executaPermissoes(){
 	}
 	else if(Ticket.Permissao == 'Solicitante'){
 		
-	}
+	}*/
 }
 function populaTicket(){
 	$('#CategoriaId option[value='+Ticket.CategoriaId+']').attr('selected','selected');

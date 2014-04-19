@@ -7,6 +7,7 @@ class TipoSolicitacao extends CI_Controller {
 		
 		$this->load->model ( 'TipoTicketMod' );
 		$this->TipoTicketMod->setCategoriaId($CategoriaId);
+		$this->TipoTicketMod->setReturnObject(false);
 		$TipoSolicitacao = $this->TipoTicketMod->getTipoTicket (false);
 		$Dados ['TipoSolicitacao'] = $TipoSolicitacao;
 		

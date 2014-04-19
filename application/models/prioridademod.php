@@ -2,6 +2,7 @@
 class PrioridadeMod extends CI_Model {
 	private $PrioridadeId;
 	private $Permissao;
+	private $Nivel;
 	public function getPrioridadeId() {
 		return $this->PrioridadeId;
 	}
@@ -13,6 +14,12 @@ class PrioridadeMod extends CI_Model {
 	}
 	public function setPermissao($Permissao) {
 		$this->Permissao = $Permissao;
+	}
+	public function getNivel(){
+		return $this->Nivel;
+	}
+	public function setNivel($Nivel){
+		$this->Nivel = $Nivel;
 	}
 	public function getPrioridades() {
 		$where = '';
@@ -51,7 +58,7 @@ class PrioridadeMod extends CI_Model {
 	private function checkPermissao() {
 		$Opcoes = '';
 		
-		if ($this->Permissao == 'Solicitante') {
+		if ($this->Permissao == 'Solicitante' || $this->Nivel != 1) {
 			$Opcoes[] = 'TP.PrioridadeId = ' . $this->PrioridadeId;
 		}
 		

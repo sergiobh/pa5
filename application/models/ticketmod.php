@@ -2,14 +2,15 @@
 class TicketMod extends CI_Model {
 	private $TicketId;
 	private $TipoId;
+	private $Tipo_Nivel;
 	private $FuncionarioId;
 	private $StatusId;
+	private $StatusIdInterno;
 	private $DH_Solicitacao;
 	private $Descricao;
 	private $DH_Previsao;
 	private $DH_Baixa;
 	private $Resultado;
-	private $SetorId;
 	private $AtendenteId;
 	private $PrioridadeId;
 	private $Permissao;
@@ -38,6 +39,12 @@ class TicketMod extends CI_Model {
 	public function setTipoId($TipoId) {
 		$this->TipoId = $TipoId;
 	}
+	public function getTipo_Nivel() {
+		return $this->Tipo_Nivel;
+	}
+	public function setTipo_Nivel($Tipo_Nivel) {
+		$this->Tipo_Nivel = $Tipo_Nivel;
+	}
 	public function getFuncionarioId() {
 		return $this->FuncionarioId;
 	}
@@ -62,12 +69,6 @@ class TicketMod extends CI_Model {
 	public function setDescricao($Descricao) {
 		$this->Descricao = $Descricao;
 	}
-	public function getSetorId() {
-		return $this->SetorId;
-	}
-	public function setSetorId($SetorId) {
-		$this->SetorId = $SetorId;
-	}
 	public function getAtendenteId() {
 		return $this->AtendenteId;
 	}
@@ -86,6 +87,9 @@ class TicketMod extends CI_Model {
 	public function setResultado($Resultado) {
 		$this->Resultado = $Resultado;
 	}
+	public function criarDH_Solicitacao() {
+		$this->DH_Solicitacao = date ( 'Y-m-d H:i:s' );
+	}
 	public function getErroMsg() {
 		return $this->erroMsg;
 	}
@@ -96,24 +100,21 @@ class TicketMod extends CI_Model {
 		$columnAtendenteId = ($this->AtendenteId != '') ? ',AtendenteId' : '';
 		$valueAtendenteId = ($this->AtendenteId != '') ? ',' . $this->AtendenteId : '';
 		
+		$this->load->model ( "TransactionMod" );
+		$this->TransactionMod->Start ();
+		
 		$sql = "
 				INSERT INTO
 				ticket(
 					TipoId
 					,FuncionarioId
-					,StatusId
 					,DH_Solicitacao
-					,SetorId
-					$columnAtendenteId
 					,PrioridadeId
 				)
 				VALUES(
 					$this->TipoId
 					,$this->FuncionarioId
-					,$this->StatusId
 					,'" . $this->DH_Solicitacao . "'
-					,$this->SetorId
-					$valueAtendenteId
 					,$this->PrioridadeId
 				)
 				";
@@ -124,7 +125,26 @@ class TicketMod extends CI_Model {
 			
 			$this->setTicketId ( $this->db->insert_id () );
 			
-			return true;
+			$this->load->model ( "Ticket_AtendimentoMod" );
+			$this->Ticket_AtendimentoMod->setTicketId ( $this->getTicketId () );
+			$this->Ticket_AtendimentoMod->setTipo_Nivel ( 1 );
+			$this->Ticket_AtendimentoMod->setStatusId ( 1 );
+			$this->Ticket_AtendimentoMod->setAtendenteId ( $this->AtendenteId );
+			$this->Ticket_AtendimentoMod->setDH_Solicitacao ( $this->getDH_Solicitacao () );
+			$this->Ticket_AtendimentoMod->setAtivo ( 1 );
+			
+			if ($this->Ticket_AtendimentoMod->setAtendimento ()) {
+				$this->TransactionMod->Commit ();
+				
+				return true;
+			} else {
+				$this->TransactionMod->Rollback ();
+				
+				$this->erroBreak = true;
+				$this->erroMsg = "Favor recarregar a página!";
+				
+				return false;
+			}
 		} else {
 			$this->erroBreak = true;
 			$this->erroMsg = "Favor recarregar a página!";
@@ -135,12 +155,11 @@ class TicketMod extends CI_Model {
 	public function salvarCadastro() {
 		$this->setFuncionarioId ( $_SESSION ['Funcionario']->FuncionarioId );
 		$this->setStatusId ( 1 );
-		$this->setDH_Solicitacao ( date ( 'Y-m-d H:i:s' ) );
+		$this->criarDH_Solicitacao ();
 		
 		$this->load->model ( "TipoTicketMod" );
 		$this->TipoTicketMod->setTipoId ( $this->TipoId );
 		$this->TipoTicketMod->getTipoTicket ();
-		$this->setSetorId ( $this->TipoTicketMod->getSetorId () );
 		$this->setPrioridadeId ( $this->TipoTicketMod->getPrioridadeId () );
 		
 		if (! $this->setTicket ()) {
@@ -167,6 +186,7 @@ class TicketMod extends CI_Model {
 		$sql = "
 				SELECT
 					T.TicketId
+					,TTN.Nivel
 					,TC.Nome AS Categoria
 					,TT.Nome AS TipoSolicitacao
 					,DATE_FORMAT( T.DH_Solicitacao , '%d/%m/%Y %H:%i:%s' ) AS DH_Solicitacao
@@ -174,27 +194,40 @@ class TicketMod extends CI_Model {
 					,IF(ISNULL(T.DH_Previsao), '-', T.DH_Previsao) AS DH_Previsao
 					,TP.Nome AS Prioridade
 				FROM 
-					ticket T
-					INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId
-					INNER JOIN ticket_categoria TC ON TC.CategoriaId = TT.CategoriaId
-					INNER JOIN ticket_prioridade TP ON TP.PrioridadeId = T.PrioridadeId
-					INNER JOIN ticket_historico TH ON TH.TicketId = T.TicketId						
+					Ticket T
+					INNER JOIN Ticket_Atendimento TA ON TA.TicketId = T.TicketId
+					INNER JOIN Ticket_Tipo TT ON TT.TipoId = T.TipoId
+					INNER JOIN Ticket_Categoria TC ON TC.CategoriaId = TT.CategoriaId
+					INNER JOIN Ticket_Prioridade TP ON TP.PrioridadeId = T.PrioridadeId
+					INNER JOIN Ticket_Historico TH ON TH.TicketId = T.TicketId						
 					INNER JOIN Funcionario FS ON FS.FuncionarioId = T.FuncionarioId
-					LEFT JOIN Funcionario FA ON FA.FuncionarioId = T.AtendenteId					
-					LEFT JOIN setor S ON S.SetorId = T.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . "
-					LEFT JOIN setorfuncionario SF ON SF.SetorId = T.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . "
+					INNER JOIN Ticket_TipoNivel TTN ON TTN.TipoId = T.TipoId
+					LEFT JOIN Funcionario FA ON FA.FuncionarioId = TA.AtendenteId
+					LEFT JOIN Setor S ON S.SetorId = TTN.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . " AND TTN.Nivel = TA.Tipo_Nivel
+					LEFT JOIN SetorFuncionario SF ON SF.SetorId = TTN.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . " AND TTN.Nivel = TA.Tipo_Nivel
 				WHERE
-					T.StatusId = $this->StatusId
+					TA.StatusId = $this->StatusId
+					AND TA.Ativo = 1
 					AND TH.HistoricoTipoId = 1
+
 					AND (
 						T.FuncionarioId = " . $this->getFuncionarioId () . "
-						OR T.AtendenteId = " . $this->getAtendenteId () . "
+						OR TA.AtendenteId = " . $this->getAtendenteId () . "
 						OR S.FuncionarioId IS NOT NULL
 						OR SF.SetorFuncionarioId IS NOT NULL
 					) 
 				GROUP BY
 					TH.TicketId
 				";
+
+		/*
+		 	AND (
+				TTN.Nivel = 1
+				OR TTN.Nivel = TA.Tipo_Nivel 
+			)  
+		*/
+		
+		
 		
 		$query = $this->db->query ( $sql );
 		
@@ -213,13 +246,14 @@ class TicketMod extends CI_Model {
 		$sql = "
 				SELECT
 					T.TicketId
+					,TTN.Nivel
 					,TT.CategoriaId
 					,T.TipoId
 					,FS.Nome AS Solicitente
 					,IF(ISNULL(FA.Nome), '-', FA.Nome ) AS Atendente
 					,T.StatusId
+					,T.StatusIdInterno				
 					,T.PrioridadeId
-					,T.SetorId
 					,DATE_FORMAT( T.DH_Solicitacao , '%d/%m/%Y %H:%i:%s' ) AS DH_Solicitacao
 					,IF(ISNULL(T.DH_Aceite), '-', DATE_FORMAT( T.DH_Aceite , '%d/%m/%Y %H:%i:%s' )) AS DH_Aceite
 					,IF(ISNULL(T.DH_Previsao), '-', DATE_FORMAT( T.DH_Previsao , '%d/%m/%Y %H:%i:%s' )) AS DH_Previsao
@@ -234,11 +268,21 @@ class TicketMod extends CI_Model {
 					ticket T
 					INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId
 					INNER JOIN Funcionario FS ON FS.FuncionarioId = T.FuncionarioId
-					LEFT JOIN Funcionario FA ON FA.FuncionarioId = T.AtendenteId					
-					LEFT JOIN setor S ON S.SetorId = T.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . "
-					LEFT JOIN setorfuncionario SF ON SF.SetorId = T.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . "
+					LEFT JOIN Funcionario FA ON FA.FuncionarioId = T.AtendenteId
+					INNER JOIN Ticket_TipoNivel TTN ON TTN.TipoId = T.TipoId
+					LEFT JOIN setor S ON S.SetorId = TTN.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . "
+					LEFT JOIN setorfuncionario SF ON SF.SetorId = TTN.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . "
 				WHERE
 					T.ticketId = " . $this->getTicketId () . "
+					AND (
+						TTN.Nivel = 1
+						OR TTN.Nivel = T.Tipo_Nivel 
+					)
+					AND (
+						S.SetorId IS NOT NULL
+						OR SF.SetorId IS NOT NULL
+						OR FA.FuncionarioId IS NOT NULL
+					)
 					AND (
 						T.FuncionarioId = " . $this->getFuncionarioId () . "
 						OR T.AtendenteId = " . $this->getAtendenteId () . "
@@ -246,10 +290,10 @@ class TicketMod extends CI_Model {
 						OR SF.SetorFuncionarioId IS NOT NULL
 					)
 				";
-
+		
 		$query = $this->db->query ( $sql );
 		
-		$dados = $query->row();
+		$dados = $query->row ();
 		
 		if (is_object ( $dados )) {
 			
@@ -273,7 +317,6 @@ class TicketMod extends CI_Model {
 		$this->load->model ( "TipoTicketMod" );
 		$this->TipoTicketMod->setTipoId ( $this->TipoId );
 		$this->TipoTicketMod->getTipoTicket ();
-		$this->setSetorId ( $this->TipoTicketMod->getSetorId () );
 		
 		$sql_set = $this->montaSetUpdate ();
 		
@@ -336,7 +379,6 @@ class TicketMod extends CI_Model {
 			}
 			
 			$setUpdate [] = "Resultado = '" . $this->Resultado . "'";
-			$setUpdate [] = "SetorId = " . $this->SetorId;
 			$setUpdate [] = "AtendenteId = " . $this->AtendenteId;
 			$setUpdate [] = "PrioridadeId = " . $this->PrioridadeId;
 		} else if ($this->TicketGravado->Permissao == 'Setor') {
@@ -356,7 +398,6 @@ class TicketMod extends CI_Model {
 				$setUpdate [] = "TipoId = " . $this->TipoId;
 				$setUpdate [] = "StatusId = " . $this->StatusId;
 				$setUpdate [] = "Resultado = '" . $this->Resultado . "'";
-				$setUpdate [] = "SetorId = " . $this->SetorId;
 				$setUpdate [] = "AtendenteId = " . $this->getFuncionarioId ();
 				$setUpdate [] = "PrioridadeId = " . $this->PrioridadeId;
 			}

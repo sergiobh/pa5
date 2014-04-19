@@ -170,7 +170,7 @@ function carregaTipoSolicitacao(CategoriaId){
 				var TipoSolicitacao = retorno.TipoSolicitacao;
 
 				for(Reg in TipoSolicitacao){
-					Dados += '<option value="'+TipoSolicitacao[Reg].tipoid+'">'+TipoSolicitacao[Reg].nome+'</option>';
+					Dados += '<option value="'+TipoSolicitacao[Reg].TipoId+'">'+TipoSolicitacao[Reg].Nome+'</option>';
 				}
 
 				$('#tipoSolicitacao').html(TipoSolicitacaoSelecione + Dados);
