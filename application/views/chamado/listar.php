@@ -140,7 +140,7 @@ function montaLinks(TicketId){
 	
 	if(StartTicket != 1){
 		var urlExportar = '<?php echo BASE_URL.'/ticket_xml/exportar/';?>'+TicketId;
-		exportar = '<div class="botao_exportar"><a href='+urlExportar+' title="Exportar ticket '+TicketId+'" target="_blank"><div class="glyphicon glyphicon-download-alt"></div></a></div>';
+		exportar = '<div class="botao_segundo"><a href='+urlExportar+' title="Exportar ticket '+TicketId+'" target="_blank"><div class="glyphicon glyphicon-download-alt"></div></a></div>';
 	}
 	
  	return carregaTD(editar+exportar);	

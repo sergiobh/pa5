@@ -80,4 +80,43 @@ class Setor extends CI_Controller {
 		$this->load->model ( "SetorMod" );
 		echo json_encode ( $this->SetorMod->getSetores () );
 	}
+	public function funcionarios() {
+		$SetorId = $this->uri->segment ( 3 );
+		
+		$Dados ['SetorId'] = $SetorId;
+		
+		$Dados ['View'] = 'setor/funcionarios';
+		$this->load->view ( 'body/index', $Dados );
+	}
+	public function getPermissoes() {
+		$SetorId = $this->input->get ( "SetorId" );
+		
+		$this->load->model ( "SetorFuncionarioMod" );
+		$this->SetorFuncionarioMod->setSetorId ( $SetorId );
+		
+		$retorno ['Permissoes'] = $this->SetorFuncionarioMod->getPermissoes ();
+		
+		$this->load->model("SetorMod");
+		$this->SetorMod->setSetorId($SetorId);
+		$this->SetorMod->setTipoRetorno("Obj");
+		$retorno ['Setor'] = $this->SetorMod->getSetor();
+		
+		$retorno ['success'] = ($retorno ['Permissoes']) ? true : false;
+		
+		echo json_encode ( $retorno );
+	}
+	public function setPermissoes(){
+		$SetorId = $this->input->post("SetorId");
+		$FuncionariosJson = $this->input->post("Funcionarios");
+		$Funcionarios = json_decode($FuncionariosJson);
+		
+		$this->load->model("SetorFuncionarioMod");
+		$this->SetorFuncionarioMod->setSetorId($SetorId);
+		$this->SetorFuncionarioMod->setFuncionarios($Funcionarios);
+
+		$retorno['success'] = $this->SetorFuncionarioMod->setVinculoAll();
+		$retorno['msg'] =  ($retorno['success']) ? 'Permissões gravadas com sucesso!' : 'Favor recarregar a página!';
+		
+		echo json_encode( $retorno );
+	}
 }

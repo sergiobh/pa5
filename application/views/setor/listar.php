@@ -79,8 +79,11 @@ function carregaTD(dado){
 function montaLinks(SetorId){
 	var urlEditar = '<?php echo BASE_URL.'/setor/editar/';?>'+SetorId;
 	var editar = '<div class="botao_editar"><a href='+urlEditar+' title="Editar setor '+SetorId+'"><div class="glyphicon glyphicon-pencil"></div></a></div>';
+
+	var urlFuncionarios = '<?php echo BASE_URL.'/setor/funcionarios/';?>'+SetorId;
+	var usuarios = '<div class="botao_segundo"><a href='+urlFuncionarios+' title="Funcionários do setor '+SetorId+'"><div class="glyphicon glyphicon-user"></div></a></div>';
 	
- 	return carregaTD(editar);	
+ 	return carregaTD(editar + usuarios);	
 }
 
 function RedirecionamentoHome(){

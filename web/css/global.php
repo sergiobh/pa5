@@ -220,6 +220,9 @@ td select{
 td input{
 	width: 254px;
 }
+td input.SetorFuncionarioCheck{
+	width: 14px;
+}
 .botao_submit,
 .botao_reset{
 	width: 100px;
@@ -351,11 +354,11 @@ th.header {
 	display: none;
 }
 
-.tbodyChamados .botao_editar{
+tbody .botao_editar{
 	float: left;
 	width: 20px;
 }
-.tbodyChamados .botao_exportar{
+tbody .botao_segundo{
 	margin-left: 22px;
 	width: 20px;
 }
@@ -387,4 +390,10 @@ th.header {
 .RespostaUpload{
 	font-weight: bold;
 	color: #FF0000;	
+}
+
+form .botao_direita{
+	float: right;
+	margin-right: 70px;
+	margin-bottom: 25px;
 }
