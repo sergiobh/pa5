@@ -210,15 +210,21 @@ class TicketMod extends CI_Model {
 					AND TA.Ativo = 1
 					AND TH.HistoricoTipoId = 1
 					AND (
-						T.FuncionarioId = " . $this->getFuncionarioId () . "
+						(
+							T.FuncionarioId = " . $this->getFuncionarioId () . " 
+							AND TA.Tipo_Nivel = 1
+						)
 						OR TA.AtendenteId = " . $this->getAtendenteId () . "
 						OR S.FuncionarioId IS NOT NULL
-						OR SF.SetorFuncionarioId IS NOT NULL
+						OR (
+							SF.SetorFuncionarioId IS NOT NULL
+							AND TA.Tipo_Nivel = 1
+						)
 					)
 				GROUP BY
 					TH.TicketId
 				";
-		
+
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();
@@ -284,7 +290,7 @@ class TicketMod extends CI_Model {
 			$this->Ticket_AtendimentoMod->setTicketId ( $dados->TicketId );
 			$this->Ticket_AtendimentoMod->setTipo_Nivel ( $dados->Nivel );
 			$TransferenciaNivel = $this->Ticket_AtendimentoMod->checkTransferencia ();
-
+			
 			$dados->TransferenciaNivel = $TransferenciaNivel;
 			
 			$retorno ['Ticket'] = $dados;

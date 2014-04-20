@@ -308,7 +308,7 @@ function carregaPrioridade(){
 	$.blockUI({ message: '<h2>Carregando as prioridades...</h2>' });
 	
 	var Url = '<?php echo BASE_URL;?>/prioridade/getPrioridades';
-	var data 	= 'PrioridadeId='+Ticket.PrioridadeId+'&Permissao='+Ticket.Permissao;
+	var data 	= 'Nivel='+Ticket.Nivel+'&PrioridadeId='+Ticket.PrioridadeId+'&Permissao='+Ticket.Permissao;
 	
 	$.ajax({
 		type: "get",

@@ -15,10 +15,10 @@ class PrioridadeMod extends CI_Model {
 	public function setPermissao($Permissao) {
 		$this->Permissao = $Permissao;
 	}
-	public function getNivel(){
+	public function getNivel() {
 		return $this->Nivel;
 	}
-	public function setNivel($Nivel){
+	public function setNivel($Nivel) {
 		$this->Nivel = $Nivel;
 	}
 	public function getPrioridades() {
@@ -27,16 +27,16 @@ class PrioridadeMod extends CI_Model {
 		if ($this->Permissao != '') {
 			$where = $this->checkPermissao ();
 		}
-
-		$sql_where = (is_array($where)) ? ' WHERE '.implode ( " AND ", $where ) : '';
-
+		
+		$sql_where = (is_array ( $where )) ? ' WHERE ' . implode ( " AND ", $where ) : '';
+		
 		$sql = "
 				SELECT
 					TP.PrioridadeId
 					,TP.Nome
 				FROM
 					ticket_prioridade TP
-				".$sql_where."
+				" . $sql_where . "
 				";
 		
 		$query = $this->db->query ( $sql );
@@ -45,21 +45,19 @@ class PrioridadeMod extends CI_Model {
 		
 		if (count ( $dados ) > 0) {
 			$retorno ['Prioridades'] = $dados;
-			$retorno ['success'] = true;
-			
-			return json_encode ( $retorno );
 		} else {
 			$retorno ['Prioridades'] = false;
-			$retorno ['success'] = true;
-			
-			return json_encode ( $retorno );
 		}
+		
+		$retorno ['success'] = true;
+		
+		return json_encode ( $retorno );
 	}
 	private function checkPermissao() {
 		$Opcoes = '';
 		
-		if ($this->Permissao == 'Solicitante' || $this->Nivel != 1) {
-			$Opcoes[] = 'TP.PrioridadeId = ' . $this->PrioridadeId;
+		if ($this->Permissao == 'Solicitante' || $this->Permissao == 'Setor') {
+			$Opcoes [] = 'TP.PrioridadeId = ' . $this->PrioridadeId;
 		}
 		
 		return $Opcoes;
