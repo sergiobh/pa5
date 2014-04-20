@@ -32,6 +32,7 @@
 				<th>DESCRIÇÃO</th>
 				<th>PREVISÃO</th>
 				<th>PRIORIDADE</th>
+				<th>NÍVEL</th>
 				<th><span class="glyphicon glyphicon-cog"></span></th>
 			</tr>
 		</thead>
@@ -111,6 +112,7 @@ function populaGrid(Chamados){
 			html += carregaTDTitle(Chamados[Reg].Descricao);
 			html += carregaTD(Chamados[Reg].DH_Previsao);
 			html += carregaTD(Chamados[Reg].Prioridade);
+			html += carregaTD(Chamados[Reg].Nivel);
 			html += montaLinks(Chamados[Reg].TicketId);		
 		html +=fechaTR();
 	}

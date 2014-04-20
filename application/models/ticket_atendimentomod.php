@@ -75,13 +75,82 @@ class Ticket_AtendimentoMod extends CI_Model {
 					," . $this->Ativo . "
 				)		
 				";
-
+		
 		$this->db->query ( $sql );
 		
 		if ($this->db->affected_rows () > 0) {
 			$this->setAtendimentoId ( $this->db->insert_id () );
 			
 			return true;
+		} else {
+			return false;
+		}
+	}
+	public function possuiProximoAtendimento($RestringeExistente = false) {
+		$ProximoNivel = $this->Tipo_Nivel + 1;
+		
+		$where = array ();
+		
+		if ($RestringeExistente) {
+			$where [] = 'TA.StatusId <= 5';
+		}
+		
+		$sql_where = (count ( $where ) > 0) ? ' AND ' . implode ( ' AND ', $where ) : '';
+		
+		$sql = "
+				SELECT
+					TA.AtendimentoId
+				FROM
+					ticket_atendimento TA
+				WHERE
+					TA.TicketId = " . $this->TicketId . "
+					AND TA.Tipo_Nivel = " . $ProximoNivel . "
+					" . $sql_where . "
+				";
+		
+		$query = $this->db->query ( $sql );
+		
+		$dados = $query->row ();
+		
+		if (is_object ( $dados )) {
+			$this->AtendimentoId = $dados->AtendimentoId;
+			
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public function checkProximoAtendimento() {
+		$ProximoNivel = $this->Tipo_Nivel + 1;
+		
+		$sql = "
+				SELECT
+					TTN.TipoNivelId
+				FROM
+					ticket T
+					INNER JOIN Ticket_TipoNivel TTN ON TTN.TipoId = T.TipoId
+				WHERE
+					T.TicketId = " . $this->TicketId . "
+					AND TTN.Nivel = " . $ProximoNivel . "
+				";
+		
+		$query = $this->db->query ( $sql );
+		
+		$dados = $query->row ();
+		
+		if (is_object ( $dados )) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public function checkTransferencia() {
+		$AtendimentoExistente = $this->possuiProximoAtendimento ( true );
+		
+		$Possibilidade = $this->checkProximoAtendimento ();
+		
+		if ($Possibilidade && ! $AtendimentoExistente) {
+			return $this->Tipo_Nivel + 1;
 		} else {
 			return false;
 		}

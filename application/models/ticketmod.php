@@ -209,25 +209,15 @@ class TicketMod extends CI_Model {
 					TA.StatusId = $this->StatusId
 					AND TA.Ativo = 1
 					AND TH.HistoricoTipoId = 1
-
 					AND (
 						T.FuncionarioId = " . $this->getFuncionarioId () . "
 						OR TA.AtendenteId = " . $this->getAtendenteId () . "
 						OR S.FuncionarioId IS NOT NULL
 						OR SF.SetorFuncionarioId IS NOT NULL
-					) 
+					)
 				GROUP BY
 					TH.TicketId
 				";
-
-		/*
-		 	AND (
-				TTN.Nivel = 1
-				OR TTN.Nivel = TA.Tipo_Nivel 
-			)  
-		*/
-		
-		
 		
 		$query = $this->db->query ( $sql );
 		
@@ -251,8 +241,7 @@ class TicketMod extends CI_Model {
 					,T.TipoId
 					,FS.Nome AS Solicitente
 					,IF(ISNULL(FA.Nome), '-', FA.Nome ) AS Atendente
-					,T.StatusId
-					,T.StatusIdInterno				
+					,TA.StatusId			
 					,T.PrioridadeId
 					,DATE_FORMAT( T.DH_Solicitacao , '%d/%m/%Y %H:%i:%s' ) AS DH_Solicitacao
 					,IF(ISNULL(T.DH_Aceite), '-', DATE_FORMAT( T.DH_Aceite , '%d/%m/%Y %H:%i:%s' )) AS DH_Aceite
@@ -260,32 +249,25 @@ class TicketMod extends CI_Model {
 					,IF(ISNULL(T.DH_Baixa), '-', DATE_FORMAT( T.DH_Baixa , '%d/%m/%Y %H:%i:%s' )) AS DH_Baixa
 					,CASE
 						WHEN S.FuncionarioId IS NOT NULL THEN 'Chefe'
-						WHEN T.AtendenteId = " . $this->getFuncionarioId () . " THEN 'Atendente'
+						WHEN TA.AtendenteId = " . $this->getFuncionarioId () . " THEN 'Atendente'
 						WHEN SF.SetorFuncionarioId IS NOT NULL THEN 'Setor'
 						WHEN T.FuncionarioId = " . $this->getFuncionarioId () . " THEN 'Solicitante'
 					END AS Permissao
 				FROM
 					ticket T
+					INNER JOIN Ticket_Atendimento TA ON TA.TicketId = T.TicketId
 					INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId
 					INNER JOIN Funcionario FS ON FS.FuncionarioId = T.FuncionarioId
-					LEFT JOIN Funcionario FA ON FA.FuncionarioId = T.AtendenteId
 					INNER JOIN Ticket_TipoNivel TTN ON TTN.TipoId = T.TipoId
-					LEFT JOIN setor S ON S.SetorId = TTN.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . "
-					LEFT JOIN setorfuncionario SF ON SF.SetorId = TTN.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . "
+					LEFT JOIN Funcionario FA ON FA.FuncionarioId = TA.AtendenteId
+					LEFT JOIN Setor S ON S.SetorId = TTN.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . " AND TTN.Nivel = TA.Tipo_Nivel
+					LEFT JOIN SetorFuncionario SF ON SF.SetorId = TTN.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . " AND TTN.Nivel = TA.Tipo_Nivel
 				WHERE
 					T.ticketId = " . $this->getTicketId () . "
-					AND (
-						TTN.Nivel = 1
-						OR TTN.Nivel = T.Tipo_Nivel 
-					)
-					AND (
-						S.SetorId IS NOT NULL
-						OR SF.SetorId IS NOT NULL
-						OR FA.FuncionarioId IS NOT NULL
-					)
+					AND TA.Ativo = 1
 					AND (
 						T.FuncionarioId = " . $this->getFuncionarioId () . "
-						OR T.AtendenteId = " . $this->getAtendenteId () . "
+						OR TA.AtendenteId = " . $this->getAtendenteId () . "
 						OR S.FuncionarioId IS NOT NULL
 						OR SF.SetorFuncionarioId IS NOT NULL
 					)
@@ -296,6 +278,14 @@ class TicketMod extends CI_Model {
 		$dados = $query->row ();
 		
 		if (is_object ( $dados )) {
+			
+			// Busca Permissao para criar próximo Nivel de Atendimento
+			$this->load->model ( "Ticket_AtendimentoMod" );
+			$this->Ticket_AtendimentoMod->setTicketId ( $dados->TicketId );
+			$this->Ticket_AtendimentoMod->setTipo_Nivel ( $dados->Nivel );
+			$TransferenciaNivel = $this->Ticket_AtendimentoMod->checkTransferencia ();
+
+			$dados->TransferenciaNivel = $TransferenciaNivel;
 			
 			$retorno ['Ticket'] = $dados;
 			$retorno ['success'] = true;
@@ -331,11 +321,11 @@ class TicketMod extends CI_Model {
 		
 		$this->db->query ( $sql );
 		
-		if ($this->db->affected_rows () > 0) {
-			$retorno ["msg"] = "Dados salvos com sucesso!";
-		} else {
-			$retorno ["msg"] = "Altere pelo menos um dos campos!";
-		}
+		/*
+		 * if ($this->db->affected_rows () > 0) { $retorno ["msg"] = "Dados salvos com sucesso!"; } else { $retorno ["msg"] = "Altere pelo menos um dos campos!"; }
+		 */
+		
+		$retorno ["msg"] = "Dados salvos com sucesso!";
 		
 		$retorno ['success'] = true;
 		
@@ -353,7 +343,7 @@ class TicketMod extends CI_Model {
 					4 
 			) )) {
 				$setUpdate [] = "TipoId = " . $this->TipoId;
-				$setUpdate [] = "StatusId = " . $this->StatusId;
+				// $setUpdate [] = "StatusId = " . $this->StatusId;
 			}
 			
 			// Se Em Manutenção
@@ -370,23 +360,14 @@ class TicketMod extends CI_Model {
 				$setUpdate [] = "DH_Baixa = '" . date ( 'Y-m-d H:i:s' ) . "'";
 			}
 			
-			// Em Aberto ou Em Manutenção
-			if (in_array ( $this->StatusId, array (
-					1,
-					4 
-			) ) && $this->Resultado != '') {
-				$this->StatusId = 2; // Recebe Aguardando Resposta
-			}
-			
-			$setUpdate [] = "Resultado = '" . $this->Resultado . "'";
-			$setUpdate [] = "AtendenteId = " . $this->AtendenteId;
+			// $setUpdate [] = "AtendenteId = " . $this->AtendenteId;
 			$setUpdate [] = "PrioridadeId = " . $this->PrioridadeId;
 		} else if ($this->TicketGravado->Permissao == 'Setor') {
 			if (in_array ( $this->TicketGravado->StatusId, array (
 					1 
 			) )) {
 				$setUpdate [] = "TipoId = " . $this->TipoId;
-				$setUpdate [] = "StatusId = " . $this->StatusId;
+				// $setUpdate [] = "StatusId = " . $this->StatusId;
 			}
 			
 			// Se o Setor selecionar o Ticket para Em Manutenção, Cancelado, Indeferido
@@ -396,13 +377,11 @@ class TicketMod extends CI_Model {
 				$this->setFuncionarioId ( $_SESSION ['Funcionario']->FuncionarioId );
 				
 				$setUpdate [] = "TipoId = " . $this->TipoId;
-				$setUpdate [] = "StatusId = " . $this->StatusId;
-				$setUpdate [] = "Resultado = '" . $this->Resultado . "'";
-				$setUpdate [] = "AtendenteId = " . $this->getFuncionarioId ();
+				// $setUpdate [] = "StatusId = " . $this->StatusId;
+				// $setUpdate [] = "AtendenteId = " . $this->getFuncionarioId ();
 				$setUpdate [] = "PrioridadeId = " . $this->PrioridadeId;
 			}
 		} else if ($this->TicketGravado->Permissao == 'Solicitante') {
-			$setUpdate [] = "Descricao = '" . $this->Descricao . "'";
 			
 			// Se em aberto pode trocar Categoria e Tipo
 			if ($this->TicketGravado->StatusId == 1) {

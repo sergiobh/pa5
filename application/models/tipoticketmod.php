@@ -10,6 +10,8 @@ class TipoTicketMod extends CI_Model {
 	private $erroBreak;
 	private $erroMsg;
 	private $ReturnObject;
+	private $TicketId;
+	private $StatusId;
 	public function TipoTicketMod() {
 		$this->erroBreak = false;
 		
@@ -68,38 +70,65 @@ class TipoTicketMod extends CI_Model {
 	public function setSLA($SLA) {
 		$this->SLA = $SLA;
 	}
-	public function setReturnObject($ReturnObject){
+	public function setReturnObject($ReturnObject) {
 		$this->ReturnObject = $ReturnObject;
+	}
+	public function getTicketId() {
+		return $this->TicketId;
+	}
+	public function setTicketId($TicketId) {
+		$this->TicketId = $TicketId;
+	}
+	public function getStatusId() {
+		return $this->StatusId;
+	}
+	public function setStatusId($StatusId) {
+		$this->StatusId = $StatusId;
 	}
 	public function getTipoTicket() {
 		$select = array ();
+		$from = array ();
+		$where = array ();
 		$order = array ();
 		
 		$select [] = "TT.TipoId";
 		$select [] = "TT.Nome";
 		
-		$where [] = "TTN.Nivel = " . $this->Nivel;
-		
-		if ($this->TipoId != '') {
-			$where [] = "TT.TipoId = " . $this->TipoId;
-		}
-		if ($this->Nome != '') {
-			$where [] = "TT.Nome = '" . $this->Nome . "'";
-		}
-		if ($this->SetorId != '') {
-			$where [] = "TTN.SetorId = " . $this->SetorId;
-		}
-
 		if ($this->CategoriaId != '') {
+			
+			// Filtra por tipo de StatusId
+			// Caso Fechado, Cancelado ou Indeferido não se altera Tipo de Ticket
+			if ($this->StatusId != '' && $this->StatusId >= 5 && is_numeric ( $this->TicketId )) {
+				
+				$from [] = 'INNER JOIN ticket T ON T.TicketId = ' . $this->TicketId;
+				$sql_from = implode ( " ", $from );
+				
+				$where [] = 'TT.TipoId = T.TipoId';
+			}
+			
 			$where [] = "TT.CategoriaId = " . $this->CategoriaId;
 			$order [] = "TT.Nome";
-		}
-		else{
+		} else {
+			
+			if ($this->TipoId != '') {
+				$where [] = "TT.TipoId = " . $this->TipoId;
+			}
+			if ($this->Nome != '') {
+				$where [] = "TT.Nome = '" . $this->Nome . "'";
+			}
+			if ($this->SetorId != '') {
+				$where [] = "TTN.SetorId = " . $this->SetorId;
+			}
+			
 			$select [] = "TT.CategoriaId";
 			$select [] = "TT.PrioridadeId";
 			$select [] = "TT.SLA";
 			$select [] = "TTN.SetorId";
 			$select [] = "TTN.Nivel";
+			
+			$where [] = "TTN.Nivel = " . $this->Nivel;
+			
+			$from [] = 'INNER JOIN ticket_tiponivel TTN ON TTN.TipoId = TT.TipoId';
 		}
 		
 		if ($where === '') {
@@ -109,6 +138,8 @@ class TipoTicketMod extends CI_Model {
 		}
 		
 		$sql_select = implode ( ", ", $select );
+		
+		$sql_from = implode ( " AND ", $from );
 		
 		$sql_where = implode ( " AND ", $where );
 		
@@ -120,7 +151,7 @@ class TipoTicketMod extends CI_Model {
 					" . $sql_select . "
 				FROM 
 					ticket_tipo TT
-					INNER JOIN ticket_tiponivel TTN ON TTN.TipoId = TT.TipoId
+					" . $sql_from . "
 				WHERE
 					" . $sql_where . $sql_order;
 

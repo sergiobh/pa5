@@ -1,6 +1,14 @@
 <div class='chamado_editar'>
 	<form class="form-signin" role="form">
 		<h2 class="form-signin-heading">Edição do Chamado</h2>
+		<div class="form-group form_atendimento">
+			<label>Permissão:</label><input type="text" id="Permissao"
+				name="Permissao" readonly="readonly" class="form-control" />
+		</div>
+		<div class="form-group form_atendimento">
+			<label>Nível do Atendimento:</label><input type="text" id="Nivel"
+				name="Nivel" readonly="readonly" class="form-control" />
+		</div>
 		<div class="form-group">
 			<label>Status:</label><select id="StatusId" name="StatusId"
 				class="form-control">
@@ -49,6 +57,8 @@
 			<div class="linha_botoes">
 				<button class="btn btn-sm btn btn-success btn-block botao_submit">
 					Enviar</button>
+				<button type="button"
+					class="btn btn-sm btn btn btn-warning btn-block botao_transferir botao_reset">Transferir</button>
 			</div>
 		</div>
 	</form>
@@ -97,7 +107,7 @@ $( document ).ready( function( ) {
 	
 	$( ".form-signin" ).submit( function( ) {
 		if( validator.form( ) ) {
-			submerterForm( );
+			submeterForm( );
 		}
 
 		return false;
@@ -113,6 +123,10 @@ $( document ).ready( function( ) {
 			carregaTipoSolicitacao(CategoriaId);
 		}
 	});
+
+	$('.botao_transferir').click(function(){
+		executarTransferencia();
+	});
 });
 
 function inicializa(){
@@ -120,8 +134,9 @@ function inicializa(){
 	
 	carregaStatus();
 }
-function submerterForm( ) {
+function submeterForm( ) {
 	// Declaração de variaveis
+	var Nivel = $('#Nivel').val();
 	var StatusId = $("#StatusId option:selected").val();
 	var TipoSolicitacaoId = $("#TipoSolicitacaoId option:selected").val();
 	var PrioridadeId = $("#PrioridadeId option:selected").val();
@@ -129,7 +144,7 @@ function submerterForm( ) {
 	// Executa o POST usando metodo AJAX e retorando Json
 	var Url				= '<?php echo BASE_URL;?>/chamado/salvarEdicao';
 
-	var data 			= 'TicketId='+Ticket.TicketId+'&StatusId='+StatusId+'&TipoSolicitacaoId='+TipoSolicitacaoId+'&PrioridadeId='+PrioridadeId;
+	var data 			= 'TicketId='+Ticket.TicketId+'&Nivel='+Nivel+'&StatusId='+StatusId+'&TipoSolicitacaoId='+TipoSolicitacaoId+'&PrioridadeId='+PrioridadeId;
 
 	$.blockUI({ message: '<h2>Salvando os dados...</h2>' });
 
@@ -175,7 +190,7 @@ function limpaTipoSolicitacao(){
 // Função para carregar os Tipo de Solicitação
 function carregaTipoSolicitacao(CategoriaId){
 	var Url		= '<?php echo BASE_URL;?>/tiposolicitacao/getTipoSolicitacao';
-	var data 	= 'CategoriaId='+CategoriaId;
+	var data 	= 'TicketId='+Ticket.TicketId+'&StatusId='+Ticket.StatusId+'&CategoriaId='+CategoriaId;
 
 	$.blockUI({ message: '<h2>Carregando os Tipos de Solicitação...</h2>' });
 
@@ -253,10 +268,13 @@ function carregaCategorias(){
 	$.blockUI({ message: '<h2>Carregando as categorias...</h2>' });
 	
 	var Url = '<?php echo BASE_URL;?>/categoria/getCategorias';
+
+	var data = 'TicketId='+Ticket.TicketId+'&StatusId='+Ticket.StatusId+'&Permissao='+Ticket.Permissao;
 	
 	$.ajax({
 		type: "get",
 		url: Url,
+		data: data,
 		dataType: 'json',
 		success: function(retorno){
 			var Dados = "";
@@ -385,20 +403,26 @@ function executaPermissoes(){
 		return false;
 	}
 
+	if( ! (Ticket.TransferenciaNivel && Ticket.StatusId == 4)){
+		$(".botao_transferir").hide();
+	}
+	
 	/*
 	/* Permissoes
 	*/
-	/*if(Ticket.Permissao == 'Chefe'){
-
-	}
-	else if(Ticket.Permissao == 'Atendente' || Ticket.Permissao == 'Setor'){
-
-	}
-	else if(Ticket.Permissao == 'Solicitante'){
-		
+	/*if(Ticket.Permissao == 'Solicitante'){
+		$(".form_atendimento").hide();
 	}*/
+	/*else if(Ticket.Permissao == 'Atendente' || Ticket.Permissao == 'Setor'){
+
+	}
+	else if(Ticket.Permissao == 'Chefe'){
+
+	} */
 }
 function populaTicket(){
+	$("#Permissao").val(Ticket.Permissao);
+	$("#Nivel").val(Ticket.Nivel);
 	$('#CategoriaId option[value='+Ticket.CategoriaId+']').attr('selected','selected');
 	$('#TipoSolicitacaoId option[value='+Ticket.TipoId+']').attr('selected','selected');
 	$("#Solicitante").val(Ticket.Solicitente);
@@ -412,5 +436,8 @@ function populaTicket(){
 	$("#DataBaixa").val(Ticket.DH_Baixa);
 
 	Iniciando = false;
+}
+function executarTransferencia(){
+	console.log('Executar a transferência!!!');
 }
 </script>

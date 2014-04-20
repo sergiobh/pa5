@@ -78,7 +78,7 @@ $(document).ready(function(){
 
     var data      = 'Cpf='+Cpf+'&Senha='+Senha;
 
-    $.blockUI({ message: '<h1>Logando...</h1>' });
+    $.blockUI({ message: '<h3>Logando...</h3>' });
 
     $.ajax({
       dataType: 'json',
@@ -88,14 +88,14 @@ $(document).ready(function(){
       success: function(retorno){
         if(retorno.success){
 
-          $.blockUI({ message: '<h1>Login efetuado, redirecionando...</h1>' });
+          $.blockUI({ message: '<h3>Login efetuado, redirecionando...</h3>' });
 
           // Efetuar o redirecionamento
           setTimeout(
             function(){
               window.location = "<?php echo BASE_URL; echo (isset($_SESSION['REDIRECT_URL']) && $_SESSION['REDIRECT_URL'] != '/') ? $_SESSION['REDIRECT_URL'] : '';?>"
             },
-            4000
+            2000
           );
           
         }
