@@ -3,6 +3,7 @@
 session_start();
 
 /*
+ * 
  * Correção de charset no php
 */
 header('Content-Type: text/html; charset=utf-8'); 
