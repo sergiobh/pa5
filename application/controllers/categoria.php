@@ -23,5 +23,20 @@ class Categoria extends CI_Controller {
 		$Dados ["success"] = true;
 		echo json_encode ( $Dados );
 	}
+	public function salvarCadastro(){
+		$this->CheckLogado ();
+		
+		$Nome = $this->input->post ( "Nome" );
+		
+		$this->load->model ( "CategoriaMod" );
+		$this->CategoriaMod->setNome ( $Nome );
+		echo json_encode ( $this->CategoriaMod->setCategoria () );
+	}
+	public function listar(){
+		$this->CheckLogado ();
+		
+		$Dados ['View'] = 'categoria/listar';
+		$this->load->view ( 'body/index', $Dados );
+	}
 }
 ?>

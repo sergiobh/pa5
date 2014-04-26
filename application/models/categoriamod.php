@@ -1,8 +1,16 @@
 <?php
 class CategoriaMod extends CI_Model {
+	private $CategoriaId;
 	private $TicketId;
 	private $StatusId;
 	private $Permissao;
+	private $Nome;
+	public function getCategoriaId(){
+		return $this->CategoriaId;
+	}
+	public function setCategoriaId($CategoriaId){
+		$this->CategoriaId = $CategoriaId;
+	}
 	public function getTicketId() {
 		return $this->TicketId;
 	}
@@ -14,6 +22,12 @@ class CategoriaMod extends CI_Model {
 	}
 	public function setStatusId($StatusId) {
 		$this->StatusId = $StatusId;
+	}
+	public function getNome(){
+		return $this->Nome;
+	}
+	public function setNome($Nome){
+		$this->Nome = $Nome;
 	}
 	public function getPermissao(){
 		return $this->Permissao;
@@ -35,8 +49,14 @@ class CategoriaMod extends CI_Model {
 			
 			$where = array ();
 			$where [] = 'TT.CategoriaId = TC.CategoriaId';
-			$sql_where = ' WHERE ' . implode ( " ", $where );
+
 		}
+		
+		if($this->Nome != ''){
+			$where [] = "TC.Nome = '".$this->Nome."'";
+		}
+
+		$sql_where = ($where != '') ? ' WHERE ' . implode ( " ", $where ) : '';
 		
 		$sql = "
                     SELECT
@@ -59,6 +79,38 @@ class CategoriaMod extends CI_Model {
 		} else {
 			return false;
 		}
+	}
+	public function setCategoria (){
+		if($this->getCategoria()){
+			$retorno['success'] = false;
+			$retorno['msg'] = 'Categoria já cadastrada!';
+			return $retorno;
+		}
+
+		$sql = "
+				INSERT INTO
+				ticket_categoria(
+					Nome
+				)
+				VALUES(
+					'".$this->Nome."'
+				)			
+				";
+		
+		$this->db->query ( $sql );
+		
+		if ($this->db->affected_rows () > 0) {
+				
+			$this->setCategoriaId ( $this->db->insert_id () );
+				
+			$retorno ['success'] = true;
+			$retorno ['msg'] = 'Categoria cadastrado com sucesso!';
+		} else {
+			$retorno ['success'] = false;
+			$retorno ['msg'] = "Favor recarregar a página!";
+		}
+		
+		return $retorno;
 	}
 }
 ?>

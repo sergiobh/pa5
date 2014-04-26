@@ -85,7 +85,7 @@ $this->load->library ( "PermissaoLib" );
 					<?php if(PermissaoLib::checkAdmin()){ ?>
 					<a href="<?php echo BASE_URL;?>/categoria/cadastrar">
 						<div class='submenu_item'>Cadastrar Categorias</div>
-					</a><a href="<?php echo BASE_URL;?>/categorias/listar">
+					</a><a href="<?php echo BASE_URL;?>/categoria/listar">
 						<div class='submenu_item'>Listar Categorias</div>
 					</a> <a href="<?php echo BASE_URL;?>/tipo/cadastrar">
 						<div class='submenu_item'>Cadastrar Tipos</div>
