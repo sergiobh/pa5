@@ -4,12 +4,11 @@
 		<BR /> <BR />
 		<div class="form-group">
 			<label>Nome:</label><input type="text" id="inputCadCategoria"
-				name="inputCadCategoria" class="form-control"
+				name="inputCadCategoria" class="form-control" maxlength="50"
 				placeholder="Descrição da Categoria" />
 		</div>
 		<div class="form-group">
 			<div class="linha_botoes">
-
 				<button class="btn btn-sm btn btn-success btn-block botao_submit">
 					Enviar</button>
 				<button class="btn btn-sm btn btn-danger btn-block botao_reset"
@@ -26,14 +25,14 @@ $(document).ready(function(){
 			inputCadCategoria: {
 				required: true,
 				minlength: 3,
-				maxlength: 30
+				maxlength: 50
 			}
 		}),
 		messages: {
 			inputCadCategoria:{
 	            required: "Campo obrigatório",
 	            minlength: "Digite pelo menos 3 caracteres",
-	            maxlength: "Digite no máximo 30 caracteres"
+	            maxlength: "Digite no máximo 50 caracteres"
 	        }
 		}
 	});

@@ -38,5 +38,53 @@ class Categoria extends CI_Controller {
 		$Dados ['View'] = 'categoria/listar';
 		$this->load->view ( 'body/index', $Dados );
 	}
+	public function montaGrid(){
+		$this->CheckLogado ();
+		
+		$this->load->model ( "CategoriaMod" );
+		$Categorias = $this->CategoriaMod->getCategoria();
+		
+		$retorno['success'] = ($Categorias) ? true : false;
+		$retorno['Categorias'] = $Categorias; 
+		
+		echo json_encode($retorno);
+	}
+	public function editar(){
+		$this->CheckLogado ();
+		
+		$CategoriaId = $this->uri->segment ( 3 );
+		
+		$Dados['CategoriaId'] = $CategoriaId;
+		
+		$Dados ['View'] = 'categoria/editar';
+		$this->load->view ( 'body/index', $Dados );
+	}
+	public function getEditar(){
+		$this->CheckLogado ();
+		
+		$CategoriaId = $this->input->get("CategoriaId");
+		
+		$this->load->model ( "CategoriaMod" );
+		$this->CategoriaMod->setCategoriaId($CategoriaId);
+		$Categoria = $this->CategoriaMod->getCategoria();
+		
+		$retorno['success'] = ($Categoria) ? true : false;
+		$retorno['Categoria'] = (isset($Categoria[0])) ? $Categoria[0] : '';
+		
+		echo json_encode($retorno);
+	}
+	public function salvarEdicao(){
+		$this->CheckLogado ();
+		
+		$CategoriaId = $this->input->post("CategoriaId");
+		$Nome = $this->input->post("Nome");
+
+		$this->load->model ( "CategoriaMod" );
+		$this->CategoriaMod->setCategoriaId($CategoriaId);
+		$this->CategoriaMod->setNome($Nome);
+		$retorno = $this->CategoriaMod->setEdicao();
+		
+		echo json_encode($retorno);
+	}
 }
 ?>

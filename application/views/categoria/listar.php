@@ -1,5 +1,5 @@
 <div class='categorias_listar'>
-	<h2 class="glyphicon glyphicon-th-list">&nbsp;LISTA DE CSTEGORIAS</h2>
+	<h2 class="glyphicon glyphicon-th-list">&nbsp;LISTA DE CATEGORIAS</h2>
 	<table class="table table-hover">
 		<thead>
 			<tr>
@@ -51,11 +51,11 @@ function carregaCategorias(){
 function populaGridCategorias(Categorias){
 	html = "";
 
-	for(Reg in Categoria){
+	for(Reg in Categorias){
 		html += abreTR();	
-			html += carregaTD(Categoria[Reg].CategoriaId);
-			html += carregaTD(Categoria[Reg].Nome);
-			html += montaLinks(Categoria[Reg].CategoriaId);		
+			html += carregaTD(Categorias[Reg].CategoriaId);
+			html += carregaTD(Categorias[Reg].Nome);
+			html += montaLinks(Categorias[Reg].CategoriaId);		
 		html +=fechaTR();
 	}
 
@@ -72,7 +72,7 @@ function carregaTD(dado){
 	return '<td>'+dado+'</td>';
 }
 
-function montaLinks(CategoriasId){
+function montaLinks(CategoriaId){
 	var urlEditar = '<?php echo BASE_URL.'/categoria/editar/';?>'+CategoriaId;
 	var editar = '<div class="botao_editar"><a href='+urlEditar+' title="Editar categoria '+CategoriaId+'"><div class="glyphicon glyphicon-pencil"></div></a></div>';
 	

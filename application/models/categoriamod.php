@@ -5,10 +5,10 @@ class CategoriaMod extends CI_Model {
 	private $StatusId;
 	private $Permissao;
 	private $Nome;
-	public function getCategoriaId(){
+	public function getCategoriaId() {
 		return $this->CategoriaId;
 	}
-	public function setCategoriaId($CategoriaId){
+	public function setCategoriaId($CategoriaId) {
 		$this->CategoriaId = $CategoriaId;
 	}
 	public function getTicketId() {
@@ -23,40 +23,45 @@ class CategoriaMod extends CI_Model {
 	public function setStatusId($StatusId) {
 		$this->StatusId = $StatusId;
 	}
-	public function getNome(){
+	public function getNome() {
 		return $this->Nome;
 	}
-	public function setNome($Nome){
+	public function setNome($Nome) {
 		$this->Nome = $Nome;
 	}
-	public function getPermissao(){
+	public function getPermissao() {
 		return $this->Permissao;
 	}
-	public function setPermissao($Permissao){
+	public function setPermissao($Permissao) {
 		$this->Permissao = $Permissao;
 	}
-	public function getCategoria() {
+	public function getCategoria($checkExistente = false) {
+		$where = array ();
+		
 		$sql_from = '';
 		$sql_where = '';
 		
 		// Filtra por tipo de StatusId
 		// Caso Fechado, Cancelado ou Indeferido não se altera Categoria
-		if ($this->StatusId != '' && $this->StatusId >= 5 && is_numeric($this->TicketId) && $this->TicketId != '' || $this->Permissao == 'Solicitante') {
-			$from = array ();			
+		if ($this->StatusId != '' && $this->StatusId >= 5 && is_numeric ( $this->TicketId ) && $this->TicketId != '' || $this->Permissao == 'Solicitante') {
+			$from = array ();
 			$from [] = 'INNER JOIN ticket T ON T.TicketId = ' . $this->TicketId;
-			$from [] = 'INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId';			
+			$from [] = 'INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId';
 			$sql_from = implode ( " ", $from );
 			
-			$where = array ();
 			$where [] = 'TT.CategoriaId = TC.CategoriaId';
-
 		}
 		
-		if($this->Nome != ''){
-			$where [] = "TC.Nome = '".$this->Nome."'";
+		if ($this->Nome != '') {
+			$where [] = "TC.Nome = '" . $this->Nome . "'";
 		}
-
-		$sql_where = ($where != '') ? ' WHERE ' . implode ( " ", $where ) : '';
+		
+		if ($this->CategoriaId != '') {
+			$condicao = ($checkExistente) ? ' != ' : ' = ';
+			$where [] = "TC.CategoriaId " . $condicao . " '" . $this->CategoriaId . "'";
+		}
+		
+		$sql_where = (count ( $where ) > 0) ? ' WHERE ' . implode ( " AND ", $where ) : '';
 		
 		$sql = "
                     SELECT
@@ -65,11 +70,11 @@ class CategoriaMod extends CI_Model {
 					FROM
 						ticket_categoria TC
 						" . $sql_from . "
-					".$sql_where."
+					" . $sql_where . "
 					ORDER BY
                         nome
                     ";
-
+		
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();
@@ -80,29 +85,29 @@ class CategoriaMod extends CI_Model {
 			return false;
 		}
 	}
-	public function setCategoria (){
-		if($this->getCategoria()){
-			$retorno['success'] = false;
-			$retorno['msg'] = 'Categoria já cadastrada!';
+	public function setCategoria() {
+		if ($this->getCategoria ()) {
+			$retorno ['success'] = false;
+			$retorno ['msg'] = 'Categoria já cadastrada!';
 			return $retorno;
 		}
-
+		
 		$sql = "
 				INSERT INTO
 				ticket_categoria(
 					Nome
 				)
 				VALUES(
-					'".$this->Nome."'
+					'" . $this->Nome . "'
 				)			
 				";
 		
 		$this->db->query ( $sql );
 		
 		if ($this->db->affected_rows () > 0) {
-				
+			
 			$this->setCategoriaId ( $this->db->insert_id () );
-				
+			
 			$retorno ['success'] = true;
 			$retorno ['msg'] = 'Categoria cadastrado com sucesso!';
 		} else {
@@ -110,6 +115,35 @@ class CategoriaMod extends CI_Model {
 			$retorno ['msg'] = "Favor recarregar a página!";
 		}
 		
+		return $retorno;
+	}
+	public function setEdicao() {
+		if ($this->getCategoria ( true )) {
+			$retorno ['success'] = false;
+			$retorno ['msg'] = 'Categoria já cadastrada!';
+				
+			return $retorno;
+		}
+	
+		$sql = "
+				UPDATE
+					ticket_categoria
+				SET
+					Nome = '" . $this->Nome . "'
+				WHERE
+					CategoriaId = " . $this->CategoriaId . "
+				";
+	
+		$this->db->query ( $sql );
+	
+		if ($this->db->affected_rows () > 0) {
+			$retorno ['success'] = true;
+			$retorno ['msg'] = "Dados salvos com sucesso!";
+		} else {
+			$retorno ['success'] = true;
+			$retorno ['msg'] = "Nenhum campo foi alterado!";
+		}
+	
 		return $retorno;
 	}
 }
