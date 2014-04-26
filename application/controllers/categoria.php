@@ -2,6 +2,12 @@
 if (! defined ( 'BASEPATH' ))
 	exit ( 'No direct script access allowed' );
 class Categoria extends CI_Controller {
+	public function cadastrar() {
+		$this->CheckLogado ();
+	
+		$Dados ['View'] = 'categoria/cadastrar';
+		$this->load->view ( 'body/index', $Dados );
+	}
 	public function getCategorias() {
 		$TicketId = $this->input->get("TicketId");
 		$StatusId = $this->input->get("StatusId");

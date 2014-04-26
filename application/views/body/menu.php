@@ -59,6 +59,13 @@ $this->load->library ( "PermissaoLib" );
 					</a> <a href="<?php echo BASE_URL;?>/funcionario/listar">
 						<div class='submenu_item submenu_primeiro'>Listar</div>
 					</a>
+					<?php if(PermissaoLib::checkAdmin()){ ?>
+						<a href="<?php echo BASE_URL;?>/setor/cadastrar">
+						<div class='submenu_item'>Cadastrar Setores</div>
+					</a><a href="<?php echo BASE_URL;?>/setor/listar">
+						<div class='submenu_item'>Listar Setores</div>
+					</a>
+					<?php } ?>
 				</div>
 			</div>
 		</div>
@@ -76,12 +83,18 @@ $this->load->library ( "PermissaoLib" );
 						<div class='submenu_item'>Importar XML</div>
 					</a>
 					<?php if(PermissaoLib::checkAdmin()){ ?>
-						<a href="<?php echo BASE_URL;?>/setor/cadastrar">
-						<div class='submenu_item'>Cadastrar Setores</div>
-					</a><a href="<?php echo BASE_URL;?>/setor/listar">
-						<div class='submenu_item'>Listar Setores</div>
+					<a href="<?php echo BASE_URL;?>/categoria/cadastrar">
+						<div class='submenu_item'>Cadastrar Categorias</div>
+					</a><a href="<?php echo BASE_URL;?>/categorias/listar">
+						<div class='submenu_item'>Listar Categorias</div>
+					</a>
+						<a href="<?php echo BASE_URL;?>/tipo/cadastrar">
+						<div class='submenu_item'>Cadastrar Tipos</div>
+					</a><a href="<?php echo BASE_URL;?>/tipo/listar">
+						<div class='submenu_item'>Listar Tipos</div>
 					</a>
 					<?php } ?>
+					
 				</div>
 			</div>
 		</div>
