@@ -154,7 +154,7 @@ class TipoTicketMod extends CI_Model {
 					" . $sql_from . "
 				WHERE
 					" . $sql_where . $sql_order;
-
+		
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();
@@ -189,6 +189,109 @@ class TipoTicketMod extends CI_Model {
 		} else {
 			echo 'Query para buscar SLA falhou!!!';
 			exit ();
+		}
+	}
+	private function existeTipoTicket() {
+		$sql = "
+				SELECT
+					TipoId
+				FROM
+					ticket_tipo
+				WHERE
+					CategoriaId = " . $this->CategoriaId . "
+					AND Nome = '" . $this->Nome . "'
+				";
+		
+		$query = $this->db->query ( $sql );
+		
+		$dados = $query->row ();
+		
+		if (is_object ( $dados )) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public function setTipoTicket() {
+		if ($this->existeTipoTicket ()) {
+			$retorno ['success'] = false;
+			$retorno ['msg'] = 'Tipo de Ticket já cadastrado!';
+			
+			return $retorno;
+		}
+		
+		$this->load->model ( "TransactionMod" );
+		$this->TransactionMod->Start ();
+		
+		$sql = "
+				INSERT INTO
+				ticket_tipo(
+					Nome
+					,CategoriaId
+					,PrioridadeId
+					,SLA
+				)
+				VALUES(
+					'" . $this->Nome . "'
+					," . $this->CategoriaId . "
+					," . $this->PrioridadeId . "
+					," . $this->SLA . "
+				)
+				";
+		
+		$this->db->query ( $sql );
+		
+		if ($this->db->affected_rows () > 0) {
+			
+			$this->setTipoId ( $this->db->insert_id () );
+			
+			$this->load->model ( "TipoNivelMod" );
+			$this->TipoNivelMod->setTipoId ( $this->getTipoId () );
+			$this->TipoNivelMod->setNivel ( 1 );
+			$this->TipoNivelMod->setSetorId ( $this->getSetorId () );
+			
+			if ($this->TipoNivelMod->setTipoNivel ()) {
+				$this->TransactionMod->Commit ();
+				
+				$retorno ['success'] = true;
+				$retorno ['msg'] = 'Tipo de Ticket cadastrado com sucesso!';
+			} else {
+				$this->TransactionMod->Rollback ();
+				
+				$retorno ['success'] = false;
+				$retorno ['msg'] = 'Ocorreu um erro ao cadastrar o Atendimento do Tipo de Ticket!';
+			}
+		} else {
+			$retorno ['success'] = false;
+			$retorno ['msg'] = 'Ocorreu um erro ao cadastrar o Tipo de Ticket!';
+		}
+		
+		return $retorno;
+	}
+	public function getTipoTickets() {
+		$sql = "
+				SELECT
+					TT.TipoId
+					,TT.Nome
+					,TC.Nome AS Categoria
+					,TP.Nome AS Prioridade
+					,TT.SLA
+				FROM
+					ticket_tipo TT
+					INNER JOIN ticket_categoria TC ON TT.CategoriaId = TC.CategoriaId
+					INNER JOIN ticket_prioridade TP ON TP.PrioridadeId = TT.PrioridadeId 
+				ORDER BY
+					TT.Nome
+				";
+		
+		$query = $this->db->query ( $sql );
+		
+		$dados = $query->result ();
+		
+		if (count ( $dados )) {
+			return $dados;
+		} else {
+			return false;
 		}
 	}
 }

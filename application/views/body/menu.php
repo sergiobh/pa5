@@ -87,9 +87,9 @@ $this->load->library ( "PermissaoLib" );
 						<div class='submenu_item'>Cadastrar Categorias</div>
 					</a><a href="<?php echo BASE_URL;?>/categoria/listar">
 						<div class='submenu_item'>Listar Categorias</div>
-					</a> <a href="<?php echo BASE_URL;?>/tipo/cadastrar">
+					</a> <a href="<?php echo BASE_URL;?>/tipoticket/cadastrar">
 						<div class='submenu_item'>Cadastrar Tipos</div>
-					</a><a href="<?php echo BASE_URL;?>/tipo/listar">
+					</a><a href="<?php echo BASE_URL;?>/tipoticket/listar">
 						<div class='submenu_item'>Listar Tipos</div>
 					</a>
 					<?php } ?>

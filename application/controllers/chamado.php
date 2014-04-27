@@ -9,11 +9,11 @@ class Chamado extends CI_Controller {
 		$this->load->view ( 'body/index', $Dados );
 	}
 	public function salvarCadastro() {
-		$TipoSolicitacaoId = $this->input->post ( "TipoSolicitacaoId" );
+		$TipoTicketId = $this->input->post ( "TipoTicketId" );
 		$Descricao = $this->input->post ( "Descricao" );
 		
 		$this->load->model ( "TicketMod" );
-		$this->TicketMod->setTipoId ( $TipoSolicitacaoId );
+		$this->TicketMod->setTipoId ( $TipoTicketId );
 		$this->TicketMod->setDescricao ( $Descricao );
 		
 		echo $this->TicketMod->salvarCadastro ();
@@ -135,7 +135,7 @@ class Chamado extends CI_Controller {
 		$PrioridadeId = $this->input->post ( 'PrioridadeId' );
 		$Resultado = $this->input->post ( 'Resultado' );
 		$StatusId = $this->input->post ( 'StatusId' );
-		$TipoSolicitacaoId = $this->input->post ( 'TipoSolicitacaoId' );
+		$TipoTicketId = $this->input->post ( 'TipoTicketId' );
 		
 		$this->load->model ( "TicketMod" );
 		$this->TicketMod->setTicketId ( $TicketId );
@@ -143,7 +143,7 @@ class Chamado extends CI_Controller {
 		$this->TicketMod->setPrioridadeId ( $PrioridadeId );
 		$this->TicketMod->setResultado ( $Resultado );
 		$this->TicketMod->setStatusId ( $StatusId );
-		$this->TicketMod->setTipoId ( $TipoSolicitacaoId );
+		$this->TicketMod->setTipoId ( $TipoTicketId );
 		
 		echo $this->TicketMod->salvarEdicao ();
 	}

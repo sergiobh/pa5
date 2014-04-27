@@ -6,8 +6,8 @@
 		</select>
 	</div>
 	<div class="form-group">
-		<label>Tipo de solicitação:</label> <select id="tipoSolicitacao"
-			name="tipoSolicitacao" value="" class="form-control">
+		<label>Tipo de solicitação:</label> <select id="TipoTicket"
+			name="TipoTicket" value="" class="form-control">
 
 		</select>
 	</div>
@@ -30,12 +30,12 @@
 <script type="text/javascript">
 var CategoriaSelecione = '<option value="">Categoria: (Selecione)</option>';
 
-var TipoSolicitacaoDependendo = '<option value="">Tipo de Solicitação: (Selecione a Categoria)</option>';
-var TipoSolicitacaoSelecione = '<option value="">Tipo de Solicitação: (Selecione)</option>';
+var TipoTicketDependendo = '<option value="">Tipo de Solicitação: (Selecione a Categoria)</option>';
+var TipoTicketSelecione = '<option value="">Tipo de Solicitação: (Selecione)</option>';
 
 
 $( document ).ready( function( ) {
-	limpaTipoSolicitacao();
+	limpaTipoTicket();
 	carregaCategorias();	
 
 	var validator = $( ".form-signin" ).validate( {
@@ -46,7 +46,7 @@ $( document ).ready( function( ) {
 				required: true
 
 			},
-			tipoSolicitacao: {
+			TipoTicket: {
 				required: true
 			},
 			descricaoTicket: {
@@ -59,7 +59,7 @@ $( document ).ready( function( ) {
 				required: "Campo obrigatório"
 
 			},
-			tipoSolicitacao: {
+			TipoTicket: {
 				required: "Campo obrigatório"
 
 			},
@@ -83,17 +83,17 @@ $( document ).ready( function( ) {
 		var CategoriaId = $(this).val();
 
 		if(CategoriaId == ''){
-			$('#tipoSolicitacao').html(TipoSolicitacaoDependendo);
+			$('#TipoTicket').html(TipoTicketDependendo);
 		}
 		else{
-			carregaTipoSolicitacao(CategoriaId);
+			carregaTipoTicket(CategoriaId);
 		}
 	});
 
 	// Reset
 	$('.botao_reset').click(function(){
 		$('#descricaoTicket').val('');
-		carregaTipoSolicitacao();
+		carregaTipoTicket();
 		$('#selectCategoriaCadTicket').val('');
 		
 		return false;
@@ -104,15 +104,15 @@ $( document ).ready( function( ) {
 function submerterForm( ) {
 	// Declaração de variaveis
 	var CategoriaId 	= $("#selectCategoriaCadTicket option:selected").val();
-	var TipoSolicitacaoId		= $("#tipoSolicitacao option:selected").val();
+	var TipoTicketId		= $("#TipoTicket option:selected").val();
 	var Descricao = $("#descricaoTicket").val();
 	
 	// Executa o POST usando metodo AJAX e retorando Json
 	var Url				= '<?php echo BASE_URL;?>/chamado/salvarCadastro';
 
-	var data 			= 'CategoriaId='+CategoriaId+'&TipoSolicitacaoId='+TipoSolicitacaoId+'&Descricao='+Descricao;
+	var data 			= 'CategoriaId='+CategoriaId+'&TipoTicketId='+TipoTicketId+'&Descricao='+Descricao;
 
-	$.blockUI({ message: '<h1>Salvando os dados...</h1>' });
+	$.blockUI({ message: '<h3>>Salvando os dados...</h3>' });
 
 	$.ajax({
 		type: "POST",
@@ -147,16 +147,16 @@ function submerterForm( ) {
 	});
 }
 
-function limpaTipoSolicitacao(){
-	$('#tipoSolicitacao').html(TipoSolicitacaoDependendo);
+function limpaTipoTicket(){
+	$('#TipoTicket').html(TipoTicketDependendo);
 }
 
 // Função para carregar os Tipo de Solicitação
-function carregaTipoSolicitacao(CategoriaId){
-	var Url		= '<?php echo BASE_URL;?>/tiposolicitacao/getTipoSolicitacao';
+function carregaTipoTicket(CategoriaId){
+	var Url		= '<?php echo BASE_URL;?>/tipoticket/gettipoticket';
 	var data 	= 'CategoriaId='+CategoriaId;
 
-	$.blockUI({ message: '<h1>Carregando os Tipos de Solicitação...</h1>' });
+	$.blockUI({ message: '<h3>Carregando os Tipos de Solicitação...</h3>' });
 
 	$.ajax({
 		type: "get",
@@ -167,13 +167,13 @@ function carregaTipoSolicitacao(CategoriaId){
 			var Dados = "";
 
 			if(retorno.success){
-				var TipoSolicitacao = retorno.TipoSolicitacao;
+				var TipoTicket = retorno.TipoTicket;
 
-				for(Reg in TipoSolicitacao){
-					Dados += '<option value="'+TipoSolicitacao[Reg].TipoId+'">'+TipoSolicitacao[Reg].Nome+'</option>';
+				for(Reg in TipoTicket){
+					Dados += '<option value="'+TipoTicket[Reg].TipoId+'">'+TipoTicket[Reg].Nome+'</option>';
 				}
 
-				$('#tipoSolicitacao').html(TipoSolicitacaoSelecione + Dados);
+				$('#TipoTicket').html(TipoTicketSelecione + Dados);
 				$.unblockUI();
 			}
 			else{
@@ -195,7 +195,7 @@ function carregaTipoSolicitacao(CategoriaId){
 }
 
 function carregaCategorias(){
-	$.blockUI({ message: '<h1>Carregando as categorias...</h1>' });
+	$.blockUI({ message: '<h3>Carregando as categorias...</h3>' });
 	
 	var Url = '<?php echo BASE_URL;?>/categoria/getCategorias';
 	

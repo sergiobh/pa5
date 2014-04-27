@@ -45,11 +45,11 @@ class PrioridadeMod extends CI_Model {
 		
 		if (count ( $dados ) > 0) {
 			$retorno ['Prioridades'] = $dados;
+			$retorno ['success'] = true;
 		} else {
+			$retorno ['success'] = false;
 			$retorno ['Prioridades'] = false;
 		}
-		
-		$retorno ['success'] = true;
 		
 		return json_encode ( $retorno );
 	}

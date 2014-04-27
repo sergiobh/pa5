@@ -19,7 +19,7 @@ class Setor extends CI_Controller {
 		
 		$this->load->model ( 'SetorMod' );
 		$Setores = $this->SetorMod->Listar ();
-		$Dados ['Setoress'] = $Setores;
+		$Dados ['Setores'] = $Setores;
 		
 		$Dados ['success'] = true;
 		
@@ -118,5 +118,10 @@ class Setor extends CI_Controller {
 		$retorno['msg'] =  ($retorno['success']) ? 'Permissões gravadas com sucesso!' : 'Favor recarregar a página!';
 		
 		echo json_encode( $retorno );
+	}
+	public function getSetores(){
+		$this->load->model ( "SetorMod" );
+	 
+		echo json_encode ( $this->SetorMod->getSetores () );
 	}
 }

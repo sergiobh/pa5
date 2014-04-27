@@ -20,6 +20,7 @@ $(document).ready(function(){
 		rules: ( "add", {
 			cpf: {
 				required: true,
+				number: true,
 				minlength: 11,
 				maxlength: 11
 			},
@@ -32,6 +33,7 @@ $(document).ready(function(){
 		messages: {
 			cpf:{
                 required: "Campo obrigatório",
+                number: "Digite um Cpf válido",
                 minlength: "Digite um Cpf válido",
                 maxlength: "Digite um Cpf válido",
                 number: "Digite um Cpf válido"
