@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50616
 File Encoding         : 65001
 
-Date: 2014-04-19 18:42:13
+Date: 2014-04-27 14:59:30
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -169,17 +169,16 @@ CREATE TABLE `setorfuncionario` (
   KEY `FuncionarioId` (`FuncionarioId`),
   CONSTRAINT `setorfuncionario_ibfk_1` FOREIGN KEY (`SetorId`) REFERENCES `setor` (`SetorId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `setorfuncionario_ibfk_2` FOREIGN KEY (`FuncionarioId`) REFERENCES `funcionario` (`FuncionarioId`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of setorfuncionario
 -- ----------------------------
 INSERT INTO `setorfuncionario` VALUES ('3', '3', '3');
 INSERT INTO `setorfuncionario` VALUES ('29', '3', '8');
-INSERT INTO `setorfuncionario` VALUES ('30', '4', '6');
-INSERT INTO `setorfuncionario` VALUES ('31', '5', '7');
 INSERT INTO `setorfuncionario` VALUES ('32', '13', '4');
 INSERT INTO `setorfuncionario` VALUES ('33', '14', '5');
+INSERT INTO `setorfuncionario` VALUES ('36', '4', '3');
 
 -- ----------------------------
 -- Table structure for telefone
@@ -223,7 +222,6 @@ CREATE TABLE `ticket` (
 -- ----------------------------
 -- Records of ticket
 -- ----------------------------
-INSERT INTO `ticket` VALUES ('15', '3', '5', '2014-04-19 17:46:36', null, null, null, '3');
 
 -- ----------------------------
 -- Table structure for ticket_atendimento
@@ -249,12 +247,6 @@ CREATE TABLE `ticket_atendimento` (
 -- ----------------------------
 -- Records of ticket_atendimento
 -- ----------------------------
-INSERT INTO `ticket_atendimento` VALUES ('3', '15', '1', '4', null, '2014-04-19 17:46:36', '1');
-INSERT INTO `ticket_atendimento` VALUES ('4', '15', '2', '1', null, '2014-04-19 17:54:23', '1');
-INSERT INTO `ticket_atendimento` VALUES ('5', '15', '3', '2', null, '2014-04-19 17:55:23', '1');
-INSERT INTO `ticket_atendimento` VALUES ('6', '15', '4', '3', null, '2014-04-19 17:56:23', '1');
-INSERT INTO `ticket_atendimento` VALUES ('7', '15', '5', '2', null, '2014-04-19 17:57:23', '1');
-INSERT INTO `ticket_atendimento` VALUES ('8', '15', '6', '5', null, '2014-04-19 17:58:23', '1');
 
 -- ----------------------------
 -- Table structure for ticket_categoria
@@ -264,7 +256,7 @@ CREATE TABLE `ticket_categoria` (
   `CategoriaId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Nome` varchar(50) NOT NULL,
   PRIMARY KEY (`CategoriaId`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of ticket_categoria
@@ -276,6 +268,9 @@ INSERT INTO `ticket_categoria` VALUES ('4', 'DB');
 INSERT INTO `ticket_categoria` VALUES ('5', 'Usuário');
 INSERT INTO `ticket_categoria` VALUES ('6', 'Quarto');
 INSERT INTO `ticket_categoria` VALUES ('7', 'Leito');
+INSERT INTO `ticket_categoria` VALUES ('8', 'Paciente');
+INSERT INTO `ticket_categoria` VALUES ('9', 'Setor');
+INSERT INTO `ticket_categoria` VALUES ('10', 'Categoria');
 
 -- ----------------------------
 -- Table structure for ticket_historico
@@ -301,7 +296,6 @@ CREATE TABLE `ticket_historico` (
 -- ----------------------------
 -- Records of ticket_historico
 -- ----------------------------
-INSERT INTO `ticket_historico` VALUES ('7', '15', 'dddadfdff', '1', '5', '1', '2014-04-19 17:46:36');
 
 -- ----------------------------
 -- Table structure for ticket_histoticotipo
@@ -375,6 +369,7 @@ CREATE TABLE `ticket_tipo` (
   `CategoriaId` int(10) unsigned NOT NULL,
   `PrioridadeId` int(10) unsigned NOT NULL,
   `SLA` int(10) unsigned NOT NULL DEFAULT '1' COMMENT 'Por convensão unidade de medida é HORA',
+  `Ativo` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`TipoId`),
   KEY `categoriaid` (`CategoriaId`),
   KEY `PriodidadeId` (`PrioridadeId`),
@@ -385,10 +380,10 @@ CREATE TABLE `ticket_tipo` (
 -- ----------------------------
 -- Records of ticket_tipo
 -- ----------------------------
-INSERT INTO `ticket_tipo` VALUES ('1', 'Outros BI', '1', '3', '12');
-INSERT INTO `ticket_tipo` VALUES ('2', 'Outros SO', '2', '3', '12');
-INSERT INTO `ticket_tipo` VALUES ('3', 'Outros CORP', '3', '3', '12');
-INSERT INTO `ticket_tipo` VALUES ('4', 'Outros DB', '4', '3', '12');
+INSERT INTO `ticket_tipo` VALUES ('1', 'Outros BI', '1', '1', '12', '1');
+INSERT INTO `ticket_tipo` VALUES ('2', 'Outros SO', '2', '3', '12', '1');
+INSERT INTO `ticket_tipo` VALUES ('3', 'Outros CORP', '3', '3', '12', '1');
+INSERT INTO `ticket_tipo` VALUES ('4', 'Outros DB', '4', '3', '12', '1');
 
 -- ----------------------------
 -- Table structure for ticket_tiponivel
@@ -396,22 +391,20 @@ INSERT INTO `ticket_tipo` VALUES ('4', 'Outros DB', '4', '3', '12');
 DROP TABLE IF EXISTS `ticket_tiponivel`;
 CREATE TABLE `ticket_tiponivel` (
   `TipoNivelId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `Tipoid` int(10) unsigned NOT NULL,
+  `TipoId` int(10) unsigned NOT NULL,
   `Nivel` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `SetorId` int(10) unsigned NOT NULL,
   PRIMARY KEY (`TipoNivelId`),
-  KEY `Tipoid` (`Tipoid`),
+  KEY `Tipoid` (`TipoId`),
   KEY `SetorId` (`SetorId`),
   CONSTRAINT `ticket_tiponivel_ibfk_1` FOREIGN KEY (`Tipoid`) REFERENCES `ticket_tipo` (`TipoId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `ticket_tiponivel_ibfk_2` FOREIGN KEY (`SetorId`) REFERENCES `setor` (`SetorId`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ticket_tiponivel
 -- ----------------------------
-INSERT INTO `ticket_tiponivel` VALUES ('17', '3', '1', '5');
-INSERT INTO `ticket_tiponivel` VALUES ('18', '3', '2', '4');
-INSERT INTO `ticket_tiponivel` VALUES ('19', '3', '3', '14');
-INSERT INTO `ticket_tiponivel` VALUES ('20', '3', '4', '4');
-INSERT INTO `ticket_tiponivel` VALUES ('21', '3', '5', '5');
-INSERT INTO `ticket_tiponivel` VALUES ('22', '3', '6', '3');
+INSERT INTO `ticket_tiponivel` VALUES ('1', '1', '1', '5');
+INSERT INTO `ticket_tiponivel` VALUES ('2', '2', '1', '3');
+INSERT INTO `ticket_tiponivel` VALUES ('3', '3', '1', '3');
+INSERT INTO `ticket_tiponivel` VALUES ('4', '4', '1', '3');
