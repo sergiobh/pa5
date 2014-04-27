@@ -60,5 +60,46 @@ class TipoTicket extends CI_Controller {
 		
 		echo json_encode ( $retorno );
 	}
+	public function editar() {
+		$this->CheckLogado ();
+		
+		$TipoId = $this->uri->segment ( 3 );
+		
+		$Dados ['TipoId'] = $TipoId;
+		
+		$Dados ['View'] = 'tipoticket/editar';
+		$this->load->view ( 'body/index', $Dados );
+	}
+	public function getEditar() {
+		$this->CheckLogado ();
+		
+		$TipoId = $this->input->get ( "TipoId" );
+		
+		$this->load->model ( "TipoTicketMod" );
+		$this->TipoTicketMod->setTipoId ( $TipoId );
+		$this->TipoTicketMod->setReturnObject ( false );
+		$TipoTicket = $this->TipoTicketMod->getTipoTicket ( true );
+		
+		$retorno ['success'] = ($TipoTicket) ? true : false;
+		$retorno ['TipoTicket'] = (isset ( $TipoTicket [0] )) ? $TipoTicket [0] : false;
+		
+		echo json_encode ( $retorno );
+	}
+	public function salvarEdicao() {
+		$this->CheckLogado ();
+		
+		$TipoId = $this->input->post ( "TipoId" );
+		$PrioridadeId = $this->input->post ( "PrioridadeId" );
+		$SLA = $this->input->post ( "SLA" );
+		$Ativo = $this->input->post ( "Ativo" );
+		
+		$this->load->model ( "TipoTicketMod" );
+		$this->TipoTicketMod->setTipoId ( $TipoId );
+		$this->TipoTicketMod->setPrioridadeId ( $PrioridadeId );
+		$this->TipoTicketMod->setSLA ( $SLA );
+		$this->TipoTicketMod->setAtivo ( $Ativo );
+		
+		echo json_encode ( $this->TipoTicketMod->setEdicao () );
+	}
 }
 ?>

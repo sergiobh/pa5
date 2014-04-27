@@ -8,6 +8,7 @@
 				<th>CATEGORIA</th>
 				<th>PRIORIDADE</th>
 				<th>SLA</th>
+				<th>STATUS</th>
 				<th><span class="glyphicon glyphicon-cog"></span></th>
 			</tr>
 		</thead>
@@ -61,6 +62,7 @@ function populaGridTipoTickets(TipoTickets){
 			html += carregaTD(TipoTickets[Reg].Categoria);
 			html += carregaTD(TipoTickets[Reg].Prioridade);
 			html += carregaTD(TipoTickets[Reg].SLA);
+			html += carregaTD(TipoTickets[Reg].Status);
 			html += montaLinks(TipoTickets[Reg].TipoId);		
 		html +=fechaTR();
 	}

@@ -12,6 +12,7 @@ class TipoTicketMod extends CI_Model {
 	private $ReturnObject;
 	private $TicketId;
 	private $StatusId;
+	private $Ativo;	
 	public function TipoTicketMod() {
 		$this->erroBreak = false;
 		
@@ -85,7 +86,13 @@ class TipoTicketMod extends CI_Model {
 	public function setStatusId($StatusId) {
 		$this->StatusId = $StatusId;
 	}
-	public function getTipoTicket() {
+	public function getAtivo(){
+		return $this->Ativo;
+	}
+	public function setAtivo($Ativo){
+		$this->Ativo = $Ativo;
+	}
+	public function getTipoTicket($Editar = false) {
 		$select = array ();
 		$from = array ();
 		$where = array ();
@@ -108,6 +115,13 @@ class TipoTicketMod extends CI_Model {
 			
 			$where [] = "TT.CategoriaId = " . $this->CategoriaId;
 			$order [] = "TT.Nome";
+		} else if ($Editar && $this->TipoId != '') {
+			$select [] = "TT.CategoriaId";
+			$select [] = "TT.PrioridadeId";
+			$select [] = "TT.SLA";
+			$select [] = "TT.Ativo";
+			
+			$where [] = "TT.TipoId = " . $this->TipoId;
 		} else {
 			
 			if ($this->TipoId != '') {
@@ -276,6 +290,7 @@ class TipoTicketMod extends CI_Model {
 					,TC.Nome AS Categoria
 					,TP.Nome AS Prioridade
 					,TT.SLA
+					,IF( TT.Ativo = 1, 'Ativo', 'Desativado' ) AS Status
 				FROM
 					ticket_tipo TT
 					INNER JOIN ticket_categoria TC ON TT.CategoriaId = TC.CategoriaId
@@ -293,6 +308,30 @@ class TipoTicketMod extends CI_Model {
 		} else {
 			return false;
 		}
+	}
+	public function setEdicao() {
+		$sql = "
+				UPDATE
+					ticket_tipo
+				SET
+					PrioridadeId = ".$this->PrioridadeId."
+					,SLA = ".$this->SLA."
+					,Ativo = ".$this->Ativo."
+				WHERE
+					TipoId = " . $this->TipoId . "
+				";
+
+		$this->db->query ( $sql );
+	
+		if ($this->db->affected_rows () > 0) {
+			$retorno ['success'] = true;
+			$retorno ['msg'] = "Dados salvos com sucesso!";
+		} else {
+			$retorno ['success'] = true;
+			$retorno ['msg'] = "Nenhum campo foi alterado!";
+		}
+	
+		return $retorno;
 	}
 }
 ?>

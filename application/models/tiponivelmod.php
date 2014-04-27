@@ -54,5 +54,32 @@ class TipoNivelMod extends CI_Model {
 			return false;
 		}
 	}
+	public function getTipoNivel() {
+		$sql = "
+				SELECT
+					TT.TipoId
+					,TT.Nivel
+					,T.Nome AS Setor
+				FROM
+					ticket_tiponivel TT
+					INNER JOIN setor T ON T.SetorId = TT.SetorId 
+				WHERE
+					TipoId = " . $this->TipoId . "
+				";
+		
+		$query = $this->db->query ( $sql );
+		
+		$dados = $query->result ();
+		
+		if (count ( $dados ) > 0) {
+			$retorno['success'] = true;
+			$retorno['TipoNivels'] = $dados;
+		} else {
+			$retorno['success'] = false;
+			$retorno['TipoNivels'] = false;
+		}
+		
+		return $retorno;
+	}
 }
 ?>
