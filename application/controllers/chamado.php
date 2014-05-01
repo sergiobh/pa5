@@ -135,7 +135,7 @@ class Chamado extends CI_Controller {
 		$PrioridadeId = $this->input->post ( 'PrioridadeId' );
 		$Resultado = $this->input->post ( 'Resultado' );
 		$StatusId = $this->input->post ( 'StatusId' );
-		$TipoTicketId = $this->input->post ( 'TipoTicketId' );
+		$TipoId = $this->input->post ( 'TipoSolicitacaoId' );
 		
 		$this->load->model ( "TicketMod" );
 		$this->TicketMod->setTicketId ( $TicketId );
@@ -143,7 +143,7 @@ class Chamado extends CI_Controller {
 		$this->TicketMod->setPrioridadeId ( $PrioridadeId );
 		$this->TicketMod->setResultado ( $Resultado );
 		$this->TicketMod->setStatusId ( $StatusId );
-		$this->TicketMod->setTipoId ( $TipoTicketId );
+		$this->TicketMod->setTipoId ( $TipoId );
 		
 		echo $this->TicketMod->salvarEdicao ();
 	}

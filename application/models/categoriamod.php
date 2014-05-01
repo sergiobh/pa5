@@ -43,7 +43,7 @@ class CategoriaMod extends CI_Model {
 		
 		// Filtra por tipo de StatusId
 		// Caso Fechado, Cancelado ou Indeferido não se altera Categoria
-		if ($this->StatusId != '' && $this->StatusId >= 5 && is_numeric ( $this->TicketId ) && $this->TicketId != '' || $this->Permissao == 'Solicitante') {
+		if ($this->StatusId != '' && $this->StatusId >= 5 && is_numeric ( $this->TicketId ) && $this->TicketId != '') {
 			$from = array ();
 			$from [] = 'INNER JOIN ticket T ON T.TicketId = ' . $this->TicketId;
 			$from [] = 'INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId';

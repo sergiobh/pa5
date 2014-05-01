@@ -65,6 +65,8 @@
 
 	<?php $this->load->view ( 'chamado/historico' );?>
 
+	<div id="ListaAtendimentos"></div>
+	
 	<?php $this->load->view ( 'chamado/observacao' );?>
 
 	<?php $this->load->view ( 'chamado/anexo' );?>
@@ -113,11 +115,11 @@ $( document ).ready( function( ) {
 		return false;
 	} );
 
-	$('#selectCategoriaCadTicket').change(function(){
+	$('#CategoriaId').change(function(){
 		var CategoriaId = $(this).val();
 
 		if(CategoriaId == ''){
-			$('#tipoSolicitacao').html(TipoSolicitacaoDependendo);
+			$('#TipoSolicitacaoId').html(TipoSolicitacaoDependendo);
 		}
 		else{
 			carregaTipoSolicitacao(CategoriaId);
@@ -146,7 +148,7 @@ function submeterForm( ) {
 
 	var data 			= 'TicketId='+Ticket.TicketId+'&Nivel='+Nivel+'&StatusId='+StatusId+'&TipoSolicitacaoId='+TipoSolicitacaoId+'&PrioridadeId='+PrioridadeId;
 
-	$.blockUI({ message: '<h2>Salvando os dados...</h2>' });
+	$.blockUI({ message: '<h3>Salvando os dados...</h3>' });
 
 	$.ajax({
 		type: "POST",
@@ -189,10 +191,10 @@ function limpaTipoSolicitacao(){
 
 // Função para carregar os Tipo de Solicitação
 function carregaTipoSolicitacao(CategoriaId){
-	var Url		= '<?php echo BASE_URL;?>/tiposolicitacao/getTipoSolicitacao';
+	var Url		= '<?php echo BASE_URL;?>/tipoticket/getTipoTicket';
 	var data 	= 'TicketId='+Ticket.TicketId+'&StatusId='+Ticket.StatusId+'&CategoriaId='+CategoriaId;
 
-	$.blockUI({ message: '<h2>Carregando os Tipos de Solicitação...</h2>' });
+	$.blockUI({ message: '<h3>Carregando os Tipos de Solicitação...</h3>' });
 
 	$.ajax({
 		type: "get",
@@ -203,10 +205,10 @@ function carregaTipoSolicitacao(CategoriaId){
 			var Dados = "";
 
 			if(retorno.success){
-				var TipoSolicitacao = retorno.TipoSolicitacao;
+				var TipoTicket = retorno.TipoTicket;
 
-				for(Reg in TipoSolicitacao){
-					Dados += '<option value="'+TipoSolicitacao[Reg].TipoId+'">'+TipoSolicitacao[Reg].Nome+'</option>';
+				for(Reg in TipoTicket){
+					Dados += '<option value="'+TipoTicket[Reg].TipoId+'">'+TipoTicket[Reg].Nome+'</option>';
 				}
 
 				$('#TipoSolicitacaoId').html(TipoSolicitacaoSelecione + Dados);
@@ -227,7 +229,7 @@ function carregaTipoSolicitacao(CategoriaId){
 	});
 }
 function carregaStatus(){
-	$.blockUI({ message: '<h2>Carregando os status...</h2>' });
+	$.blockUI({ message: '<h3>Carregando os status...</h3>' });
 	
 	var Url = '<?php echo BASE_URL;?>/status/getStatus';
 	var data 	= 'StatusId='+Ticket.StatusId+'&Permissao='+Ticket.Permissao+'&Nivel='+Ticket.Nivel;
@@ -265,7 +267,7 @@ function carregaStatus(){
 	});
 }
 function carregaCategorias(){
-	$.blockUI({ message: '<h2>Carregando as categorias...</h2>' });
+	$.blockUI({ message: '<h3>Carregando as categorias...</h3>' });
 	
 	var Url = '<?php echo BASE_URL;?>/categoria/getCategorias';
 
@@ -305,7 +307,7 @@ function carregaCategorias(){
 }
 function carregaPrioridade(){
 	//PrioridadeId
-	$.blockUI({ message: '<h2>Carregando as prioridades...</h2>' });
+	$.blockUI({ message: '<h3>Carregando as prioridades...</h3>' });
 	
 	var Url = '<?php echo BASE_URL;?>/prioridade/getPrioridades';
 	var data 	= 'Nivel='+Ticket.Nivel+'&PrioridadeId='+Ticket.PrioridadeId+'&Permissao='+Ticket.Permissao;
@@ -328,7 +330,7 @@ function carregaPrioridade(){
 				$('#PrioridadeId').html(Dados);
 
 				if(Iniciando){
-					populaTicket();
+					buscaListaAtendimentos();
 				}
 				
 				$.unblockUI();
@@ -342,8 +344,44 @@ function carregaPrioridade(){
 		}
 	});
 }
+function buscaListaAtendimentos(){
+
+	if(Ticket.Permissao != 'Solicitante'){
+		buscaAtendimentos();
+	}
+	else if(Iniciando){
+		populaTicket();
+	}
+}
+function buscaAtendimentos(){
+	$.blockUI({ message: '<h3>Carregando os dados dos Atendimentos...</h3>' });
+	
+	var Url = '<?php echo BASE_URL;?>/atendimentoticket/listar';
+	var data 	= 'TicketId='+Ticket.TicketId;
+	
+	$.ajax({
+		type: "get",
+		url: Url,
+		data: data,
+		success: function(retorno){
+			var Dados = "";
+
+			if(retorno){
+				$("#ListaAtendimentos").html(retorno);
+			}
+				
+			if(Iniciando){
+				populaTicket();
+			}		
+			$.unblockUI();
+		},
+		error: function(){
+			exibeErroRecarregarPagina();
+		}
+	});
+}
 function buscaTicket(TicketId){
-	$.blockUI({ message: '<h2>Carregando os dados do Chamado...</h2>' });
+	$.blockUI({ message: '<h3>Carregando os dados do Chamado...</h3>' });
 	
 	var Url = '<?php echo BASE_URL;?>/chamado/carregaEditar';
 	var data 	= 'TicketId='+TicketId;

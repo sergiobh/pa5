@@ -224,7 +224,7 @@ class TicketMod extends CI_Model {
 				GROUP BY
 					TH.TicketId
 				";
-
+		
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();
@@ -305,6 +305,8 @@ class TicketMod extends CI_Model {
 		}
 	}
 	public function salvarEdicao() {
+		$this->load->model ( "TransactionMod" );
+		$this->TransactionMod->Start ();
 		
 		// $this->Permissao = $this->getPermissao();
 		$TicketGravado = json_decode ( $this->getTicket () );
@@ -327,15 +329,54 @@ class TicketMod extends CI_Model {
 		
 		$this->db->query ( $sql );
 		
-		/*
-		 * if ($this->db->affected_rows () > 0) { $retorno ["msg"] = "Dados salvos com sucesso!"; } else { $retorno ["msg"] = "Altere pelo menos um dos campos!"; }
-		 */
-		
-		$retorno ["msg"] = "Dados salvos com sucesso!";
-		
-		$retorno ['success'] = true;
+		if ($this->db->affected_rows () > 0) {
+			
+			$retorno = $this->checkAlteracoesAtendimento ();
+		} else {
+			$retorno ['success'] = false;
+			$retorno ["msg"] = "Altere pelo menos um dos campos!";
+		}
 		
 		return json_encode ( $retorno );
+	}
+	private function checkAlteracoesAtendimento() {
+		if ($this->TicketGravado->TipoId != $this->TipoId) {
+			$this->load->model ( "TransactionMod" );
+			
+			$this->load->model ( "Ticket_AtendimentoMod" );
+			$this->Ticket_AtendimentoMod->setTicketId ( $this->getTicketId () );
+			
+			$Desativar = $this->Ticket_AtendimentoMod->setDesativarAtendimentos ();
+			
+			if (! $Desativar) {
+				$this->TransactionMod->Rollback ();
+				
+				$retorno ['success'] = false;
+				$retorno ["msg"] = "Ocorreu um erro ao desativar os atendimentos existentes!";
+				
+				return $retorno;
+			}
+			
+			$this->Ticket_AtendimentoMod->setTipo_Nivel ( 1 );
+			$this->Ticket_AtendimentoMod->setStatusId ( 1 );
+			$this->Ticket_AtendimentoMod->criarDH_Solicitacao ();
+			$this->Ticket_AtendimentoMod->setAtivo ( 1 );
+			
+			if ($this->Ticket_AtendimentoMod->setAtendimento ()) {
+				
+				$this->TransactionMod->Commit ();
+				
+				$retorno ['success'] = true;
+				$retorno ["msg"] = "Dados salvos com sucesso!";
+			} else {
+				$this->TransactionMod->Rollback ();
+				
+				$retorno ['success'] = false;
+				$retorno ["msg"] = "Ocorreu um erro ao salvar o novo atendimento!";
+			}
+		}
+		
+		return $retorno;
 	}
 	private function montaSetUpdate() {
 		$setUpdate = array ();
@@ -382,7 +423,6 @@ class TicketMod extends CI_Model {
 			) )) {
 				$this->setFuncionarioId ( $_SESSION ['Funcionario']->FuncionarioId );
 				
-				$setUpdate [] = "TipoId = " . $this->TipoId;
 				// $setUpdate [] = "StatusId = " . $this->StatusId;
 				// $setUpdate [] = "AtendenteId = " . $this->getFuncionarioId ();
 				$setUpdate [] = "PrioridadeId = " . $this->PrioridadeId;
@@ -390,7 +430,13 @@ class TicketMod extends CI_Model {
 		} else if ($this->TicketGravado->Permissao == 'Solicitante') {
 			
 			// Se em aberto pode trocar Categoria e Tipo
-			if ($this->TicketGravado->StatusId == 1) {
+			// if ($this->TicketGravado->StatusId == 1) {
+			if (in_array ( $this->TicketGravado->StatusId, array (
+					1,
+					2,
+					3,
+					4 
+			) )) {
 				$setUpdate [] = "TipoId = " . $this->TipoId;
 			}
 		}

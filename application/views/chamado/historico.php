@@ -1,5 +1,5 @@
 <div class='chamados_historicos'>
-	<h2 class="glyphicon glyphicon-th-list">Histórico do Chamado</h2>
+	<h2 class="glyphicon glyphicon-th-list">&nbsp;Histórico do Chamado</h2>
 	<table class="table table-hover">
 		<thead>
 			<tr>

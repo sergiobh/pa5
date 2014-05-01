@@ -75,7 +75,7 @@ class Ticket_AtendimentoMod extends CI_Model {
 					," . $this->Ativo . "
 				)		
 				";
-		
+
 		$this->db->query ( $sql );
 		
 		if ($this->db->affected_rows () > 0) {
@@ -154,5 +154,50 @@ class Ticket_AtendimentoMod extends CI_Model {
 		} else {
 			return false;
 		}
+	}
+	public function setDesativarAtendimentos() {
+		$sql = "
+				UPDATE
+					ticket_atendimento
+				SET
+					Ativo = 0
+				WHERE
+					TicketId = " . $this->TicketId . "				
+				";
+
+		$this->db->query ( $sql );
+		
+		if ($this->db->affected_rows () > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public function getAtendimentos(){
+		$sql = "
+				SELECT
+					TA.AtendimentoId
+					,TA.Tipo_Nivel
+					,TS.Nome AS Status
+					,IF( F.Nome IS NULL, '-', F.Nome ) AS Atendente
+					,DATE_FORMAT( TA.DH_Solicitacao , '%d/%m/%Y %H:%i:%s' ) AS DH_Solicitacao
+					,IF(TA.Ativo = 1, 'Sim', 'Não' ) AS Ativo
+				FROM
+					ticket_atendimento TA
+					INNER JOIN ticket_status TS ON TS.StatusId = TA.StatusId
+					LEFT JOIN funcionario F ON F.FuncionarioId = TA.AtendenteId
+				WHERE
+					TA.TicketId = ".$this->TicketId."
+				";
+		
+		$query = $this->db->query ( $sql );
+		
+		$dados = $query->result ();
+		
+		if (count ( $dados ) > 0) {
+			return $dados;
+		} else {
+			return false;
+		}		
 	}
 }
