@@ -98,8 +98,8 @@ class HistoricoMod extends CI_Model {
 				FROM
 					ticket_historico TH
 					INNER JOIN ticket_histoticotipo THT ON THT.HistoticoTipoId = TH.HistoricoTipoId
-					INNER JOIN Funcionario FS ON FS.FuncionarioId = TH.UsuarioId
-					LEFT JOIN Funcionario FA ON FA.FuncionarioId = TH.UsuarioId
+					INNER JOIN funcionario FS ON FS.FuncionarioId = TH.UsuarioId
+					LEFT JOIN funcionario FA ON FA.FuncionarioId = TH.UsuarioId
 				WHERE
 					TH.TicketId = ".$this->TicketId."
 				ORDER BY

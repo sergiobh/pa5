@@ -194,17 +194,17 @@ class TicketMod extends CI_Model {
 					,IF(ISNULL(T.DH_Previsao), '-', T.DH_Previsao) AS DH_Previsao
 					,TP.Nome AS Prioridade
 				FROM 
-					Ticket T
-					INNER JOIN Ticket_Atendimento TA ON TA.TicketId = T.TicketId
-					INNER JOIN Ticket_Tipo TT ON TT.TipoId = T.TipoId
-					INNER JOIN Ticket_Categoria TC ON TC.CategoriaId = TT.CategoriaId
-					INNER JOIN Ticket_Prioridade TP ON TP.PrioridadeId = T.PrioridadeId
-					INNER JOIN Ticket_Historico TH ON TH.TicketId = T.TicketId						
-					INNER JOIN Funcionario FS ON FS.FuncionarioId = T.FuncionarioId
-					INNER JOIN Ticket_TipoNivel TTN ON TTN.TipoId = T.TipoId
-					LEFT JOIN Funcionario FA ON FA.FuncionarioId = TA.AtendenteId
-					LEFT JOIN Setor S ON S.SetorId = TTN.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . " AND TTN.Nivel = TA.Tipo_Nivel
-					LEFT JOIN SetorFuncionario SF ON SF.SetorId = TTN.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . " AND TTN.Nivel = TA.Tipo_Nivel
+					ticket T
+					INNER JOIN ticket_atendimento TA ON TA.TicketId = T.TicketId
+					INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId
+					INNER JOIN ticket_categoria TC ON TC.CategoriaId = TT.CategoriaId
+					INNER JOIN ticket_prioridade TP ON TP.PrioridadeId = T.PrioridadeId
+					INNER JOIN ticket_historico TH ON TH.TicketId = T.TicketId						
+					INNER JOIN funcionario FS ON FS.FuncionarioId = T.FuncionarioId
+					INNER JOIN ticket_tiponivel TTN ON TTN.TipoId = T.TipoId
+					LEFT JOIN funcionario FA ON FA.FuncionarioId = TA.AtendenteId
+					LEFT JOIN setor S ON S.SetorId = TTN.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . " AND TTN.Nivel = TA.Tipo_Nivel
+					LEFT JOIN setorfuncionario SF ON SF.SetorId = TTN.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . " AND TTN.Nivel = TA.Tipo_Nivel
 				WHERE
 					TA.StatusId = $this->StatusId
 					AND TA.Ativo = 1
@@ -261,13 +261,13 @@ class TicketMod extends CI_Model {
 					END AS Permissao
 				FROM
 					ticket T
-					INNER JOIN Ticket_Atendimento TA ON TA.TicketId = T.TicketId
+					INNER JOIN ticket_atendimento TA ON TA.TicketId = T.TicketId
 					INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId
-					INNER JOIN Funcionario FS ON FS.FuncionarioId = T.FuncionarioId
-					INNER JOIN Ticket_TipoNivel TTN ON TTN.TipoId = T.TipoId
-					LEFT JOIN Funcionario FA ON FA.FuncionarioId = TA.AtendenteId
-					LEFT JOIN Setor S ON S.SetorId = TTN.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . " AND TTN.Nivel = TA.Tipo_Nivel
-					LEFT JOIN SetorFuncionario SF ON SF.SetorId = TTN.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . " AND TTN.Nivel = TA.Tipo_Nivel
+					INNER JOIN funcionario FS ON FS.FuncionarioId = T.FuncionarioId
+					INNER JOIN ticket_tiponivel TTN ON TTN.TipoId = T.TipoId
+					LEFT JOIN funcionario FA ON FA.FuncionarioId = TA.AtendenteId
+					LEFT JOIN setor S ON S.SetorId = TTN.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . " AND TTN.Nivel = TA.Tipo_Nivel
+					LEFT JOIN setorfuncionario SF ON SF.SetorId = TTN.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . " AND TTN.Nivel = TA.Tipo_Nivel
 				WHERE
 					T.ticketId = " . $this->getTicketId () . "
 					AND TA.Ativo = 1
@@ -458,7 +458,7 @@ class TicketMod extends CI_Model {
 					END AS Permissao		
 				FROM
 					ticket T
-					LEFT JOIN Funcionario FA ON FA.FuncionarioId = T.AtendenteId					
+					LEFT JOIN funcionario FA ON FA.FuncionarioId = T.AtendenteId					
 					LEFT JOIN setor S ON S.SetorId = T.SetorId AND S.FuncionarioId = " . $this->getFuncionarioId () . "
 					LEFT JOIN setorfuncionario SF ON SF.SetorId = T.SetorId AND SF.FuncionarioId = " . $this->getFuncionarioId () . "
 				WHERE

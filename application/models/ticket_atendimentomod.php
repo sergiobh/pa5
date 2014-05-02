@@ -128,7 +128,7 @@ class Ticket_AtendimentoMod extends CI_Model {
 					TTN.TipoNivelId
 				FROM
 					ticket T
-					INNER JOIN Ticket_TipoNivel TTN ON TTN.TipoId = T.TipoId
+					INNER JOIN ticket_tiponivel TTN ON TTN.TipoId = T.TipoId
 				WHERE
 					T.TicketId = " . $this->TicketId . "
 					AND TTN.Nivel = " . $ProximoNivel . "
