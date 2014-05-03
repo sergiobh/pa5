@@ -10,5 +10,15 @@ class TipoNivel extends CI_Controller {
 		
 		echo json_encode ( $this->TipoNivelMod->getTipoNivel () );
 	}
+	public function listar(){
+		$this->CheckLogado ();
+		
+		$TipoId = $this->uri->segment ( 3 );
+		
+		$Dados ['TipoId'] = $TipoId;
+		
+		$Dados ['View'] = 'tiponivel/listar';
+		$this->load->view ( 'body/index', $Dados );
+	}
 }
 ?>
