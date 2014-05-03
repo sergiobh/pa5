@@ -4,7 +4,7 @@
 		<div class="form-group selectTipoObservacao">
 			<label>Tipo de Observação:</label> <select id="TipoObservacao"
 				name="TipoObservacao" class="form-control">
-				<option value='1' selected="selected" >Pública</option>
+				<option value='1' selected="selected">Pública</option>
 			</select>
 		</div>
 		<div class="form-group">
@@ -53,8 +53,8 @@ function submerterFormObservacao(){
 
 	var Descricao = $("#Descricao").val();
 	var TipoObservacao = $("#TipoObservacao option:selected").val();
-	
-	var data 			= 'TicketId='+Ticket.TicketId+'&TipoObservacao='+TipoObservacao+'&Descricao='+Descricao;
+		
+	var data 			= 'TicketId='+Ticket.TicketId+'&TipoObservacao='+TipoObservacao+'&Descricao='+Descricao+'&Nivel='+Ticket.Nivel;
 	
 	$.blockUI({ message: '<h2>Salvando os dados...</h2>' });
 
@@ -73,6 +73,10 @@ function submerterFormObservacao(){
 				setTimeout(
 					function(){
 						listarHistorico();
+
+						if(TipoObservacao == 3){
+							listarAtendimentos();
+						}
 					},
 					2000
 				);
@@ -97,47 +101,19 @@ function submerterFormObservacao(){
 
 function limparCamposObservacao(){
 	$("#Descricao").val("");
+	$("#TipoObservacao").val( 1 );
+	$(".optElevacaoNivel").remove();
 }
 
 function validaPermissaoObservacao(){
 	if(Ticket && Ticket.Permissao != 'Solicitante'){
 		$("#TipoObservacao").append("<option value='2'>Interna</option>");
 
-		exibicaoElevacaoNivel();
-		
+		if(Ticket.TransferenciaNivel){
+			$("#TipoObservacao").append("<option value='3' class='optElevacaoNivel'>Elevação de Nível do Suporte</option>");
+		}
+				
 		$(".selectTipoObservacao").show();
-	}
-}
-
-function exibicaoElevacaoNivel(){
-	/*
-	/* Se Status do Ticket for:
-	/* * Em Manutenção
-	/* Se Permissao for:
-	/* * Chefe
-	/* * Atendente
-	*/
-	if( Ticket.StatusId == 4 && ( Ticket.Permissao == 'Chefe' || Ticket.Permissao == 'Atendente' ) ){
-		/*
-		/* Verifica Se o Nivel que o usuário tem permissao é o último
-		*/	
-		var Url				= '<?php echo BASE_URL;?>/atendimentoticket/checkProximoAtendimento';
-	
-		var data 			= 'TicketId='+Ticket.TicketId+'&Nivel='+Ticket.Nivel;
-
-		$.ajax({
-			type: "GET",
-			url: Url,
-			data: data,
-			dataType: 'json',
-			success: function(retorno){
-				if(retorno.success){
-					$("#TipoObservacao").append("<option value='3'>Elevação de Nível do Suporte</option>");
-				}
-
-				$.unblockUI();
-			}
-		});
 	}
 }
 </script>

@@ -75,7 +75,7 @@ class Ticket_AtendimentoMod extends CI_Model {
 					," . $this->Ativo . "
 				)		
 				";
-
+		
 		$this->db->query ( $sql );
 		
 		if ($this->db->affected_rows () > 0) {
@@ -84,6 +84,17 @@ class Ticket_AtendimentoMod extends CI_Model {
 			return true;
 		} else {
 			return false;
+		}
+	}
+	public function setNovoNivel() {
+		if ($Tipo_Nivel = $this->checkTransferencia ()) {
+			$this->setTipo_Nivel ( $Tipo_Nivel );
+			$this->setStatusId ( 1 );
+			$this->setAtendenteId ( NULL );
+			$this->criarDH_Solicitacao ();
+			$this->setAtivo ( 1 );
+			
+			return $this->setAtendimento ();
 		}
 	}
 	public function possuiProximoAtendimento($RestringeExistente = false) {
@@ -108,7 +119,7 @@ class Ticket_AtendimentoMod extends CI_Model {
 					AND TA.Ativo = 1
 					" . $sql_where . "
 				";
-
+		
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->row ();
@@ -165,7 +176,7 @@ class Ticket_AtendimentoMod extends CI_Model {
 				WHERE
 					TicketId = " . $this->TicketId . "				
 				";
-
+		
 		$this->db->query ( $sql );
 		
 		if ($this->db->affected_rows () > 0) {
@@ -179,23 +190,23 @@ class Ticket_AtendimentoMod extends CI_Model {
 				UPDATE
 					ticket_atendimento
 				SET
-					StatusId = ".$this->StatusId."
-					,AtendenteId = ".$this->AtendenteId."
+					StatusId = " . $this->StatusId . "
+					,AtendenteId = " . $this->AtendenteId . "
 				WHERE
 					TicketId = " . $this->TicketId . "
-					AND Tipo_Nivel = ".$this->Tipo_Nivel."
+					AND Tipo_Nivel = " . $this->Tipo_Nivel . "
 					AND Ativo = 1
 				";
-
+		
 		$this->db->query ( $sql );
-	
+		
 		if ($this->db->affected_rows () > 0) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	public function getAtendimentos(){
+	public function getAtendimentos() {
 		$sql = "
 				SELECT
 					TA.AtendimentoId
@@ -209,7 +220,7 @@ class Ticket_AtendimentoMod extends CI_Model {
 					INNER JOIN ticket_status TS ON TS.StatusId = TA.StatusId
 					LEFT JOIN funcionario F ON F.FuncionarioId = TA.AtendenteId
 				WHERE
-					TA.TicketId = ".$this->TicketId."
+					TA.TicketId = " . $this->TicketId . "
 				";
 		
 		$query = $this->db->query ( $sql );
@@ -220,6 +231,6 @@ class Ticket_AtendimentoMod extends CI_Model {
 			return $dados;
 		} else {
 			return false;
-		}		
+		}
 	}
 }

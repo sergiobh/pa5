@@ -32,6 +32,7 @@ class Historico extends CI_Controller {
 		$TicketId = $this->input->post ( 'TicketId' );
 		$TipoObservacao = $this->input->post ( 'TipoObservacao' );
 		$Descricao = $this->input->post ( 'Descricao' );
+		$Nivel = $this->input->post ( 'Nivel' );
 		
 		/*
 		 * Buscar Permissao
@@ -61,9 +62,13 @@ class Historico extends CI_Controller {
 			/*
 			 * Elevação de Nível do Suporte
 			 */
-			$this->load->model("Ticket_AtendimentoMod");
-			$this->Ticket_AtendimentoMod->
+			$this->load->model ( "Ticket_AtendimentoMod" );
+			$this->Ticket_AtendimentoMod->setTicketId ( $TicketId );
+			$this->Ticket_AtendimentoMod->setTipo_Nivel ( $Nivel );
+			$this->Ticket_AtendimentoMod->setAtendenteId ( $FuncionarioId );
+			$this->Ticket_AtendimentoMod->setNovoNivel ();
 			
+			$HistoricoTipoId = 6;
 		}
 		
 		$this->load->model ( "HistoricoMod" );

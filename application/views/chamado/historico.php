@@ -15,16 +15,11 @@
 	</table>
 </div>
 <script>
-$( document ).ready( function( ) {
-	listarHistorico();
-
-});
-
 function listarHistorico(){
 	// Executa o GET usando metodo AJAX e retorando Json
 	var Url				= '<?php echo BASE_URL;?>/chamado/carregarHistorico';
 
-	var data 			= 'TicketId=<?php echo $TicketId;?>';
+	var data 			= 'TicketId=<?php echo $TicketId;?>'+'&Permissao='+Ticket.Permissao;
 
 	$.blockUI({ message: '<h1>Carregandos os Históricos...</h1>' });
 
@@ -68,7 +63,7 @@ function populaGridHistorico(Historicos){
 	
 	for(Reg in Historicos){
 		html += abreTR();	
-			html += carregaTDTitle(Historicos[Reg].HistoricoTipoId, Historicos[Reg].Descricao);
+			html += carregaTDTitleHistorico(Historicos[Reg].HistoricoTipoId, Historicos[Reg].Descricao);
 			html += carregaTD(Historicos[Reg].Ocorrencia);
 			html += carregaTD(Historicos[Reg].Usuario);
 			html += carregaTD(Historicos[Reg].DH_Cadastro);
@@ -87,12 +82,12 @@ function fechaTR(){
 function carregaTD(dado){
 	return '<td>'+dado+'</td>';
 }
-function carregaTDTitle(HistoricoTipoId, dado){
-	if(HistoricoTipoId >= 3 && HistoricoTipoId <= 4){
+function carregaTDTitleHistorico(HistoricoTipoId, dado){
+	if(HistoricoTipoId == 3 || HistoricoTipoId == 4){
 		return carregaTD('Anexo'); 
 	}
 	
-	dadoReduzido = dado.substring(0,50);
+	dadoReduzido = dado.substring(0,20);
 
 	return '<td title="'+dado+'">'+dadoReduzido+'</td>';
 }

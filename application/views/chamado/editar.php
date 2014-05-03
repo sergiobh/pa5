@@ -57,8 +57,6 @@
 			<div class="linha_botoes">
 				<button class="btn btn-sm btn btn-success btn-block botao_submit">
 					Enviar</button>
-				<button type="button"
-					class="btn btn-sm btn btn btn-warning btn-block botao_transferir botao_reset">Transferir</button>
 			</div>
 		</div>
 	</form>
@@ -125,10 +123,6 @@ $( document ).ready( function( ) {
 			carregaTipoSolicitacao(CategoriaId);
 		}
 	});
-
-	$('.botao_transferir').click(function(){
-		executarTransferencia();
-	});
 });
 
 function inicializa(){
@@ -141,6 +135,8 @@ function inicializa(){
 	validaPermissaoObservacao();
 	
 	carregaStatus();
+
+	listarHistorico();
 }
 function submeterForm( ) {
 	// Declaração de variaveis
@@ -446,23 +442,6 @@ function executaPermissoes(){
 		exibeErroRecarregarPagina();
 		return false;
 	}
-
-	if( ! (Ticket.TransferenciaNivel && Ticket.StatusId == 4)){
-		$(".botao_transferir").hide();
-	}
-	
-	/*
-	/* Permissoes
-	*/
-	/*if(Ticket.Permissao == 'Solicitante'){
-		$(".form_atendimento").hide();
-	}*/
-	/*else if(Ticket.Permissao == 'Atendente' || Ticket.Permissao == 'Setor'){
-
-	}
-	else if(Ticket.Permissao == 'Chefe'){
-
-	} */
 }
 function populaTicket(){
 	$("#Permissao").val(Ticket.Permissao);
@@ -480,8 +459,5 @@ function populaTicket(){
 	$("#DataBaixa").val(Ticket.DH_Baixa);
 
 	Iniciando = false;
-}
-function executarTransferencia(){
-	console.log('Executar a transferência!!!');
 }
 </script>

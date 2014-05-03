@@ -52,7 +52,7 @@ class Chamado extends CI_Controller {
 		 * Verifica se possui get de arquivos para anexar
 		 */
 		if (isset ( $_FILES ['ticketFile'] )) {
-			$Dados ['RespostaMsg'] = $this->salvaArquivos ($TicketId);
+			$Dados ['RespostaMsg'] = $this->salvaArquivos ( $TicketId );
 		}
 		
 		$Dados ['TicketId'] = $TicketId;
@@ -63,14 +63,14 @@ class Chamado extends CI_Controller {
 		$this->load->view ( 'body/index', $Dados );
 	}
 	private function salvaArquivos($TicketId) {
-		$config ['upload_path'] = './public/anexos/'.$TicketId.'/';
+		$config ['upload_path'] = './public/anexos/' . $TicketId . '/';
 		$config ['allowed_types'] = '*';
 		$config ['max_size'] = '10240';
-
+		
 		$this->load->library ( 'upload', $config );
-
-		if (!is_dir($config ['upload_path'])) {
-			mkdir($config ['upload_path'], 0777, TRUE);
+		
+		if (! is_dir ( $config ['upload_path'] )) {
+			mkdir ( $config ['upload_path'], 0777, TRUE );
 		}
 		
 		if (! $this->upload->do_upload ( "ticketFile" )) {
@@ -84,19 +84,19 @@ class Chamado extends CI_Controller {
 				return $Dados;
 			}
 			
-			$TicketJson = $this->TicketMod->getTicket ();  
-			$TicketObj = json_decode($TicketJson);
+			$TicketJson = $this->TicketMod->getTicket ();
+			$TicketObj = json_decode ( $TicketJson );
 			
-			if(! $TicketObj->Ticket){
+			if (! $TicketObj->Ticket) {
 				$Resposta = 'Usuário sem permissão para o ticket!';
 				return $Resposta;
 			}
 			
-			$HistoricoTipoId = ($TicketObj->Ticket->Permissao == 'Solicitante') ? 3 : 4; 
-
+			$HistoricoTipoId = ($TicketObj->Ticket->Permissao == 'Solicitante') ? 3 : 4;
+			
 			/*
 			 * Upload do arquivo
-			 * */
+			 */
 			$config = $this->upload->data ( "ticketFile" );
 			
 			$file = $config ['file_name'];
@@ -139,7 +139,7 @@ class Chamado extends CI_Controller {
 		
 		$this->load->model ( "TicketMod" );
 		$this->TicketMod->setTicketId ( $TicketId );
-		$this->TicketMod->setTipo_Nivel($Nivel);
+		$this->TicketMod->setTipo_Nivel ( $Nivel );
 		$this->TicketMod->setPrioridadeId ( $PrioridadeId );
 		$this->TicketMod->setResultado ( $Resultado );
 		$this->TicketMod->setStatusId ( $StatusId );
@@ -149,9 +149,11 @@ class Chamado extends CI_Controller {
 	}
 	public function carregarHistorico() {
 		$TicketId = $this->input->get ( 'TicketId' );
+		$permissao = $this->input->get ( 'Permissao' );
 		
 		$this->load->model ( "HistoricoMod" );
 		$this->HistoricoMod->setTicketId ( $TicketId );
+		$this->HistoricoMod->setPermissao ( $permissao );
 		
 		$Historicos = $this->HistoricoMod->getHistoricos ();
 		

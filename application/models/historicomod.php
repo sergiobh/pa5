@@ -6,6 +6,7 @@ class HistoricoMod extends CI_Model {
 	private $HistoricoTipoId;
 	private $UsuarioId;
 	private $DH_Cadastro;
+	private $Permissao;
 	private $erroBreak;
 	private $erroMsg;
 	public function getHistoricoId() {
@@ -47,13 +48,19 @@ class HistoricoMod extends CI_Model {
 	public function criarDH_Cadastro() {
 		$this->DH_Cadastro = date ( 'Y-m-d H:i:s' );
 	}
+	public function getPermissao(){
+		return $this->Permissao;
+	}
+	public function setPermissao($Permissao){
+		$this->Permissao = $Permissao;
+	}
 	public function getErroMsg() {
 		return $this->erroMsg;
 	}
 	public function getErroBreak() {
 		return $this->erroBreak;
 	}
-	public function setHistorico() {
+	public function setHistorico() {		
 		$sql = "
 				INSERT INTO
 					ticket_historico(
@@ -83,7 +90,15 @@ class HistoricoMod extends CI_Model {
 			return false;
 		}
 	}
-	public function getHistoricos(){		
+	public function getHistoricos() {
+		$where = array();
+		
+		if($this->Permissao == 'Solicitante'){
+			$where[] = 'TH.HistoricoTipoId IN (1,2)';
+		}
+		
+		$sql_where = (count($where) > 0) ? ' AND '.implode(' AND ', $where) : '';
+		
 		$sql = "
 				SELECT
 					THT.Nome AS Ocorrencia
@@ -95,8 +110,8 @@ class HistoricoMod extends CI_Model {
 					END AS Usuario
 					,DATE_FORMAT( TH.DH_Cadastro , '%d/%m/%Y %H:%i:%s' ) AS DH_Cadastro
 					,CASE
-						WHEN (TH.HistoricoTipoId < 3 ) THEN ''
-						ELSE CONCAT('/historico/anexo/', TH.HistoricoId) 
+						WHEN (TH.HistoricoTipoId = 3 OR TH.HistoricoTipoId = 4 ) THEN CONCAT('/historico/anexo/', TH.HistoricoId)
+						ELSE ''
 					END AS Url
 				FROM
 					ticket_historico TH
@@ -104,11 +119,12 @@ class HistoricoMod extends CI_Model {
 					INNER JOIN funcionario FS ON FS.FuncionarioId = TH.UsuarioId
 					LEFT JOIN funcionario FA ON FA.FuncionarioId = TH.UsuarioId
 				WHERE
-					TH.TicketId = ".$this->TicketId."
+					TH.TicketId = " . $this->TicketId . "
+					".$sql_where."
 				ORDER BY
 					TH.HistoricoId
 				";
-
+//echo '<pre>'.$sql;exit;
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();
@@ -119,7 +135,7 @@ class HistoricoMod extends CI_Model {
 			return false;
 		}
 	}
-	public function getUrl(){
+	public function getUrl() {
 		$sql = "
 				SELECT
 					TH.Texto AS nameFile
@@ -127,17 +143,16 @@ class HistoricoMod extends CI_Model {
 				FROM
 					ticket_historico TH
 				WHERE
-					TH.HistoricoId = ".$this->HistoricoId."
+					TH.HistoricoId = " . $this->HistoricoId . "
 				";
 		
-		$query  = $this->db->query($sql);
+		$query = $this->db->query ( $sql );
 		
-		$dados = $query->row();
+		$dados = $query->row ();
 		
-		if(is_object($dados)){
+		if (is_object ( $dados )) {
 			return $dados;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
