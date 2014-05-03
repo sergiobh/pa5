@@ -44,6 +44,9 @@ class HistoricoMod extends CI_Model {
 	public function setDH_Cadastro($DH_Cadastro) {
 		$this->DH_Cadastro = $DH_Cadastro;
 	}
+	public function criarDH_Cadastro() {
+		$this->DH_Cadastro = date ( 'Y-m-d H:i:s' );
+	}
 	public function getErroMsg() {
 		return $this->erroMsg;
 	}

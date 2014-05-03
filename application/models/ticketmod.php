@@ -329,17 +329,19 @@ class TicketMod extends CI_Model {
 		
 		$this->db->query ( $sql );
 		
-		if ($this->db->affected_rows () > 0) {
-			
-			$retorno = $this->checkAlteracoesAtendimento ();
-		} else {
-			$retorno ['success'] = false;
-			$retorno ["msg"] = "Altere pelo menos um dos campos!";
-		}
+		// if ($this->db->affected_rows () > 0) {
+		
+		$retorno = $this->checkAlteracoesAtendimento ();
+		/*
+		 * } else { $retorno ['success'] = false; $retorno ["msg"] = "Altere pelo menos um dos campos!"; }
+		 */
 		
 		return json_encode ( $retorno );
 	}
 	private function checkAlteracoesAtendimento() {
+		$retorno ['success'] = true;
+		$retorno ["msg"] = "Dados salvos com sucesso!";
+		
 		if ($this->TicketGravado->TipoId != $this->TipoId) {
 			$this->load->model ( "TransactionMod" );
 			
@@ -366,13 +368,36 @@ class TicketMod extends CI_Model {
 				
 				$this->TransactionMod->Commit ();
 				
-				$retorno ['success'] = true;
-				$retorno ["msg"] = "Dados salvos com sucesso!";
+				/*
+				 * Retorno já populado com SUCCESS = TRUE
+				 */
 			} else {
 				$this->TransactionMod->Rollback ();
 				
 				$retorno ['success'] = false;
 				$retorno ["msg"] = "Ocorreu um erro ao salvar o novo atendimento!";
+			}
+		} else if ($this->StatusId == 4) {
+			/*
+			 * Verificar se é $this->StatusId == 4 para inserir o AtendenteId
+			 */
+			$this->load->model ( "TransactionMod" );
+			
+			$this->setAtendenteId ( $_SESSION ['Funcionario']->FuncionarioId );
+			
+			$this->load->model ( "Ticket_AtendimentoMod" );
+			$this->Ticket_AtendimentoMod->setTicketId ( $this->getTicketId () );
+			$this->Ticket_AtendimentoMod->setStatusId ( $this->StatusId );
+			$this->Ticket_AtendimentoMod->setTipo_Nivel ( $this->Tipo_Nivel );
+			$this->Ticket_AtendimentoMod->setAtendenteId( $this->AtendenteId );
+			
+			if ($this->Ticket_AtendimentoMod->updateAtendimento ()) {
+				$this->TransactionMod->Commit ();
+			} else {
+				$this->TransactionMod->Rollback ();
+				
+				$retorno ['success'] = false;
+				$retorno ["msg"] = "Ocorreu um erro ao atualizar o atendimento!";
 			}
 		}
 		

@@ -133,6 +133,12 @@ $( document ).ready( function( ) {
 
 function inicializa(){
 	executaPermissoes();
+
+	/*
+	/* Método está na view:
+	/* chamado/observacao
+	*/
+	validaPermissaoObservacao();
 	
 	carregaStatus();
 }

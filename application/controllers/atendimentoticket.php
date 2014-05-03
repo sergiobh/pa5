@@ -23,4 +23,17 @@ class AtendimentoTicket extends CI_Controller {
 		
 		echo json_encode ( $retorno );
 	}
+	public function checkProximoAtendimento() {
+		$TicketId = $this->input->get ( "TicketId" );
+		$Nivel = $this->input->get ( "Nivel" );
+		
+		$this->load->model ( "Ticket_AtendimentoMod" );
+		$this->Ticket_AtendimentoMod->setTicketId ( $TicketId );
+		
+		$transferencia = $this->Ticket_AtendimentoMod->checkTransferencia();
+		echo '<pre>';var_dump($transferencia);exit;
+		//$retorno['success'] = $this->Ticket_AtendimentoMod->checkProximoAtendimento ();  
+		
+		echo json_encode ( $retorno );
+	}
 }

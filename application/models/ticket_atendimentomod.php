@@ -92,7 +92,7 @@ class Ticket_AtendimentoMod extends CI_Model {
 		$where = array ();
 		
 		if ($RestringeExistente) {
-			$where [] = 'TA.StatusId <= 5';
+			$where [] = 'TA.StatusId <= 4';
 		}
 		
 		$sql_where = (count ( $where ) > 0) ? ' AND ' . implode ( ' AND ', $where ) : '';
@@ -105,9 +105,10 @@ class Ticket_AtendimentoMod extends CI_Model {
 				WHERE
 					TA.TicketId = " . $this->TicketId . "
 					AND TA.Tipo_Nivel = " . $ProximoNivel . "
+					AND TA.Ativo = 1
 					" . $sql_where . "
 				";
-		
+
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->row ();
@@ -167,6 +168,27 @@ class Ticket_AtendimentoMod extends CI_Model {
 
 		$this->db->query ( $sql );
 		
+		if ($this->db->affected_rows () > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public function updateAtendimento() {
+		$sql = "
+				UPDATE
+					ticket_atendimento
+				SET
+					StatusId = ".$this->StatusId."
+					,AtendenteId = ".$this->AtendenteId."
+				WHERE
+					TicketId = " . $this->TicketId . "
+					AND Tipo_Nivel = ".$this->Tipo_Nivel."
+					AND Ativo = 1
+				";
+
+		$this->db->query ( $sql );
+	
 		if ($this->db->affected_rows () > 0) {
 			return true;
 		} else {

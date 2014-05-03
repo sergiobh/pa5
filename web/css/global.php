@@ -397,3 +397,7 @@ form .botao_direita{
 	margin-right: 70px;
 	margin-bottom: 25px;
 }
+
+.chamado_editar_observacao .selectTipoObservacao{
+	display: none;
+}
