@@ -14,10 +14,10 @@
 	</div>
 </div>
 <script type="text/javascript">
-	var URL_DISPONIVEL = '<?php echo BASE_URL."/web/imagens/site/mobile/disponivel.jpg";?>';
-	var URL_OCUPADO = '<?php echo BASE_URL."/web/imagens/site/mobile/ocupado.jpg";?>';
-	var URL_DESATIVADO = '<?php echo BASE_URL."/web/imagens/site/mobile/desativado.jpg";?>';
-	var URL_ARRUMACAO = '<?php echo BASE_URL."/web/imagens/site/mobile/arrumacao.jpg";?>';
+	var URL_DISPONIVEL = '<?php echo BASE_URL."/web/imagens/site/mobile/disponivel.png";?>';
+	var URL_OCUPADO = '<?php echo BASE_URL."/web/imagens/site/mobile/ocupado.png";?>';
+	var URL_DESATIVADO = '<?php echo BASE_URL."/web/imagens/site/mobile/desativado.png";?>';
+	var URL_ARRUMACAO = '<?php echo BASE_URL."/web/imagens/site/mobile/arrumacao.png";?>';
 
 	function RedirecionamentoHome(){
 		$.blockUI({ message: '<h1>Nenhum leito encontrado!</h1>' });
