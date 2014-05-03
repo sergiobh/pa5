@@ -1,7 +1,7 @@
 <form class="form-signin functionario_login" role="form" >
 	<h2 class="form-signin-heading">Controle de Acesso</h2>
 	<div class="form-group">
-		<label>CPF:</label><input type='number' class="form-control" placeholder="Cpf" autofocus maxlength='11' id='Cpf' name='cpf' />
+		<label>CPF:</label><input type='text' class="form-control" placeholder="Cpf" autofocus maxlength='11' id='Cpf' name='cpf' />
 	</div>
 	<div class="form-group">
 		<label>Senha:</label><input type='password' class="form-control" placeholder="Senha" maxlength='10' id='Senha' name='senha' />
