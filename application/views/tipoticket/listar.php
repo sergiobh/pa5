@@ -84,7 +84,7 @@ function montaLinks(TipoId){
 	var urlEditar = '<?php echo BASE_URL.'/tipoticket/editar/';?>'+TipoId;
 	var editar = '<div class="botao_editar"><a href='+urlEditar+' title="Editar tipo de ticket '+TipoId+'"><div class="glyphicon glyphicon-pencil"></div></a></div>';
 
-	var urlNivel = '<?php echo BASE_URL.'/tiponivel/listar/';?>'+TipoId;
+	var urlNivel = '<?php echo BASE_URL.'/tiponivel/cadastrar/';?>'+TipoId;
 	var nivel = '<div class=""><a href='+urlNivel+' title="Níveis do tipo de ticket '+TipoId+'"><div class="glyphicon glyphicon-open"></div></a></div>';
 	
  	return carregaTD(editar + nivel);	

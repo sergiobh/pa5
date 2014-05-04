@@ -106,6 +106,10 @@ class Ticket_AtendimentoMod extends CI_Model {
 			$where [] = 'TA.StatusId <= 4';
 		}
 		
+		if ($this->TicketId != '') {
+			$where [] = "TA.TicketId = " . $this->TicketId;
+		}
+		
 		$sql_where = (count ( $where ) > 0) ? ' AND ' . implode ( ' AND ', $where ) : '';
 		
 		$sql = "
@@ -114,8 +118,7 @@ class Ticket_AtendimentoMod extends CI_Model {
 				FROM
 					ticket_atendimento TA
 				WHERE
-					TA.TicketId = " . $this->TicketId . "
-					AND TA.Tipo_Nivel = " . $ProximoNivel . "
+					TA.Tipo_Nivel = " . $ProximoNivel . "
 					AND TA.Ativo = 1
 					" . $sql_where . "
 				";
