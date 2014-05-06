@@ -32,7 +32,8 @@
 	}
 
 	function insereAndar(Andar){
-		$('#leitos').append($('<li/>', {
+		$('#leitos').append($('<div class="divideAndar"/>'),
+			$('<li/>', {
 			'data-role':'list-divider',
 			'role':"heading",
 			'class': 'divisor ui-li ui-li-divider ui-bar-b ui-first-child',
@@ -48,28 +49,31 @@
 
 		
 		$('#leitos').append($('<li/>', {
-				'class': 'ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-li-has-thumb ui-last-child ui-btn-up-d'
+				'class': 'noLi ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-li-has-thumb ui-last-child ui-btn-up-d'
 			}).append($('<div>', {
 				'class': 'ui-btn-inner ui-li'
 			}).append($('<div>', {
-				'class': 'ui-btn-text'					
-			}).append($('<a/>', {
+				'class': 'boxLeito ui-btn-text'					
+			}).append($('<a class="homeLeito"/>', {
 				'href': '#erro'
 				,'data-rel': 'popup'
 				,'data-transition': 'pop'
 				,'data-position-to': 'window'
-				,'class': 'ui-btn ui-btn-up-d ui-btn-icon-right ui-li-has-arrow ui-li ui-li-has-thumb ui-last-child'
+				,'class': 'noSublinhado ui-btn ui-btn-up-d ui-btn-icon-right ui-li-has-arrow ui-li ui-li-has-thumb ui-last-child'
 				+ Link
 			}).append(
 				$('<img/>',{
 					'src': URL	
-				}),$('<h2/>',{
-					'text': Leito
-				}),$('<p/>',{
-					'class': 'ui-li-aside',
+				}),$('<span/>',{
+					'class':'nomeLeito'
+					,'text': Leito
+				}),$('<span/>',{
+					'class': 'homeTextQuartoLeito',
 					'text': Quarto							
 				}),
-				$('<p/>',{
+				$('<br />'),
+				$('<span />',{
+					'class': 'homeTextQuartoLeito homeTextStatus',
 					'text': Status							
 				})
 			)))));

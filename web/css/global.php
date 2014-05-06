@@ -167,6 +167,75 @@ border-color:red
 	padding-top: 10px;
 	clear: both;
 }
+
+
+.divisor{ /*weslei*/
+	font-size:20px;
+	font-weight:bold ;
+	list-style-type: none;
+	background:#e5e5e5;
+	border:1px solid #ccc;
+	text-transform: uppercase;
+	padding:2px 2px;
+	margin-bottom:10px;
+	border-radius:3px;
+	
+
+}
+
+.divideAndar{
+	clear:both;
+	margin-bottom: 10px;
+	
+}
+
+
+.noLi{ /*weslei*/
+	list-style-type: none !important;
+}
+
+.homeLeito:hover{
+	text-decoration: none;
+	cursor:pointer;
+}
+
+.homeTextQuartoLeito {
+	background:#ccc;
+	border:1px solid #ccc;
+	border-radius:3px;
+	display:block !important;
+	color:#888;
+	padding-left: 3px;
+}
+
+.homeTextStatus{
+	clear:both;
+	background:#316391 !important;
+	color:#fff;
+	margin-top:-17px;
+}
+
+.boxLeito{ /*weslei*/
+	float:left;
+	margin-left:5px;
+	border:1px solid #ccc;
+	border-radius:3px;
+	padding:5px;
+	background:#e5e5e5;
+}
+
+.nomeLeito{ /*weslei*/
+	margin-top:-1px;
+	text-align:center;
+	display:block;
+	font-size:16px !important;
+	font-weight:bold;
+	color:#444 !important;
+	text-transform:uppercase;
+	border-radius:3px;
+}
+
+
 .home_andar .home_andar_item{
 	margin-top: 15px;	
 	font-size: 22px;
