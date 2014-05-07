@@ -44,7 +44,7 @@
 </form>
 </div>
 <?php
-	$this->load->view ( 'tipoticket/NIVEL', array('TipoId' => $TipoId) );
+	$this->load->view ( 'tiponivel/listar', array('TipoId' => $TipoId) );
 ?>
 <script type="text/javascript">
 var TipoTicket = '';

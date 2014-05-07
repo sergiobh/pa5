@@ -89,6 +89,7 @@ class FuncionarioMod extends CI_Model {
 	}
 	public function SalvarCadastro() {
 		if ($funcionario = $this->getFuncionario ()) {
+			$Retorno = new stdClass();
 			$Retorno->Status = false;
 			$Retorno->Msg = "Funcionário já cadastrado!";
 			$this->FuncionarioId = $Retorno->FuncionarioId = $funcionario->FuncionarioId;
