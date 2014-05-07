@@ -235,11 +235,36 @@ border-color:red
 	border-radius:3px;
 }
 
+.leg{ /*weslei*/
+	float:left;
+	margin:5px;
+	
+}
+
+.quarto{ /*weslei*/
+	margin:5px;
+	
+}
+
+.quarto span{ /*weslei*/
+	background:#407B97 !important;
+	color:#fff !important;
+	width:91px !important;
+	border-radius:0 !important;
+	padding:2px !important;
+	margin-top:-2px !important;
+	border:none !important;
+}
+
+input[type="text"]{
+	height: 28px !important;
+	margin-bottom:5px;
+}
 
 .home_andar .home_andar_item{
 	margin-top: 15px;	
 	font-size: 22px;
-	color: #F00;
+	color: #333333;
 	font-weight: bold;
 }
 .home_andar .home_quarto{
@@ -263,17 +288,27 @@ border-color:red
 	color: #000;
 }
 .home_andar .home_leito_item.Ocupado{
-	background-color: #F00;
+	background: url("../imagens/site/mobile/ocupado.png") no-repeat;
+	height:92px;
+	width: 92px !important;
 }
 .home_andar .home_leito_item.Liberado,
 .home_andar .home_leito_item.Ativo{
-	background-color: #0F0;
+	background: url("../imagens/site/mobile/disponivel.png") no-repeat;
+	height:92px;
+	width: 92px !important;
+	
+	 
 }
 .home_andar .home_leito_item.Arrumacao{
-	background-color: #FFFF00;
+	background: url("../imagens/site/mobile/arrumacao.png") no-repeat;
+	height:92px;
+	width: 92px !important;
 }
 .home_andar .home_leito_item.Desativado{
-	background-color: #C0C0C0;
+	background: url("../imagens/site/mobile/desativado.png") no-repeat;
+	height:92px;
+	width: 92px !important;
 }
 
 

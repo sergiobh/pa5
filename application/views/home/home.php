@@ -46,9 +46,10 @@
 		if(LeitoId != 0){
 			Link = ','+'onClick'+':'+'Quarto('+LeitoId+')';
 		}
-
 		
-		$('#leitos').append($('<li/>', {
+		
+		$('#leitos').append(
+			$('<li/>', {
 				'class': 'noLi ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-li-has-thumb ui-last-child ui-btn-up-d'
 			}).append($('<div>', {
 				'class': 'ui-btn-inner ui-li'
