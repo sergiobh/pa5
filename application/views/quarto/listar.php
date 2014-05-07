@@ -14,8 +14,8 @@
 					echo '</div>';
 				}
 
-				echo '<div class="home_andar">';
-				echo '<div class="home_andar_item">Andar: '.$Registro->Andar.'</div>';
+				echo '<div class="divideAndar home_andar">';
+				echo '<div class="divisor home_andar_item">Andar: '.$Registro->Andar.'</div>';
 
 				$Andar 	= $Registro->Andar;
 				$Quarto = '';
@@ -23,7 +23,7 @@
 			}
 
 			echo '<a class="link_quarto" href="'.BASE_URL.'/quarto/editar/'.$Registro->QuartoId.'" title="Editar '.$Registro->Quarto.'" >';
-				echo '<div class="home_leito_item '.$Registro->Status.'">Quarto: '.$Registro->Quarto.'</div>';
+				echo '<div class="home_leito_item '.$Registro->Status.' quarto"><span class="homeTextQuartoLeito"><b> '.$Registro->Quarto.'</b></span></div>';
 			echo '</a>';
 		}			
 		}
