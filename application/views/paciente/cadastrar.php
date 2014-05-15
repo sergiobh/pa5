@@ -1,98 +1,99 @@
 <div class='titulo_page'>Cadastro de Pacientes</div>
 <div class = 'painel_pacientes'>
-	<form class='formulario'>
-		<table cellspacing = "10" border = '0'>
-			<tr>
-				<td>Nome:</td>
-				<td><input id = 'nome' type = 'text' maxlength = '100' name = 'nome' descricao = 'nome' obrigatorio = 'sim' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Plano:</td>
-				<td>
-					<select name="tipo" descricao = "plano" id='tipo' obrigatorio = 'sim'>
+	<form class='formulario form-signin'>
+		
+		<div class="form-group">
+			<label>Nome:</label>
+			<input class="form-control" id = 'nome' type = 'text' maxlength = '100' name = 'nome' descricao = 'nome' obrigatorio = 'sim' />
+			
+		</div>
+		
+		<div class="form-group">
+			<label>Plano:</label>
+			<select class="form-control" name="tipo" descricao = "plano" id='tipo' obrigatorio = 'sim'>
 						<option value="-1">--- Selecione ---</option>
 						<option value="1">Apartamento</option>
 						<option value="2">Enfermária</option>
 					</select>
-				</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Sexo:</td>
-				<td>
-					<select name="sexo" id='sexo' descricao = "sexo" obrigatorio = 'sim'>
+		</div>
+		
+		<div class="form-group">
+			<label>Sexo:</label>
+			<select class="form-control" name="sexo" id='sexo' descricao = "sexo" obrigatorio = 'sim'>
 						<option value="-1">--- Selecione ---</option>
 						<option value="1">Masculino</option>
 						<option value="2">Feminino</option>
 					</select>
-				</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Cpf:</td>
-				<td><input type = 'text' maxlength = '11' name = 'cpf' id='cpf' descricao = 'cpf' obrigatorio = 'sim' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Logradouro:</td>
-				<td><input type = 'text' maxlength = '50' name = 'logradouro' id='logradouro' descricao = 'logradouro' obrigatorio = 'sim' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Número:</td>
-				<td><input type = 'text' maxlength = '10' name = 'numero' id='numero' descricao = 'numero' obrigatorio = 'sim' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Complemento:</td>
-				<td><input type = 'text' maxlength = '10' name = 'complemento' id='complemento' descricao = 'complemento' obrigatorio = 'nao' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Bairro:</td>
-				<td><input type = 'text' maxlength = '40' name = 'bairro' id='bairro' descricao = 'bairro' obrigatorio = 'sim' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Cidade:</td>
-				<td><input type = 'text' maxlength = '40' name = 'cidade' id='cidade' descricao = 'cidade' obrigatorio = 'sim' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Estado:</td>
-				<td><input type = 'text' maxlength = '2' name = 'estado' id='estado' descricao = 'estado' obrigatorio = 'sim' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Contatos:</td>
-				<td>
-					<input class='add_telefone' type = 'button' value = 'Adicionar' />
-					<input type="hidden" name="QtdTelefone" value="0" id="QtdTelefone">
-				</td>
-				<td></td>
-			</tr>
-			<tr class='tr_botoes'>
+			
+		</div>
+		
+		<div class="form-group">
+			<label>CPF:</label>
+			<input class="form-control" type = 'text' maxlength = '11' name = 'cpf' id='cpf' descricao = 'cpf' obrigatorio = 'sim' />
+		</div>
+		
+		<div class="form-group">
+			<label>Logradouro:</label>
+			<input class="form-control" type = 'text' maxlength = '50' name = 'logradouro' id='logradouro' descricao = 'logradouro' obrigatorio = 'sim' />
+		</div>
+		
+		<div class="form-group">
+			<label>Número:</label>
+			<input class="form-control" type = 'text' maxlength = '10' name = 'numero' id='numero' descricao = 'numero' obrigatorio = 'sim' />
+			
+		</div>
+		
+		<div class="form-group">
+			<label>Complemento:</label>
+			<input class="form-control" type = 'text' maxlength = '10' name = 'complemento' id='complemento' descricao = 'complemento' obrigatorio = 'nao' />
+		</div>
+		
+		<div class="form-group">
+			<label>Bairro:</label>
+			<input class="form-control" type = 'text' maxlength = '40' name = 'bairro' id='bairro' descricao = 'bairro' obrigatorio = 'sim' />
+		</div>
+		
+		<div class="form-group">
+			<label>Cidade:</label>
+			<input class="form-control" type = 'text' maxlength = '40' name = 'cidade' id='cidade' descricao = 'cidade' obrigatorio = 'sim' />
+		</div>
+		
+		<div class="form-group">
+			<label>Estado:</label>
+			<input class="form-control" type = 'text' maxlength = '2' name = 'estado' id='estado' descricao = 'estado' obrigatorio = 'sim' />
+		</div>
+		
+		<div class="form-group">
+			<label>Contatos</label>
+			<input class='add_telefone' type = 'button' value = 'Adicionar' />
+			<input type="hidden" name="QtdTelefone" value="0" id="QtdTelefone">
+		</div>
+		<div class="form-group">
+		<table>
+		<tr class='tr_botoes'>
 				<td></td>
 				<td colspan="2">
-					<div class='retorno_ajax'></div>
-					<input class='botao_submit' type = 'button' value = 'Enviar' />
-					<input class='botao_reset' type = 'reset' value = 'Limpar' />
+		<div class="linha_botoes">
+		<div class='retorno_ajax'></div>
+			<button class="btn btn-sm btn btn-success btn-block botao_submit">
+					Enviar</button>
+			<button class="btn btn-sm btn btn-danger btn-block botao_reset"
+					type="reset">Limpar</button>
+		</div>
+					
+					
 				</td>
 			</tr>
 		</table>
-	</form>
+		</div>
+			</form>
 	<script type="text/javascript">
 		var Telefones = [];
 
 		function AddTelefone(){
 			var QtdTelefone = $("#QtdTelefone").val();
 
+			
 			QtdTelefone++;
 
 			$("#QtdTelefone").val(QtdTelefone);
@@ -100,7 +101,7 @@
 			// Adiciona o Telefone no array
 			Telefones.push(QtdTelefone);
 
-			var AddTelefone = "<tr class='linha_telefone linha_telefone"+QtdTelefone+"'><td>Telefone"+QtdTelefone+":</td><td><input type = 'text' maxlength = '14' name = 'telefone"+QtdTelefone+"' descricao = 'telefone"+QtdTelefone+"' class='telefone' id = 'telefone"+QtdTelefone+"' obrigatorio = 'sim' /></td><td><input class='del_telefone' onclick='DelTelefone("+QtdTelefone+")' type = 'button' value = 'Remover' /></td></tr>";
+			var AddTelefone = "<tr class='linha_telefone linha_telefone"+QtdTelefone+"'><td>Telefone"+QtdTelefone+":</td><td><input class='form-control' type = 'text' maxlength = '14' name = 'telefone"+QtdTelefone+"' descricao = 'telefone"+QtdTelefone+"' class='telefone' id = 'telefone"+QtdTelefone+"' obrigatorio = 'sim' /></td><td><input class='del_telefone ' onclick='DelTelefone("+QtdTelefone+")' type = 'button' value = 'Remover' /></td></tr>";
 
 			$(".tr_botoes").before(AddTelefone);
 

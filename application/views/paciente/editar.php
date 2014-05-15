@@ -1,97 +1,82 @@
 <div class='titulo_page'>Edição de Pacientes</div>
 <div class = 'painel_pacientes'>
-	<form class='formulario'>
-		<table cellspacing = "10" border = '0'>
-			<tr>
-				<td>Status:</td>
-				<td>
-					<select name="status" descricao = "status" id='status' obrigatorio = 'sim'>
+	<form class='formulario form-signin'>
+		
+		<div class="form-group">
+			<label>Status:</label>
+			<select name="status" descricao = "status" id='status' obrigatorio = 'sim' class="form-control">
 						<option value="1" <?php echo ($Paciente->Status == 1) ? 'selected="selected"' : '';?>>Presente</option>
 						<?php if($Paciente->Ocupacao == 0){ ?>
 							<option value="0" <?php echo ($Paciente->Status == 0) ? 'selected="selected"' : '';?>>Auta hospitalar</option>
 						<?php } ?>
 					</select>
-				</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Nome:</td>
-				<td>
-					<input id = 'nome' type = 'text' maxlength = '100' name = 'nome' descricao = 'nome' obrigatorio = 'sim' value="<?php echo $Paciente->Nome;?>" />
-				</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Plano:</td>
-				<td>
-					<select name="tipo" descricao = "plano" id='tipo' obrigatorio = 'sim'>
+		</div>
+		
+		<div class="form-group">
+			<label>Nome:</label>
+				<input class="form-control" id = 'nome' type = 'text' maxlength = '100' name = 'nome' descricao = 'nome' obrigatorio = 'sim' value="<?php echo $Paciente->Nome;?>" />
+		</div>
+		
+		<div class="form-group">
+			<label>Plano:</label>
+			<select class="form-control" name="tipo" descricao = "plano" id='tipo' obrigatorio = 'sim'>
 						<option value="-1">--- Selecione ---</option>
 						<option value="1" <?php echo ($Paciente->Tipo == 1) ? 'selected="selected"' : '';?>>Apartamento</option>
 						<option value="2" <?php echo ($Paciente->Tipo == 2) ? 'selected="selected"' : '';?>>Enfermária</option>
 					</select>
-				</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Sexo:</td>
-				<td>
-					<select name="sexo" id='sexo' descricao = "sexo" obrigatorio = 'sim'>
+		</div>
+		
+		<div class="form-group">
+			<label>Sexo:</label>
+			<td>
+					<select class="form-control" name="sexo" id='sexo' descricao = "sexo" obrigatorio = 'sim'>
 						<option value="-1">--- Selecione ---</option>
 						<option value="1" <?php echo ($Paciente->Sexo == 1) ? 'selected="selected"' : '';?>>Masculino</option>
 						<option value="2" <?php echo ($Paciente->Sexo == 2) ? 'selected="selected"' : '';?>>Feminino</option>
 					</select>
-				</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Cpf:</td>
-				<td><input type = 'text' maxlength = '11' name = 'cpf' id='cpf' descricao = 'cpf' obrigatorio = 'sim' value='<?php echo $Paciente->Cpf;?>' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Logradouro:</td>
-				<td><input type = 'text' maxlength = '50' name = 'logradouro' id='logradouro' descricao = 'logradouro' obrigatorio = 'sim' value='<?php echo $Paciente->Logradouro;?>' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Número:</td>
-				<td><input type = 'text' maxlength = '10' name = 'numero' id='numero' descricao = 'numero' obrigatorio = 'sim' value='<?php echo $Paciente->Numero;?>' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Complemento:</td>
-				<td><input type = 'text' maxlength = '10' name = 'complemento' id='complemento' descricao = 'complemento' obrigatorio = 'nao' value='<?php echo $Paciente->Complemento;?>' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Bairro:</td>
-				<td><input type = 'text' maxlength = '40' name = 'bairro' id='bairro' descricao = 'bairro' obrigatorio = 'sim' value='<?php echo $Paciente->Bairro;?>' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Cidade:</td>
-				<td><input type = 'text' maxlength = '40' name = 'cidade' id='cidade' descricao = 'cidade' obrigatorio = 'sim' value='<?php echo $Paciente->Cidade;?>' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Estado:</td>
-				<td><input type = 'text' maxlength = '2' name = 'estado' id='estado' descricao = 'estado' obrigatorio = 'sim' value='<?php echo $Paciente->Estado;?>' /></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>Contatos:</td>
-				<td>
-					<input class='add_telefone' type = 'button' value = 'Adicionar' />
-					<input type="hidden" name="QtdTelefone" value="<?php echo count($Paciente->Telefones);?>" id="QtdTelefone">
-				</td>
-				<td></td>
-			</tr>
-			<?php 
+		</div>
+		
+		<div class="form-group">
+			<label>CPF:</label>
+			<input class="form-control" type = 'text' maxlength = '11' name = 'cpf' id='cpf' descricao = 'cpf' obrigatorio = 'sim' value='<?php echo $Paciente->Cpf;?>' />
+		</div>
+		
+		<div class="form-group">
+			<label>Logradouro:</label>
+			<input class="form-control" type = 'text' maxlength = '50' name = 'logradouro' id='logradouro' descricao = 'logradouro' obrigatorio = 'sim' value='<?php echo $Paciente->Logradouro;?>' />
+		</div>
+		<div class="form-group">
+			<label>Número:</label>
+			<input class="form-control" type = 'text' maxlength = '10' name = 'numero' id='numero' descricao = 'numero' obrigatorio = 'sim' value='<?php echo $Paciente->Numero;?>' />
+		</div>
+		<div class="form-group">
+			<label>Complemento:</label>
+			<input class="form-control" type = 'text' maxlength = '10' name = 'complemento' id='complemento' descricao = 'complemento' obrigatorio = 'nao' value='<?php echo $Paciente->Complemento;?>' />
+		</div>
+		<div class="form-group">
+			<label>Bairro:</label>
+			<input class="form-control" type = 'text' maxlength = '40' name = 'bairro' id='bairro' descricao = 'bairro' obrigatorio = 'sim' value='<?php echo $Paciente->Bairro;?>' />
+		</div>
+		<div class="form-group">
+			<label>Cidade:</label>
+			<input class="form-control" type = 'text' maxlength = '40' name = 'cidade' id='cidade' descricao = 'cidade' obrigatorio = 'sim' value='<?php echo $Paciente->Cidade;?>' />
+		</div>
+		<div class="form-group">
+			<label>Estado:</label>
+			<input class="form-control" type = 'text' maxlength = '2' name = 'estado' id='estado' descricao = 'estado' obrigatorio = 'sim' value='<?php echo $Paciente->Estado;?>' />
+		</div>
+		<div class="form-group">
+			<label>Contatos:</label>
+			<input class='add_telefone' type = 'button' value = 'Adicionar' />
+			<input type="hidden" name="QtdTelefone" value="<?php echo count($Paciente->Telefones);?>" id="QtdTelefone">
+		</div>
+
+		<div class="form-group">
+			
+			<table>
+				
+			
+					<?php 
 				if(is_array($Paciente->Telefones)){
 					foreach($Paciente->Telefones as $key => $Telefone) { ?>
 						<?php $Registro = $key+1;?>
@@ -99,16 +84,23 @@
 					<?php }
 				}
 			?>
-			<tr class='tr_botoes'>
-				<td></td>
-				<td colspan="2">
-					<div class='retorno_ajax'></div>
-					<input class='botao_submit' type = 'button' value = 'Enviar' />
-					<input class='botao_reset' type = 'reset' value = 'Limpar' />
-				</td>
-			</tr>
-		</table>
-	</form>
+			<tr class='tr_botoes'></tr>
+			</table>
+		</div>
+		<div class="form-group">
+			<div class='retorno_ajax'></div>
+			<div class="linha_botoes">
+				<button class="btn btn-sm btn btn-success btn-block botao_submit">
+					Enviar</button>
+				<button class="btn btn-sm btn btn-danger btn-block botao_reset"
+					type="reset">Limpar</button>
+
+			</div>
+			
+		</div>		
+					
+					
+		</form>
 	<script type="text/javascript">
 		var Telefones = [];
 

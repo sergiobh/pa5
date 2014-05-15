@@ -1,14 +1,18 @@
 <form class="form-signin" role="form">
 	<h2 class="form-signin-heading">Cadastro de Quartos</h2>
 	<div class="form-group">
+		<label>Andar:</label>
 		<input type='text' class="form-control" placeholder="Andar" autofocus maxlength='10' id='Andar' name='Andar' />
 	</div>
 	<div class="form-group">
+		<label>Identificação:</label>
 		<input type='text' class="form-control" placeholder="Identificação" autofocus maxlength='10' id='identificacao' name='identificacao' />
 	</div>
-	<div class="linha_botoes">
+	<div class="form-group">
+		<div class="linha_botoes">
 		<button class="btn btn-sm btn btn-success btn-block botao_submit">Enviar</button>
 		<button class="btn btn-sm btn btn-danger btn-block botao_reset" type="reset">Limpar</button>
+		</div>
 	</div>
 </form>
 <script type="text/javascript">

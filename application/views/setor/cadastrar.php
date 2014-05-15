@@ -1,9 +1,10 @@
 <div id="cadSetores" class="float espacoPadding borda ">
 	<form id="formFuncionarios" role="form"
 		class="form-signin form-signin_setor">
-		<h3 class="glyphicon glyphicon-th-large">CADASTRO DE SETOR</h3>
-		<BR /> <BR />
+		
 		<div class="form-group">
+			<h3 class="glyphicon glyphicon-th-large">CADASTRO DE SETOR</h3>
+		<BR /> <BR />
 			<label>Nome:</label><input type="text" id="inputNomeSetor"
 				name="inputNomeSetor" class="form-control" placeholder="Nome"
 				maxlength="40" />

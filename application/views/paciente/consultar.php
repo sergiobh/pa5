@@ -1,21 +1,21 @@
 
 <div class='titulo_page'>Consulta de Pacientes</div>
 <div class="paciente_consultar">
-	<form class='formulario'>
-		<table cellspacing = "10" border = '0'>
-			<tr>
-				<td>Cpf:</td>
-				<td><input type = 'text' maxlength = '14' id='cpf' name = 'cpf' descricao = 'Cpf'  obrigatorio = 'sim' /></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>
-					<div class='retorno_ajax'></div>
-					<input class='botao_submit' type = 'button' value = 'Consultar' />
-					<input class='botao_reset' type = 'reset' value = 'Limpar' />
-				</td>
-			</tr>
-		</table>
+	<form class='formulario form-signin'>
+		
+		<div class="form-group">
+			<label>CPF:</label>
+			<input type = 'text' maxlength = '14' id='cpf' name = 'cpf' descricao = 'Cpf'  obrigatorio = 'sim' class="form-control"/>
+		</div>
+		<div class="form-group">
+			<div class='retorno_ajax'></div>
+			<div class="linha_botoes">
+			<button class='btn btn-sm btn btn-success btn-block botao_submit' >Consultar </button>
+			<button class="btn btn-sm btn btn-danger btn-block botao_reset" type="reset">Limpar</button>
+			</div>
+			
+		</div>
+
 	</form>
 
 	<div id='Redirect' class='hide'></div>

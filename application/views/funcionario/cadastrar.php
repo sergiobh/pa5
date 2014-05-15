@@ -1,9 +1,9 @@
 <div id="cadFuncionarios" class="float espacoPadding borda ">
 	<form id="formFuncionarios" role="form"
 		class="form-signin form-signin_func">
-		<h3 class="glyphicon glyphicon-th-large">FUNCIONÁRIO</h3>
-		<BR /> <BR />
+		
 		<div class="form-group">
+			<h3 class="glyphicon glyphicon-th-large">FUNCIONÁRIO</h3><br /><BR />
 			<label>Nome:</label> <input type="text" id="inputNomeFunc" autofocus
 				name="inputNomeFunc" class="form-control" titulo="Nome"
 				placeholder="Nome" />
