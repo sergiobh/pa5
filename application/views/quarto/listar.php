@@ -32,13 +32,14 @@
 		echo '</div>';
 	?>
 	<div class="clear"></div>
-
+	
 	<div class='legenda home_andar'>
-		<div class='home_andar_item'>Legenda:</div>
-		<div class='home_leito_item Liberado'>Liberado</div>	<div class="clear"></div>
-		<div class='home_leito_item Ocupado'>Ocupado</div>	<div class="clear"></div>
-		<div class='home_leito_item Desativado'>Desativado</div>	<div class="clear"></div>
+		<div class='divideAndar divisor'>Legenda:</div>
+		<div class='home_leito_item Liberado leg'>Liberado</div>	<!-- <div class="clear"></div> -->
+		<div class='home_leito_item Ocupado leg'>Ocupado</div>	<!-- <div class="clear"></div> -->
+		<div class='home_leito_item Desativado leg'>Desativado</div>	<!-- <div class="clear"></div> -->
 	</div>
+	
 
 	<div class="clear"></div>	
 </div>

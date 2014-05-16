@@ -1,8 +1,7 @@
 <div id="cadTipoTicket" class="float espacoPadding">
 	<form id="formTipoTicket" role="form" class="form-signin">
-		<h3 class="glyphicon glyphicon-th-large">&nbsp;CADASTRAR TIPO DE
-			TICKET</h3>
-		<BR /> <BR />
+		<h2 class="form-signin-heading">&nbsp;Cadastrar Tipo de	Ticket</h2>
+		<BR />
 		<div class="form-group">
 			<label>Nome:</label><input type="text" id="inputCadTipoTicket"
 				name="inputCadTipoTicket" class="form-control" maxlength="50"

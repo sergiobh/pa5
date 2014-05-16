@@ -1,8 +1,9 @@
 <div id="cadCategoria" class="float espacoPadding">
 	<form id="formCategoria" role="form" class="form-signin">
-		<h3 class="glyphicon glyphicon-th-large">&nbsp;CADASTRAR CATEGORIA</h3>
-		<BR /> <BR />
+		<h2 class="form-signin-heading">&nbsp;Cadastrar Categoria</h2>
+		<BR />
 		<div class="form-group">
+
 			<label>Nome:</label><input type="text" id="inputCadCategoria"
 				name="inputCadCategoria" class="form-control" maxlength="50"
 				placeholder="Descrição da Categoria" />
