@@ -1,24 +1,21 @@
 <div class='titulo_page'>Edição de Quarto</div>
 <div class="quarto_editar">
 	<?php if($Quarto) { ?>
-		<form class='formulario'>
-			<table cellspacing = "10" border = '0'>
-				<tr>
-					<td class='col_titulo'>Andar:</td>
-					<td>
-						<input type="text" id="Andar" value="<?php echo $Quarto->Andar;?>" <?php echo ($Quarto->Status == '3') ? 'readonly="readonly"' : '';?> obrigatorio = 'sim' >
-					</td>
-				</tr>
-				<tr>
-					<td>Identificação:</td>
-					<td>
-						<input type = 'text' maxlength = '10' id='Identificacao' name = 'identificacao' descricao = 'Identificação'  obrigatorio = 'sim' value="<?php echo $Quarto->Identificacao;?>" />
-					</td>
-				</tr>
-				<tr>
-					<td>Status:</td>
-					<td>
-						<select id='Status' descricao = 'Status' obrigatorio = 'sim'>
+		<form class='formulario form-signin'>
+			
+			<div class="form-group">
+				<label>Andar:</label>
+				<input class="form-control" type="text" id="Andar" value="<?php echo $Quarto->Andar;?>" <?php echo ($Quarto->Status == '3') ? 'readonly="readonly"' : '';?> obrigatorio = 'sim' >
+			</div>
+			
+			<div class="form-group">
+				<label>Identificação:</label>
+				<input class="form-control" type = 'text' maxlength = '10' id='Identificacao' name = 'identificacao' descricao = 'Identificação'  obrigatorio = 'sim' value="<?php echo $Quarto->Identificacao;?>" />
+			</div>
+			
+			<div class="form-group">
+				<label>Status:</label>
+				<select class="form-control" id='Status' descricao = 'Status' obrigatorio = 'sim'>
 							<?php if($Quarto->Status != '3') { ?>
 								<?php foreach($Status as $Registro){ ?>
 									<option value="<?php echo $Registro->Status;?>" <?php echo ($Quarto->Status == $Registro->Status) ? 'selected="selected"' : '';?>><?php echo $Registro->Nome;?></option>
@@ -27,18 +24,19 @@
 								<option value="1" selected="selected">Ocupado</option>
 							<?php } ?>
 						</select>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<div class='retorno_ajax'></div>
-						<input class='botao_submit' type = 'button' value = 'Enviar' />
-						<input class='botao_reset' type = 'reset' value = 'Cancelar' />
-					</td>
-				</tr>
-			</table>
-		</form>
+			</div>
+			
+			<div class="form-group">
+				
+				<div class='retorno_ajax'></div>
+			<div class="linha_botoes">
+				<button class="btn btn-sm btn btn-success btn-block botao_submit">
+					Enviar</button>
+				<button class="btn btn-sm btn btn-danger btn-block botao_reset"
+					type="reset">Cancelar</button>
+			</div>
+			</div>
+	</form>
 	<?php } else{ ?>
 		<div class=''>Quarto inválido!</div>
 	<?php } ?>

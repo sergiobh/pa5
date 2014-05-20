@@ -1,36 +1,33 @@
 <div class='titulo_page'>Edição de Leito</div>
 <div class="leito_editar">
-	<form class='formulario'>
+	<form class='formulario form-signin'>
 		<input type="hidden" value="<?php echo $LeitoId;?>" id='LeitoId' />
-		<table cellspacing = "10" border = '0'>
-			<tr>
-				<td class='col_titulo'>Quarto:</td>
-				<td>
-					<input type="text" readonly="readonly" id="Quarto">
-					<input type="hidden" readonly="readonly" id="QuartoId">
-				</td>
-			</tr>
-			<tr>
-				<td>Identificação:</td>
-				<td>
-					<input type = 'text' maxlength = '10' id='Identificacao' name = 'identificacao' descricao = 'Identificação'  obrigatorio = 'sim' />
-				</td>
-			</tr>
-			<tr>
-				<td>Status:</td>
-				<td>
-					<select id='Status' descricao = 'Status' obrigatorio = 'sim'></select>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>
-					<div class='retorno_ajax'></div>
-					<input class='botao_submit' type = 'button' value = 'Enviar' />
-					<input class='botao_reset' type = 'reset' value = 'Cancelar' />
-				</td>
-			</tr>
-		</table>
+		
+		<div class="form-group">
+			<label>Quarto:</label>
+			<input class="form-control" type="text" readonly="readonly" id="Quarto">
+			<input type="hidden" readonly="readonly" id="QuartoId">
+		</div>
+		<div class="form-group">
+			<label>Identificação:</label>
+			<input class="form-control" type = 'text' maxlength = '10' id='Identificacao' name = 'identificacao' descricao = 'Identificação'  obrigatorio = 'sim' />
+		</div>
+		
+		<div class="form-group">
+			<label>Status:</label>
+			<select class="form-control" id='Status' descricao = 'Status' obrigatorio = 'sim'></select>
+		</div>
+		
+		<div class="form-group">
+				
+				<div class='retorno_ajax'></div>
+			<div class="linha_botoes">
+				<button class="btn btn-sm btn btn-success btn-block botao_submit">
+					Enviar</button>
+				<button class="btn btn-sm btn btn-danger btn-block botao_reset"
+					type="reset">Cancelar</button>
+			</div>
+			</div>
 	</form>
 
 	<script type="text/javascript">
