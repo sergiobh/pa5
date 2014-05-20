@@ -179,7 +179,6 @@ border-color:red
 	padding:2px 2px;
 	margin-bottom:10px;
 	border-radius:3px;
-	
 
 }
 
