@@ -1,10 +1,9 @@
 <div id="cadFuncionarios" class="float espacoPadding borda ">
 	<form id="formFuncionarios" role="form"
 		class="form-signin form-signin_func">
+		<h2 class="form-signin-heading">Editar Funcionário</h2>
 		
 		<div class="form-group">
-			<h3 class="glyphicon glyphicon-th-large">FUNCIONÁRIO</h3>
-		<BR /> <BR />
 			<input type="hidden" id="inputFuncId"
 				name="inputFuncId" class="form-control" value="<?php echo $FuncionarioId;?>" />
 		</div>

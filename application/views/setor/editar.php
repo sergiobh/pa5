@@ -1,11 +1,11 @@
 <div id="editSetores" class="float espacoPadding borda ">
-	<form id="formFuncionarios" role="form"
-		class="form-signin form-signin_setor">
+	<form id="formFuncionarios" role="form"	class="form-signin form-signin_setor">
+		
+		<h2 class="form-signin-heading">Edição de Setor</h2>
+		
 		 <input type="hidden" id="inputSetorId"
 			name="inputSetorId" class="form-control" value="<?php echo $SetorId;?>"/>
 		<div class="form-group">
-			<h3 class="glyphicon glyphicon-th-large">EDIÇÃO DE SETOR</h3>
-		<BR /> <BR />
 			<label>Nome:</label><input type="text" id="inputNomeSetor"
 				name="inputNomeSetor" class="form-control" placeholder="Nome"
 				maxlength="40" />

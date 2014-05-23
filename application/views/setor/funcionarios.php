@@ -1,7 +1,8 @@
 <div class='setores_funcionarios'>
-	<h2 class="glyphicon glyphicon-th-list">PERMISSÃO DE FUNCIONÁRIOS</h2>
+	<h2 class="form-signin-heading">Permissão de Funcionários</h2>
+	
 	<h2 class="form-signin-heading">
-		SETOR: <span id="title_setor"></span>
+		<b class="homeTextStatus">Setor: <span id="title_setor"></span></b>
 	</h2>
 	<form class="form-inline" role="form">
 		<table class="table table-hover">

@@ -246,16 +246,7 @@ class QuartoMod extends CI_Model{
         // Se não existir poderá ser adicionado
         if(! $this->existQuarto()){
             
-            $sql        = "
-                            INSERT INTO
-                            quarto (
-                                Andar
-                                ,Identificacao
-                            )
-                            VALUES(
-                                '".$this->Andar."'
-                                ,'".$this->Identificacao."'
-                            )";
+            $sql        = "INSERT INTO quarto (Andar,Identificacao) VALUES('".$this->Andar."','".$this->Identificacao."')";
 
             $this->db->query($sql);
 
@@ -277,15 +268,8 @@ class QuartoMod extends CI_Model{
             return false;
         }
 
-        $sql  = "
-                SELECT
-                    QuartoId
-                FROM
-                    quarto Q
-                WHERE
-                    Q.Andar = '".$this->Andar."'
-                    AND Q.Identificacao = '".$this->Identificacao."'
-                ";
+        $sql  = "SELECT Q.QuartoId FROM quarto Q
+                 WHERE Q.Andar = '".$this->Andar."' AND Q.Identificacao = '".$this->Identificacao."'";
 
         $query  = $this->db->query($sql);
 
@@ -359,11 +343,12 @@ class QuartoMod extends CI_Model{
                             SET
                                 Identificacao = '".$this->Identificacao."'
                                 ,Andar = '".$this->Andar."'
-                                ".$sql_status."
+                                ,Status = '".$this->Status."'
                             WHERE
                                 QuartoId = ".$this->QuartoId."
                             ";
 
+echo "<pre>".$sql; exit;
             $this->db->query($sql);
 
             if($this->db->affected_rows() > 0){

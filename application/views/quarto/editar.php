@@ -5,12 +5,12 @@
 			
 			<div class="form-group">
 				<label>Andar:</label>
-				<input class="form-control" type="text" id="Andar" value="<?php echo $Quarto->Andar;?>" <?php echo ($Quarto->Status == '3') ? 'readonly="readonly"' : '';?> obrigatorio = 'sim' >
+				<input class="form-control" type="text" id="Andar" name="Andar" value="<?php echo $Quarto->Andar;?>" <?php echo ($Quarto->Status == '3') ? 'readonly="readonly"' : '';?> obrigatorio = 'sim' >
 			</div>
 			
 			<div class="form-group">
 				<label>Identificação:</label>
-				<input class="form-control" type = 'text' maxlength = '10' id='Identificacao' name = 'identificacao' descricao = 'Identificação'  obrigatorio = 'sim' value="<?php echo $Quarto->Identificacao;?>" />
+				<input class="form-control" type = 'text' maxlength = '10' id='Identificacao' name = 'Identificacao' descricao = 'Identificação'  obrigatorio = 'sim' value="<?php echo $Quarto->Identificacao;?>" />
 			</div>
 			
 			<div class="form-group">

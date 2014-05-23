@@ -1,5 +1,6 @@
 <div class='setores_listar'>
-	<h2 class="glyphicon glyphicon-th-list">LISTA DE SETORES</h2>
+	<h2 class="form-signin-heading">Lista de Setores</h2>
+	
 	<table class="table table-hover">
 		<thead>
 			<tr>

@@ -1,6 +1,6 @@
 <div class='titulo_page'>Painel de Pacientes</div>
 <div class = 'painel_pacientes'>
-	<table cellspacing="1" id='myTable' class="tablesorter">
+	<table cellspacing="1" id='myTable' class="table table-hover tablesorter">
 		<thead>
 			<tr>
 				<th>Paciente</th>

@@ -91,7 +91,7 @@ class Quarto extends CI_Controller {
 	}
 
 	public function salvarEdicao(){
-
+	
 		$QuartoId	   	= $this->input->post("QuartoId");
 		$Identificacao 	= $this->input->post("Identificacao");
 		$Andar 			= $this->input->post("Andar");
