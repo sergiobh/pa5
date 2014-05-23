@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50525
 File Encoding         : 65001
 
-Date: 2014-05-07 11:49:46
+Date: 2014-05-22 22:20:48
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -53,12 +53,97 @@ CREATE TABLE `leito` (
   PRIMARY KEY (`LeitoId`),
   KEY `QuartoId` (`QuartoId`),
   CONSTRAINT `leito_ibfk_1` FOREIGN KEY (`QuartoId`) REFERENCES `quarto` (`QuartoId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of leito
 -- ----------------------------
 INSERT INTO `leito` VALUES ('1', '1', 'Leito 01', '1');
+INSERT INTO `leito` VALUES ('2', '1', 'Leito 02', '2');
+INSERT INTO `leito` VALUES ('3', '1', 'Leito 03', '1');
+INSERT INTO `leito` VALUES ('4', '1', 'Leito 04', '1');
+INSERT INTO `leito` VALUES ('5', '2', 'Leito 01', '1');
+INSERT INTO `leito` VALUES ('6', '4', 'Leito 01', '1');
+
+-- ----------------------------
+-- Table structure for mudanca
+-- ----------------------------
+DROP TABLE IF EXISTS `mudanca`;
+CREATE TABLE `mudanca` (
+  `MudancaId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `Nome` varchar(200) NOT NULL,
+  `Descricao` text,
+  `PrioridadeId` int(10) unsigned NOT NULL,
+  `UsuarioId` int(10) unsigned NOT NULL,
+  `DH_Solicitacao` datetime NOT NULL,
+  `AutorizacaoDesenvolvimento` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '0-Não autorizado 1-Autorizado',
+  `StatusId` tinyint(10) unsigned NOT NULL DEFAULT '1',
+  `Avaliacao` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '0-Não aprovado 1-Aprovado',
+  PRIMARY KEY (`MudancaId`),
+  KEY `PrioridadeId` (`PrioridadeId`),
+  KEY `0` (`UsuarioId`),
+  KEY `StatusId` (`StatusId`),
+  CONSTRAINT `0` FOREIGN KEY (`UsuarioId`) REFERENCES `funcionario` (`FuncionarioId`) ON UPDATE CASCADE,
+  CONSTRAINT `mudanca_ibfk_1` FOREIGN KEY (`PrioridadeId`) REFERENCES `ticket_prioridade` (`PrioridadeId`) ON UPDATE CASCADE,
+  CONSTRAINT `mudanca_ibfk_2` FOREIGN KEY (`StatusId`) REFERENCES `mudanca_status` (`StatusId`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of mudanca
+-- ----------------------------
+INSERT INTO `mudanca` VALUES ('1', 'Nome da mudança', 'Descrição da mudança', '1', '1', '2014-05-22 22:13:21', '0', '1', '0');
+
+-- ----------------------------
+-- Table structure for mudanca_comite
+-- ----------------------------
+DROP TABLE IF EXISTS `mudanca_comite`;
+CREATE TABLE `mudanca_comite` (
+  `ComiteId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `UsuarioId` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`ComiteId`),
+  KEY `UsuarioId` (`UsuarioId`),
+  CONSTRAINT `mudanca_comite_ibfk_1` FOREIGN KEY (`UsuarioId`) REFERENCES `funcionario` (`FuncionarioId`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of mudanca_comite
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for mudanca_justificativa
+-- ----------------------------
+DROP TABLE IF EXISTS `mudanca_justificativa`;
+CREATE TABLE `mudanca_justificativa` (
+  `JustificativaId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `MudancaId` int(10) unsigned NOT NULL,
+  `Justificativa` text NOT NULL,
+  `UsuarioId` int(10) unsigned NOT NULL,
+  `DH_Cadastro` datetime NOT NULL,
+  PRIMARY KEY (`JustificativaId`),
+  KEY `MudancaId` (`MudancaId`),
+  KEY `UsuarioId` (`UsuarioId`),
+  CONSTRAINT `mudanca_justificativa_ibfk_2` FOREIGN KEY (`UsuarioId`) REFERENCES `funcionario` (`FuncionarioId`) ON UPDATE CASCADE,
+  CONSTRAINT `mudanca_justificativa_ibfk_1` FOREIGN KEY (`MudancaId`) REFERENCES `mudanca` (`MudancaId`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of mudanca_justificativa
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for mudanca_status
+-- ----------------------------
+DROP TABLE IF EXISTS `mudanca_status`;
+CREATE TABLE `mudanca_status` (
+  `StatusId` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `Nome` varchar(40) NOT NULL,
+  PRIMARY KEY (`StatusId`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of mudanca_status
+-- ----------------------------
+INSERT INTO `mudanca_status` VALUES ('1', 'Não avaliado');
 
 -- ----------------------------
 -- Table structure for ocupacao
@@ -84,11 +169,15 @@ CREATE TABLE `ocupacao` (
   CONSTRAINT `ocupacao_ibfk_2` FOREIGN KEY (`LeitoId`) REFERENCES `leito` (`LeitoId`),
   CONSTRAINT `ocupacao_ibfk_3` FOREIGN KEY (`FuncCadastro`) REFERENCES `funcionario` (`FuncionarioId`),
   CONSTRAINT `ocupacao_ibfk_4` FOREIGN KEY (`FuncBaixa`) REFERENCES `funcionario` (`FuncionarioId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ocupacao
 -- ----------------------------
+INSERT INTO `ocupacao` VALUES ('1', '1', '6', null, '1', '2014-05-07', '18:28:25', '1', '2014-05-07', '18:41:08');
+INSERT INTO `ocupacao` VALUES ('2', '2', '1', null, '1', '2014-05-07', '18:39:04', null, null, null);
+INSERT INTO `ocupacao` VALUES ('3', '3', '5', null, '1', '2014-05-07', '18:40:53', '1', '2014-05-07', '19:19:22');
+INSERT INTO `ocupacao` VALUES ('4', '1', '6', null, '1', '2014-05-07', '19:20:59', null, null, null);
 
 -- ----------------------------
 -- Table structure for paciente
@@ -109,11 +198,14 @@ CREATE TABLE `paciente` (
   `Status` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `DataHora` datetime NOT NULL,
   PRIMARY KEY (`PacienteId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of paciente
 -- ----------------------------
+INSERT INTO `paciente` VALUES ('1', 'Sérgio Macedo', '1', '01257303651', 'Rua I', '932', '', 'Eldorado', 'Contagem', 'MG', '1', '1', '2014-05-07 19:20:13');
+INSERT INTO `paciente` VALUES ('2', 'Wesley Nunes de Assis', '1', '01266439625', 'Rua A', '2', '', 'Eldorado', 'Contagem', 'MG', '2', '1', '2014-05-07 18:38:44');
+INSERT INTO `paciente` VALUES ('3', 'Juliana Vieira', '2', '06027264683', 'Rua B', '5', '', 'Centro', 'Belo Horizonte', 'MG', '1', '0', '2014-05-07 18:40:33');
 
 -- ----------------------------
 -- Table structure for quarto
@@ -125,13 +217,16 @@ CREATE TABLE `quarto` (
   `Identificacao` varchar(10) NOT NULL,
   `Status` tinyint(3) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`QuartoId`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of quarto
 -- ----------------------------
 INSERT INTO `quarto` VALUES ('1', '1 andar', 'Quarto 01', '1');
-INSERT INTO `quarto` VALUES ('2', '2 andar', 'undefined', '1');
+INSERT INTO `quarto` VALUES ('2', '2 andar', 'Quarto Fem', '1');
+INSERT INTO `quarto` VALUES ('3', '1 ANDAR', 'Quarto 02', '1');
+INSERT INTO `quarto` VALUES ('4', '1 ANDAR', 'Quarto 03', '1');
+INSERT INTO `quarto` VALUES ('5', 'Andar 10', 'undefined', '1');
 
 -- ----------------------------
 -- Table structure for setor
@@ -194,11 +289,14 @@ CREATE TABLE `telefone` (
   PRIMARY KEY (`TelefoneId`),
   KEY `PacienteId` (`PacienteId`),
   CONSTRAINT `telefone_ibfk_1` FOREIGN KEY (`PacienteId`) REFERENCES `paciente` (`PacienteId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of telefone
 -- ----------------------------
+INSERT INTO `telefone` VALUES ('3', '2', '(31)9227-9390');
+INSERT INTO `telefone` VALUES ('4', '3', '(31)9999-9999');
+INSERT INTO `telefone` VALUES ('5', '1', '(31)8811-8927');
 
 -- ----------------------------
 -- Table structure for ticket
@@ -220,13 +318,14 @@ CREATE TABLE `ticket` (
   CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`TipoId`) REFERENCES `ticket_tipo` (`TipoId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `ticket_ibfk_2` FOREIGN KEY (`FuncionarioId`) REFERENCES `funcionario` (`FuncionarioId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `ticket_ibfk_5` FOREIGN KEY (`PrioridadeId`) REFERENCES `ticket_prioridade` (`PrioridadeId`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of ticket
 -- ----------------------------
 INSERT INTO `ticket` VALUES ('18', '1', '3', '2014-05-03 11:11:09', null, null, null, '1');
 INSERT INTO `ticket` VALUES ('19', '3', '1', '2014-05-04 16:12:04', null, null, null, '3');
+INSERT INTO `ticket` VALUES ('20', '5', '7', '2014-05-07 19:27:25', null, null, null, '3');
 
 -- ----------------------------
 -- Table structure for ticket_atendimento
@@ -247,7 +346,7 @@ CREATE TABLE `ticket_atendimento` (
   CONSTRAINT `ticket_atendimento_ibfk_1` FOREIGN KEY (`TicketId`) REFERENCES `ticket` (`TicketId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `ticket_atendimento_ibfk_2` FOREIGN KEY (`StatusId`) REFERENCES `ticket_status` (`StatusId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `ticket_atendimento_ibfk_3` FOREIGN KEY (`AtendenteId`) REFERENCES `funcionario` (`FuncionarioId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ticket_atendimento
@@ -255,6 +354,7 @@ CREATE TABLE `ticket_atendimento` (
 INSERT INTO `ticket_atendimento` VALUES ('16', '18', '1', '4', '4', '2014-05-03 11:11:09', '1');
 INSERT INTO `ticket_atendimento` VALUES ('23', '18', '2', '1', null, '2014-05-03 16:00:36', '1');
 INSERT INTO `ticket_atendimento` VALUES ('24', '19', '1', '1', null, '2014-05-04 16:12:04', '1');
+INSERT INTO `ticket_atendimento` VALUES ('25', '20', '1', '4', '8', '2014-05-07 19:27:25', '1');
 
 -- ----------------------------
 -- Table structure for ticket_categoria
@@ -299,7 +399,7 @@ CREATE TABLE `ticket_historico` (
   CONSTRAINT `ticket_historico_ibfk_1` FOREIGN KEY (`UsuarioId`) REFERENCES `funcionario` (`FuncionarioId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `ticket_historico_ibfk_2` FOREIGN KEY (`HistoricoTipoId`) REFERENCES `ticket_histoticotipo` (`HistoticoTipoId`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `ticket_historico_ibfk_3` FOREIGN KEY (`TicketId`) REFERENCES `ticket` (`TicketId`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ticket_historico
@@ -309,6 +409,7 @@ INSERT INTO `ticket_historico` VALUES ('13', '18', 'teste', '2', '4', '1', '2014
 INSERT INTO `ticket_historico` VALUES ('17', '18', 'teste 5', '6', '4', '1', '2014-05-03 16:00:36');
 INSERT INTO `ticket_historico` VALUES ('18', '18', 'teste de observação interna', '5', '4', '1', '2014-05-03 16:18:13');
 INSERT INTO `ticket_historico` VALUES ('19', '19', 'TEWDADASDASD', '1', '1', '1', '2014-05-04 16:12:04');
+INSERT INTO `ticket_historico` VALUES ('20', '20', 'Nao consegui efetuar o cadastro do leito', '1', '7', '1', '2014-05-07 19:27:25');
 
 -- ----------------------------
 -- Table structure for ticket_histoticotipo
@@ -449,3 +550,22 @@ INSERT INTO `ticket_tiponivel` VALUES ('26', '14', '1', '3');
 INSERT INTO `ticket_tiponivel` VALUES ('27', '15', '1', '3');
 INSERT INTO `ticket_tiponivel` VALUES ('28', '16', '1', '3');
 INSERT INTO `ticket_tiponivel` VALUES ('29', '17', '1', '3');
+
+-- ----------------------------
+-- Table structure for vinculo_mudanca_ticket
+-- ----------------------------
+DROP TABLE IF EXISTS `vinculo_mudanca_ticket`;
+CREATE TABLE `vinculo_mudanca_ticket` (
+  `VinculoId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `MudancaId` int(10) unsigned NOT NULL,
+  `TicketId` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`VinculoId`),
+  KEY `MudancaId` (`MudancaId`),
+  KEY `TicketId` (`TicketId`),
+  CONSTRAINT `vinculo_mudanca_ticket_ibfk_2` FOREIGN KEY (`TicketId`) REFERENCES `ticket` (`TicketId`) ON UPDATE CASCADE,
+  CONSTRAINT `vinculo_mudanca_ticket_ibfk_1` FOREIGN KEY (`MudancaId`) REFERENCES `mudanca` (`MudancaId`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of vinculo_mudanca_ticket
+-- ----------------------------
