@@ -112,7 +112,7 @@ function submerterForm( ) {
 
 	var data 			= 'CategoriaId='+CategoriaId+'&TipoTicketId='+TipoTicketId+'&Descricao='+Descricao;
 
-	$.blockUI({ message: '<h3>>Salvando os dados...</h3>' });
+	$.blockUI({ message: '<h3>Salvando os dados...</h3>' });
 
 	$.ajax({
 		type: "POST",

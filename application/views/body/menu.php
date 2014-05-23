@@ -97,5 +97,28 @@ $this->load->library ( "PermissaoLib" );
 				</div>
 			</div>
 		</div>
+		
+		<div class='botao menu_body' tabindex='<?php echo $Tabindex++;?>'
+			submenu='menu<?php echo $Tabindex;?>'>
+			<div class='menu_text'>Mudanças</div>
+			<div class='submenu menu<?php echo $Tabindex;?>'>
+				<div class='submenu_containt'>
+					<a href="<?php echo BASE_URL;?>/mudanca/cadastrar">
+						<div class='submenu_item submenu_primeiro'>Cadastrar Mudanças</div>
+					</a> <a href="<?php echo BASE_URL;?>/mudanca/listar">
+						<div class='submenu_item'>Listar Mudanças</div>
+					</a>
+					<?php if(PermissaoLib::checkAdmin()){ ?>
+						<a href="<?php echo BASE_URL;?>/comite/gerenciar">
+							<div class='submenu_item'>Gerenciar Comite</div>
+						</a><a href="<?php echo BASE_URL;?>/migrar_ticket/listar">
+							<div class='submenu_item'>Migrar Ticket</div>
+						</a>
+					<?php } ?>
+					
+				</div>
+			</div>
+		</div>
+		
 	</div>
 </div>
