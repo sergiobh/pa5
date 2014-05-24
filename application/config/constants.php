@@ -4,7 +4,7 @@
 /* Geral
 */
 
-define('BASE_URL',((isset($_SERVER['HTTPS'])) ? 'https://' : 'http://').$_SERVER['HTTP_HOST']);
+define('BASE_URL',((isset($_SERVER['HTTPS'])) ? 'https://' : 'http://').(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : ''));
 
 define('TITLE_PAGE', 'Sistema de Gestão da Hotelaria Hospitalar!');
 define('NOME_SITE', 'SGHH');
