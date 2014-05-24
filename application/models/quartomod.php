@@ -348,7 +348,7 @@ class QuartoMod extends CI_Model{
                                 QuartoId = ".$this->QuartoId."
                             ";
 
-echo "<pre>".$sql; exit;
+
             $this->db->query($sql);
 
             if($this->db->affected_rows() > 0){
