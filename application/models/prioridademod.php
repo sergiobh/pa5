@@ -3,6 +3,7 @@ class PrioridadeMod extends CI_Model {
 	private $PrioridadeId;
 	private $Permissao;
 	private $Nivel;
+	private $RestringePlanejada;
 	public function getPrioridadeId() {
 		return $this->PrioridadeId;
 	}
@@ -21,12 +22,26 @@ class PrioridadeMod extends CI_Model {
 	public function setNivel($Nivel) {
 		$this->Nivel = $Nivel;
 	}
+	public function getRestringePlanejada(){
+		return $this->RestringePlanejada;
+	}
+	public function setRestringePlanejada($RestringePlanejada){
+		$this->RestringePlanejada = $RestringePlanejada;
+	}
 	public function getPrioridades() {
+		$columns = array();
 		$where = '';
-		
-		if ($this->Permissao != '') {
+ 
+		if ($this->Permissao != NULL) {
+			echo 'carai';exit;
 			$where = $this->checkPermissao ();
 		}
+		else if($this->RestringePlanejada === true){
+			$columns[] = 'TipoBotao';
+			$where[] = "TP.PrioridadeId < 6 ";
+		}
+		
+		$sql_columns = (count($columns) > 0) ? ','.implode(',', $columns) : '';
 		
 		$sql_where = (is_array ( $where )) ? ' WHERE ' . implode ( " AND ", $where ) : '';
 		
@@ -34,6 +49,7 @@ class PrioridadeMod extends CI_Model {
 				SELECT
 					TP.PrioridadeId
 					,TP.Nome
+					$sql_columns
 				FROM
 					ticket_prioridade TP
 				" . $sql_where . "
