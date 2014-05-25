@@ -169,7 +169,7 @@ class PacienteMod extends CI_Model{
         }
     }
 
-    private function setMascaraCpf($Cpf){
+    public function setMascaraCpf($Cpf){
         return substr($Cpf, 0, 3).'.'.substr($Cpf, 3, 3).'.'.substr($Cpf, 6, 3).'-'.substr($Cpf, -2);
     }
 
