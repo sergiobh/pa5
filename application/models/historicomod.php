@@ -124,7 +124,7 @@ class HistoricoMod extends CI_Model {
 				ORDER BY
 					TH.HistoricoId
 				";
-//echo '<pre>'.$sql;exit;
+
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();

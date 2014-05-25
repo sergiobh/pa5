@@ -127,6 +127,11 @@ class FuncionarioMod extends CI_Model {
 		return $Retorno;
 	}
 	public function checkAcessoFuncionario() {
+
+		if(! isset($_SESSION ['Funcionario']) ){
+			return false;
+		}
+		
 		$FuncionarioIdSessao = $_SESSION ['Funcionario']->FuncionarioId;
 		
 		if ($FuncionarioIdSessao == 1 || $FuncionarioIdSessao == $this->FuncionarioId) {
