@@ -262,19 +262,22 @@ class XmlMod extends CI_Model {
 					,FA.Nome AS Atendente_Nome
 					,FS.Cpf AS Solicitante_CPF
 					,FS.Nome AS Solicitante_Nome
-					,T.Descricao
+					,TH.Texto AS Descricao
 					,TT.Nome AS Titulo
 					,UNIX_TIMESTAMP(T.DH_Solicitacao) AS DH_Solicitacao
 				FROM
 					ticket T
+					LEFT JOIN ticket_atendimento TA ON ( TA.TicketId = T.TicketId AND TA.Tipo_Nivel = 1 AND TA.Ativo = 1 )
 					INNER JOIN funcionario FS ON FS.FuncionarioId = T.FuncionarioId
-					LEFT JOIN funcionario FA ON FA.FuncionarioId = T.AtendenteId
+					LEFT JOIN funcionario FA ON FA.FuncionarioId = TA.AtendenteId
 					INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId
 					INNER JOIN ticket_categoria TC ON TC.CategoriaId = TT.CategoriaId
+					LEFT JOIN ticket_historico TH ON TH.TicketId = T.TicketId
 				WHERE
 					T.ticketId = " . $this->getTicketId () . "
+				LIMIT 1					
 				";
-		
+
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->row ();
