@@ -190,7 +190,7 @@ class TicketMod extends CI_Model {
 					,TC.Nome AS Categoria
 					,TT.Nome AS TipoSolicitacao
 					,DATE_FORMAT( T.DH_Solicitacao , '%d/%m/%Y %H:%i:%s' ) AS DH_Solicitacao
-					,TH.Texto AS Descricao
+					,IF (TH.Texto IS NULL, '-', TH.Texto ) AS Descricao
 					,IF(ISNULL(T.DH_Previsao), '-', T.DH_Previsao) AS DH_Previsao
 					,TP.Nome AS Prioridade
 				FROM 
@@ -199,7 +199,7 @@ class TicketMod extends CI_Model {
 					INNER JOIN ticket_tipo TT ON TT.TipoId = T.TipoId
 					INNER JOIN ticket_categoria TC ON TC.CategoriaId = TT.CategoriaId
 					INNER JOIN ticket_prioridade TP ON TP.PrioridadeId = T.PrioridadeId
-					INNER JOIN ticket_historico TH ON TH.TicketId = T.TicketId						
+					LEFT JOIN ticket_historico TH ON ( TH.TicketId = T.TicketId AND TH.HistoricoTipoId = 1 )						
 					INNER JOIN funcionario FS ON FS.FuncionarioId = T.FuncionarioId
 					INNER JOIN ticket_tiponivel TTN ON TTN.TipoId = T.TipoId
 					LEFT JOIN funcionario FA ON FA.FuncionarioId = TA.AtendenteId
@@ -208,7 +208,6 @@ class TicketMod extends CI_Model {
 				WHERE
 					TA.StatusId = $this->StatusId
 					AND TA.Ativo = 1
-					AND TH.HistoricoTipoId = 1
 					AND (
 						(
 							T.FuncionarioId = " . $this->getFuncionarioId () . " 
@@ -224,7 +223,7 @@ class TicketMod extends CI_Model {
 				GROUP BY
 					TH.TicketId
 				";
-		
+
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();
