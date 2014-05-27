@@ -22,7 +22,7 @@
 		</select>
 	</div>
 	<div class="form-group">
-		<label>SLA: (minutos)</label><input type="text" maxlength="5"
+		<label>SLA: (horas)</label><input type="text" maxlength="5"
 			id="inputSlaTipo" name="inputSlaTipo" class="form-control"
 			placeholder="SLA" />
 	</div>
