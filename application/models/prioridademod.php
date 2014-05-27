@@ -33,7 +33,6 @@ class PrioridadeMod extends CI_Model {
 		$where = '';
  
 		if ($this->Permissao != NULL) {
-			echo 'carai';exit;
 			$where = $this->checkPermissao ();
 		}
 		else if($this->RestringePlanejada === true){
