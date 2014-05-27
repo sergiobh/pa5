@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<helpdesk>
+<origem>BI</origem>
+<incidente><atendente><cpf>44444444444</cpf>
+<nome>Weslei Nunes</nome>
+</atendente>
+<solicitante><cpf>33333333333</cpf>
+<nome>Enrique Bonifácio</nome>
+</solicitante>
+<descricao>Teste BI</descricao>
+<titulo>Outros BI</titulo>
+<abertura>1399126269</abertura>
+</incidente>
+</helpdesk>

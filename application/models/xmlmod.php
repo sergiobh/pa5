@@ -83,14 +83,15 @@ class XmlMod extends CI_Model {
 		 * Instanciar Ticket
 		 */
 		$Descricao = $xmlObject->titulo . " " . $xmlObject->descricao;
-		$DH_Abertura = date ( 'Y-m-d H:i:s', ( string ) $xmlObject->abertura );
+
+		$DH_Abertura = $this->getAbertura( ( string ) $xmlObject->abertura );
 		
 		$this->TicketMod->setTipoId ( $this->TipoId );
 		$this->TicketMod->setFuncionarioId ( $SolicitanteFuncionarioId );
 		$this->TicketMod->setStatusId ( 1 );
 		$this->TicketMod->setDH_Solicitacao ( $DH_Abertura );
 		$this->TicketMod->setDescricao ( $Descricao );
-		$this->TicketMod->setSetorId ( $AtendenteSetorId );
+		//$this->TicketMod->setSetorId ( $AtendenteSetorId );
 		$this->TicketMod->setAtendenteId ( $AtendenteFuncionarioId );
 		$this->TicketMod->setPrioridadeId ( $this->PrioridadeId );
 		
@@ -100,6 +101,17 @@ class XmlMod extends CI_Model {
 			// Força a parada do sistema e imprime o erro
 			$this->getXmlErro ();
 		}
+	}
+	private function getAbertura($abertura){
+		
+		if(strlen( $abertura ) == 10){
+			$data = date ( 'Y-m-d H:i:s', $abertura );
+		}
+		else{
+			$data = date ('Y-m-d H:i:s');
+		}
+		
+		return $data; 
 	}
 	private function getSetorId($Origem) {
 		$this->load->model ( 'SetorMod' );

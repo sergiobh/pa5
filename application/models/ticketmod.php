@@ -221,9 +221,10 @@ class TicketMod extends CI_Model {
 						)
 					)
 				GROUP BY
-					TH.TicketId
+					T.TicketId
+					,TH.TicketId
 				";
-
+//echo '<pre>'.$sql;exit;
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();
