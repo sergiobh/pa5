@@ -1,101 +1,110 @@
 <div class='titulo_page'>Edição de Quarto</div>
 <div class="quarto_editar">
-	<?php if($Quarto) { ?>
-		<form class='formulario form-signin'>
-			
-			<div class="form-group">
-				<label>Andar:</label>
-				<input class="form-control" type="text" id="Andar" name="Andar" value="<?php echo $Quarto->Andar;?>" <?php echo ($Quarto->Status == '3') ? 'readonly="readonly"' : '';?> obrigatorio = 'sim' >
-			</div>
-			
-			<div class="form-group">
-				<label>Identificação:</label>
-				<input class="form-control" type = 'text' maxlength = '10' id='Identificacao' name = 'Identificacao' descricao = 'Identificação'  obrigatorio = 'sim' value="<?php echo $Quarto->Identificacao;?>" />
-			</div>
-			
-			<div class="form-group">
-				<label>Status:</label>
-				<select class="form-control" id='Status' descricao = 'Status' obrigatorio = 'sim'>
-							<?php if($Quarto->Status != '3') { ?>
-								<?php foreach($Status as $Registro){ ?>
-									<option value="<?php echo $Registro->Status;?>" <?php echo ($Quarto->Status == $Registro->Status) ? 'selected="selected"' : '';?>><?php echo $Registro->Nome;?></option>
-								<?php } ?>
-							<?php }else { ?>
-								<option value="1" selected="selected">Ocupado</option>
-							<?php } ?>
-						</select>
-			</div>
-			
-			<div class="form-group">
-				
-				<div class='retorno_ajax'></div>
-			<div class="linha_botoes">
-				<button class="btn btn-sm btn btn-success btn-block botao_submit">
-					Enviar</button>
-				<button class="btn btn-sm btn btn-danger btn-block botao_reset"
-					type="reset">Cancelar</button>
-			</div>
-			</div>
-	</form>
-	<?php } else{ ?>
-		<div class=''>Quarto inválido!</div>
-	<?php } ?>
-	<script type="text/javascript">
-		$(document).ready(function(){
+<?php if($Quarto) { ?>
+	<form class='formulario form-signin'>
 		
-			// Função para o click de cadastro
-			$('.botao_submit').click(function(){
+		<div class="form-group">
+			<label>Andar:</label>
+			<input class="form-control" type="text" id="Andar" name="Andar" value="<?php echo $Quarto->Andar;?>" <?php echo ($Quarto->Status == '3') ? 'readonly="readonly"' : '';?> obrigatorio = 'sim' >
+		</div>
+		
+		<div class="form-group">
+			<label>Identificação:</label>
+			<input class="form-control" type = 'text' maxlength = '10' id='Identificacao' name = 'Identificacao' descricao = 'Identificação'  obrigatorio = 'sim' value="<?php echo $Quarto->Identificacao;?>" />
+		</div>
+		
+		<div class="form-group">
+			<label>Status:</label>
+			<select class="form-control" id='Status' descricao = 'Status' obrigatorio = 'sim'>
+						<?php if($Quarto->Status != '3') { ?>
+							<?php foreach($Status as $Registro){ ?>
+								<option value="<?php echo $Registro->Status;?>" <?php echo ($Quarto->Status == $Registro->Status) ? 'selected="selected"' : '';?>><?php echo $Registro->Nome;?></option>
+							<?php } ?>
+						<?php }else { ?>
+							<option value="1" selected="selected">Ocupado</option>
+						<?php } ?>
+					</select>
+		</div>
+		
+		<div class="form-group">
+			
+			<div class='retorno_ajax'></div>
+		<div class="linha_botoes">
+			<button class="btn btn-sm btn btn-success btn-block botao_submit">
+				Enviar</button>
+			<button class="btn btn-sm btn btn-danger btn-block botao_reset"
+				type="reset">Cancelar</button>
+		</div>
+		</div>
+</form>
+<?php } else{ ?>
+	<div class=''>Quarto inválido!</div>
+<?php } ?>
+<script type="text/javascript">
+$(document).ready(function(){
 
-				// Validação do formulário padrão
-				if(! validaDados2('formulario')){
-					return false;
-				}
+	// Função para o click de cadastro
+	$('.botao_submit').click(function(){
+		salvarEdicao();
 
-				// Declaração de variaveis
-				var QuartoId 	= <?php echo $Quarto->QuartoId;?>;
-				var Andar 		= $("#Andar").val();
-				var Identificacao 	= $("#Identificacao").val();
-				var Status		= $("#Status option:selected").val();
+		return false;
+	});	
+});
 
-				// Executa o POST usando metodo AJAX e retorando Json
-				var Url				= '<?php echo BASE_URL;?>/quarto/salvarEdicao';
+function salvarEdicao(){
+	// Validação do formulário padrão
+	if(! validaDados2('formulario')){
+		return false;
+	}
 
-				var data 			= 'Andar='+Andar+'&QuartoId='+QuartoId+'&Status='+Status+'&Identificacao='+Identificacao;
+	// Declaração de variaveis
+	var QuartoId 	= <?php echo $Quarto->QuartoId;?>;
+	var Andar 		= $("#Andar").val();
+	var Identificacao 	= $("#Identificacao").val();
+	var Status		= $("#Status option:selected").val();
 
-				$.blockUI({ message: '<h1>Salvando os dados...</h1>' });
+	// Executa o POST usando metodo AJAX e retorando Json
+	var Url				= '<?php echo BASE_URL;?>/quarto/salvarEdicao';
 
-				$.ajax({
-					type: "POST",
-					url: Url,
-					data: data,
-					dataType: 'json',
-					success: function(retorno){
-						if(retorno.success){
-							// Se retorno do php Deu OK
-							//$('.retorno').html(retorno.msg);
-				
-							$.blockUI({ message: '<h3>'+retorno.msg+'</h3>' });
+	var Data 			= 'Andar='+Andar+'&QuartoId='+QuartoId+'&Status='+Status+'&Identificacao='+Identificacao;
+	
+	$.blockUI({ message: '<h3>Salvando os dados...</h3>' });
 
-							// Efetuar o redirecionamento
-							setTimeout(
-								function(){
-									window.location = "<?php echo BASE_URL;?>/quarto/listar"
-								},
-								4000
-							);
-						}
-						else{
-							// Se php retornou erro irá salvar o retorno da div "retorno"
-							$('.retorno_ajax').html(retorno.msg);
-							$.unblockUI();
-						}
+	$.ajax({
+		type: "POST",
+		url: Url,
+		data: Data,
+		dataType: 'json',
+		success: function(retorno){
+			if(retorno.success){
+
+				console.log('retorno post');
+				// Se retorno do php Deu OK
+				//$('.retorno').html(retorno.msg);
+	
+				$.blockUI({ message: '<h3>'+retorno.msg+'</h3>' });
+
+				// Efetuar o redirecionamento
+				setTimeout(
+					function(){
+						window.location = "<?php echo BASE_URL;?>/quarto/listar"
 					},
-					error: function(){
-						$('.retorno_ajax').html('Ocorreu um erro no servidor. Tentar novamente!');
-						$.unblockUI();
-					}
-				});
-			});	
-		});
-	</script>
+					4000
+				);
+			}
+			else{
+				console.log('retorno else post');
+				// Se php retornou erro irá salvar o retorno da div "retorno"
+				$('.retorno_ajax').html(retorno.msg);
+				$.unblockUI();
+			}
+		},
+		error: function(){
+			console.log('retorno error post');
+			$('.retorno_ajax').html('Ocorreu um erro no servidor. Tentar novamente!');
+			$.unblockUI();
+		}
+	});
+}
+</script>
 </div>

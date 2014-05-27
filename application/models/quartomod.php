@@ -246,7 +246,15 @@ class QuartoMod extends CI_Model{
         // Se não existir poderá ser adicionado
         if(! $this->existQuarto()){
             
-            $sql        = "INSERT INTO quarto (Andar,Identificacao) VALUES('".$this->Andar."','".$this->Identificacao."')";
+            $sql        = "INSERT INTO
+            				quarto (
+            					Andar,
+            					Identificacao
+							)
+            				VALUES(
+            					'".$this->Andar."',
+            					'".$this->Identificacao."'
+							)";
 
             $this->db->query($sql);
 
@@ -316,7 +324,6 @@ class QuartoMod extends CI_Model{
     }
 
     public function setEdicao(){
-
         if(! is_numeric($this->QuartoId)){
             echo '{"success": false, "msg": "Favor recarregar a página!"}';
             exit;
@@ -343,11 +350,10 @@ class QuartoMod extends CI_Model{
                             SET
                                 Identificacao = '".$this->Identificacao."'
                                 ,Andar = '".$this->Andar."'
-                                ,Status = '".$this->Status."'
+                                ,Status = ".$this->Status."
                             WHERE
                                 QuartoId = ".$this->QuartoId."
                             ";
-
 
             $this->db->query($sql);
 
