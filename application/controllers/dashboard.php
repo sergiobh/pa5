@@ -12,6 +12,15 @@ class Dashboard extends CI_Controller {
 	}
 	
 	
+	public function dashMudanca(){
+		$this->CheckLogado();
+
+		$Dados['View'] 					= 'dashboard/dashMudanca';
+		$this->load->view('body/index', $Dados);
+		
+	}
+	
+	
 	
 	
 }

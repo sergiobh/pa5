@@ -5,9 +5,11 @@ include_once("queryExec.class.php");
 
 $consulta = new query;
 ?>
-<h3>DASHBOARD</h3>
+<h3>DASHBOARD DE TICKETS</h3>
+
+
 <div class="panel panel-primary floatLeft margin">
-  <div class="panel-heading">POR STATUS</div>
+  <div class="panel-heading">QTDE POR STATUS</div>
   <div class="panel-body">
 <?php
 $ResultadoStatus = $consulta -> consultaQuery("select s.Nome, count(a.StatusId) Qtde from ticket_atendimento a, ticket_status s 
@@ -24,7 +26,7 @@ while($status = mysql_fetch_array($ResultadoStatus)){
 
 
 <div class="panel panel-primary floatLeft margin">
-  <div class="panel-heading">POR TIPO</div>
+  <div class="panel-heading">QTDE POR TIPO</div>
   <div class="panel-body">
 <?php
 $ResultadoTipo = $consulta -> consultaQuery("select tp.nome,  count(t.TicketId) Qtde from ticket t, ticket_tipo tp
@@ -40,7 +42,7 @@ while($Tipo = mysql_fetch_array($ResultadoTipo)){
 
 
 <div class="panel panel-primary floatLeft margin">
-  <div class="panel-heading">POR PRIORIDADE</div>
+  <div class="panel-heading">QTDE POR PRIORIDADE</div>
   <div class="panel-body">
 <?php
 $ResultadoPrioridade = $consulta -> consultaQuery("select p.nome, count(t.prioridadeId) Qtde from ticket t, ticket_prioridade p 
@@ -55,7 +57,7 @@ while($Prioridade = mysql_fetch_array($ResultadoPrioridade)){
 
 
 <div class="panel panel-primary floatLeft margin">
-  <div class="panel-heading">SEM BAIXA</div>
+  <div class="panel-heading">QTDE SEM BAIXA</div>
   <div class="panel-body">
 <?php
 $ResultadoSemBaixa = $consulta -> consultaQuery("select p.nome, count(t.prioridadeId) Qtde from ticket t, ticket_prioridade p 
@@ -71,7 +73,7 @@ while($SemBaixa = mysql_fetch_array($ResultadoSemBaixa)){
 
 
 <div class="panel panel-primary floatLeft margin">
-  <div class="panel-heading">POR FUNCIONÁRIO</div>
+  <div class="panel-heading">QTDE POR FUNCIONÁRIO</div>
   <div class="panel-body">
 <?php
 $ResultadoPorFuncionario = $consulta -> consultaQuery("select f.Nome, count(t.FuncionarioId)Qtde from ticket t, funcionario f
@@ -101,13 +103,27 @@ while($Media = mysql_fetch_array($ResultadoPorMedia)){
 
 
 <div class="panel panel-primary floatLeft margin">
-  <div class="panel-heading">EM ATENDIMENTO</div>
+  <div class="panel-heading">QTDE EM ATENDIMENTO</div>
   <div class="panel-body">
 <?php
 $ResultadoEmAtendimento = $consulta -> consultaQuery("select count(TicketId) Qtde from ticket where DH_Aceite is not null");
 
 while($EmAtendimento = mysql_fetch_array($ResultadoEmAtendimento)){
 	echo "Qtde:&nbsp;<span class=\"badge\">".$EmAtendimento['Qtde']."</span><br />";
+}
+?>
+  </div>
+</div>
+
+
+<div class="panel panel-primary floatLeft margin">
+  <div class="panel-heading">QTDE TOTAL DE TICKETS</div>
+  <div class="panel-body">
+<?php
+$ResultadoTotal = $consulta -> consultaQuery("select count(TicketId) qtde from ticket");
+
+while($Total = mysql_fetch_array($ResultadoTotal)){
+	echo "Qtde:&nbsp;<span class=\"badge\">".$Total['qtde']."</span><br />";
 }
 ?>
   </div>

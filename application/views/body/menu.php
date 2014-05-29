@@ -94,6 +94,8 @@ $this->load->library ( "PermissaoLib" );
 					</a>
 					<?php } ?><a href="<?php echo BASE_URL;?>/dashboard/dashtickets">
 						<div class='submenu_item'>Dashboard Tickets</div>
+					</a><a href="<?php echo BASE_URL;?>/dashboard/dashMudanca">
+						<div class='submenu_item'>Dashboard Mudança</div>
 					</a>
 					
 				</div>
