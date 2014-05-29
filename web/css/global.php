@@ -234,6 +234,17 @@ border-color:red
 	border-radius:3px;
 }
 
+.floatLeft{
+	float:left;
+}
+
+.margin{
+	margin:5px;
+}
+
+
+
+
 .leg{ /*weslei*/
 	float:left;
 	margin:5px;
