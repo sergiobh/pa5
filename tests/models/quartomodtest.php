@@ -13,11 +13,7 @@ class quartomodtest extends CIUnit_TestCase {
 	}
 		
 	public function testgetStatusAll() {
-//echo print_r($this->QuartoMod);exit;
-		
 		$this->assertTrue( method_exists($this->QuartoMod, 'getStatusAll'));
-		
-		//$this->assertEquals ( $this->QuartoMod->getStatusAll(), $this->montaGetStatusAll() );
 	}
 
 	private function montaGetStatusAll(){
