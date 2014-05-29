@@ -76,6 +76,7 @@ function carregaNomeNivel(){
 	$.ajax({
 		type: "get",
 		url: Url,
+		data: data,
 		dataType: 'json',
 		success: function(retorno){
 			if(retorno.success){
