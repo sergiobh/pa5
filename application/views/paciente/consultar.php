@@ -20,92 +20,101 @@
 
 	<div id='Redirect' class='hide'></div>
 
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$("#cpf").mask("999.999.999-99");
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#cpf").mask("999.999.999-99");
 
-			$('.formulario').submit(function(){
-				return false;
-			});
+	$('.formulario').submit(function(){
+		return false;
+	});
 
-			// Função para o click de cadastro
-			$('.botao_submit').click(function(){
+	// Função para o click de cadastro
+	$('.botao_submit').click(function(){
+		consultaCpf();
+	});
+});
 
-				var cpf = $("#cpf").val();
+function consultaCpf(){
+	var cpf = $("#cpf").val();
 
-				cpf = cpf.replace('.','');
-				cpf = cpf.replace('.','');
-				cpf = cpf.replace('-','');
+	cpf = cpf.replace('.','');
+	cpf = cpf.replace('.','');
+	cpf = cpf.replace('-','');
 
-				if(!validaCPF(cpf)){
-					$(".retorno_ajax").html('Cpf inválido, favor verificar!');
-					return false;
+	if(!validaCPF(cpf)){
+		$(".retorno_ajax").html('Cpf inválido, favor verificar!');
+		return false;
+	}
+
+	// Executa o POST usando metodo AJAX e retorando Json
+	var Url				= '<?php echo BASE_URL;?>/paciente/getPaciente';
+
+	var data 			= 'Cpf='+cpf;
+
+	var Html;
+
+	$.blockUI({ message: '<h1>Consultando paciente...</h1>' });
+
+	$.ajax({
+		type: "POST",
+		url: Url,
+		data: data,
+		dataType: 'json',
+		success: function(retorno){
+			if(retorno.success){
+	
+				$.blockUI({ message: '<h3>'+retorno.msg+'</h3>' });
+
+				// Metodo se 
+				if(retorno.url == 'editar'){
+					/*
+					/* Executa um post com o CPF do paciente
+					*/
+					var PacienteId = retorno.PacienteId;
+					
+					Html = "<form id='form_edit' action='<?php echo BASE_URL;?>/paciente/editar' method='POST'>";
+					Html += "<input value='"+ PacienteId +"' name='PacienteId' />";
+					Html += "</form>";
+
+					$("#Redirect").html(Html);
+
+					$("#form_edit").submit();
 				}
+				else{
+					// Efetuar o redirecionamento
+					$.blockUI({ message: '<h3>'+retorno.msg+'</h3>' });
 
-				// Executa o POST usando metodo AJAX e retorando Json
-				var Url				= '<?php echo BASE_URL;?>/paciente/getPaciente';
+					/*
+					/* Executa um post com o CPF do paciente
+					*/
+					var PacienteId = retorno.PacienteId;
+					
+					Html = "<form id='form_edit' action='<?php echo BASE_URL;?>/paciente/cadastrar' method='POST'>";
+					Html += "<input value='"+ cpf +"' name='Cpf' />";
+					Html += "</form>";
 
-				var data 			= 'Cpf='+cpf;
+					$("#Redirect").html(Html);
 
-				var Html;
+					$("#form_edit").submit();
+				}
+			}
+			else{
+				// Se php retornou erro irá salvar o retorno da div "retorno"
+				$.blockUI({ message: '<h3>'+retorno.msg+'</h3>' });
 
-				$.blockUI({ message: '<h1>Consultando paciente...</h1>' });
-
-				$.ajax({
-					type: "POST",
-					url: Url,
-					data: data,
-					dataType: 'json',
-					success: function(retorno){
-						if(retorno.success){
-				
-							$.blockUI({ message: '<h3>'+retorno.msg+'</h3>' });
-
-							// Metodo se 
-							if(retorno.url == 'editar'){
-								/*
-								/* Executa um post com o CPF do paciente
-								*/
-								var PacienteId = retorno.PacienteId;
-								
-								Html = "<form id='form_edit' action='<?php echo BASE_URL;?>/paciente/editar' method='POST'>";
-								Html += "<input value='"+ PacienteId +"' name='PacienteId' />";
-								Html += "</form>";
-
-								$("#Redirect").html(Html);
-
-								$("#form_edit").submit();
-							}
-							else{
-								// Efetuar o redirecionamento
-								$.blockUI({ message: '<h3>'+retorno.msg+'</h3>' });
-
-								setTimeout(
-									function(){
-										window.location = "<?php echo BASE_URL;?>/paciente/cadastrar";
-									},
-									4000
-								);
-							}
-						}
-						else{
-							// Se php retornou erro irá salvar o retorno da div "retorno"
-							$.blockUI({ message: '<h3>'+retorno.msg+'</h3>' });
-
-							setTimeout(
-								function(){
-									$.unblockUI();
-								},
-								4000
-							);
-						}
-					},
-					error: function(){
-						$('.retorno_ajax').html('Ocorreu um erro no servidor. Tentar novamente!');
+				setTimeout(
+					function(){
 						$.unblockUI();
-					}
-				});
-			});
-		});
-	</script>
+					},
+					4000
+				);
+			}
+		},
+		error: function(){
+			$('.retorno_ajax').html('Ocorreu um erro no servidor. Tentar novamente!');
+			$.unblockUI();
+		}
+	});
+}
+</script>
 </div>

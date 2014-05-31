@@ -276,15 +276,26 @@ class QuartoMod extends CI_Model{
             return false;
         }
 
-        $sql  = "SELECT Q.QuartoId FROM quarto Q
-                 WHERE Q.Andar = '".$this->Andar."' AND Q.Identificacao = '".$this->Identificacao."'";
+        $sql  = "SELECT
+        			Q.QuartoId
+        		FROM
+        			quarto Q
+				WHERE
+        			Q.Andar = '".$this->Andar."'
+        			AND Q.Identificacao = '".$this->Identificacao."'
+        		";
 
         $query  = $this->db->query($sql);
 
         $dados = $query->row();
 
         if(is_object($dados)){
-            return true;
+            if($dados->QuartoId == $this->QuartoId){
+            	return false;
+            }
+			else{
+				return true;
+			}
         }
         else{
             return false;
@@ -365,7 +376,7 @@ class QuartoMod extends CI_Model{
             }
         }
         else{
-            echo '{"success": false, "msg": "Leito existente para este quarto!" }';
+            echo '{"success": false, "msg": "Quarto existente para este andar!" }';
             exit;
         }
     }

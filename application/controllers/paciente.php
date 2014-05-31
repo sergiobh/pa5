@@ -6,6 +6,9 @@ class Paciente extends CI_Controller {
 	{
 		$this->CheckLogado();
 
+		$Cpf 							= $this->input->post("Cpf");
+		$Dados['Cpf'] 					= $Cpf;
+		
 		$Dados['Script'][]				= 'jquery/jquery.maskedinput.js';
 
 		$Dados['View'] 					= 'paciente/cadastrar';

@@ -515,3 +515,18 @@ form .botao_direita{
 .chamado_editar_observacao .selectTipoObservacao{
 	display: none;
 }
+
+.linha_telefone .columnTitleTelefone{
+	float: left;
+	width: 75px;
+	height: 30px;
+}
+
+.linha_telefone .columnRemoveTelefone{
+	float: right;
+	width: 100px;
+	height: 30px;
+}
+.linha_telefone .dadosTelefone{
+	margin: 0 105px 0 75px;	
+}

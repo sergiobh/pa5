@@ -99,11 +99,11 @@ class LeitoMod extends CI_Model{
         $dados = $query->row();
 
         if(is_object($dados)){
-            return true;
+           	return true;
         }
         else{
-            return false;
-        }
+	return false;
+}
     }
 
     public function getLeito(){

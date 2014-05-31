@@ -1,21 +1,25 @@
 <form class="form-signin" role="form">
 	<h2 class="form-signin-heading">Cadastro de Leitos</h2>
 	<div class="form-group">
-		<label>Andar:</label>
-		<select class="form-control" name='AndarId' id='AndarId' autofocus></select>
+		<label>Andar:</label> <select class="form-control" name='AndarId'
+			id='AndarId' autofocus></select>
 	</div>
 	<div class="form-group">
-		<label>Quarto:</label>
-		<select class="form-control" name='quartoid' id='QuartoId'></select>
+		<label>Quarto:</label> <select class="form-control" name='quartoid'
+			id='QuartoId'></select>
 	</div>
 	<div class="form-group">
-		<label>Identificação:</label>		
-		<input type='text' class="form-control" placeholder="Identificação" maxlength='10' id='Identificacao' name='identificacao' />
+		<label>Identificação:</label> <input type='text' class="form-control"
+			placeholder="Identificação" maxlength='10' id='Identificacao'
+			name='identificacao' />
+	</div>
+	<div class="form-group">
+		<div class="retorno_ajax"></div>
 	</div>
 	<div class="form-group">
 		<div class="linha_botoes">
-		<button class="btn btn-sm btn btn-success btn-block botao_submit">Enviar</button>
-		<button class="btn btn-sm btn btn-danger btn-block botao_reset">Limpar</button>
+			<button class="btn btn-sm btn btn-success btn-block botao_submit">Enviar</button>
+			<button class="btn btn-sm btn btn-danger btn-block botao_reset">Limpar</button>
 		</div>
 	</div>
 </form>
