@@ -21,7 +21,7 @@ if (! is_numeric ( $Cpf )) {
 		</div>
 		<div class="form-group">
 			<label>Sexo:</label> <select class="form-control" name="sexo"
-				id='sexo' >
+				id='sexo'>
 				<option value="">--- Selecione ---</option>
 				<option value="1">Masculino</option>
 				<option value="2">Feminino</option>
@@ -29,8 +29,8 @@ if (! is_numeric ( $Cpf )) {
 		</div>
 		<div class="form-group">
 			<label>CPF:</label> <input class="form-control" type='text'
-				maxlength='11' name='cpf' id='cpf'
-				value='<?php echo $Cpf;?>' readonly="readonly" />
+				maxlength='11' name='cpf' id='cpf' value='<?php echo $Cpf;?>'
+				readonly="readonly" />
 		</div>
 		<div class="form-group">
 			<label>Logradouro:</label> <input class="form-control" type='text'
@@ -57,9 +57,9 @@ if (! is_numeric ( $Cpf )) {
 				maxlength='2' name='estado' id='estado' />
 		</div>
 		<div class="form-group">
-			<label>Contatos</label> <input class='add_telefone' type='button' name='adicionaTelefone'
-				value='Adicionar' /> <input type="hidden" name="QtdTelefone"
-				value="0" id="QtdTelefone">
+			<label>Contatos</label> <input class='add_telefone' type='button'
+				name='adicionaTelefone' value='Adicionar' /> <input type="hidden"
+				name="QtdTelefone" value="0" id="QtdTelefone">
 		</div>
 		<div class="form-group">
 			<div class="add_contatos"></div>
@@ -72,7 +72,7 @@ if (! is_numeric ( $Cpf )) {
 			</div>
 		</div>
 	</form>
-<script type="text/javascript">
+	<script type="text/javascript">
 var validator = '';
 var Telefones = [];
 
@@ -214,10 +214,7 @@ function DelTelefone(Telefone){
 }
 
 function salvarPaciente(){
-	// Validação do formulário padrão
-	if(! validator()){
-		return false;
-	}
+console.log('salvar');
 
 	// Declaração de variaveis
 	var Nome 			= $("#nome").val();
@@ -261,7 +258,7 @@ function salvarPaciente(){
 							+'&Telefone='+Telefone
 							+'&QtdTelefone='+QtdTelefone;
 
-	$.blockUI({ message: '<h1>Salvando os dados...</h1>' });
+	$.blockUI({ message: '<h3>Salvando os dados...</h3>' });
 
 	$.ajax({
 		type: "POST",
@@ -316,10 +313,12 @@ $(document).ready(function(){
 		AddTelefone();				
 	});
 
-	// Função para o click de cadastro
-	$('.botao_submit').click(function(){
-		salvarPaciente();
-	});
+	$(".form-signin").submit( function(){
+		if( validator.form() ){
+			salvarPaciente();
+		}
+		return false;
+	});	
 });
 </script>
 </div>
