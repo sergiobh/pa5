@@ -9,12 +9,10 @@
 		</div>
 		<div class="form-group">
 			<label>Identificação:</label> <input class="form-control" type='text'
-				maxlength='10' id='Identificacao' name='identificacao'
-				descricao='Identificação' obrigatorio='sim' />
+				maxlength='10' id='Identificacao' name='identificacao' autofocus />
 		</div>
 		<div class="form-group">
-			<label>Status:</label> <select class="form-control" id='Status'
-				descricao='Status' obrigatorio='sim'></select>
+			<label>Status:</label> <select class="form-control" id='Status'></select>
 		</div>
 		<div class="form-group">
 			<div class="retorno_ajax"></div>

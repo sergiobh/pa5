@@ -344,6 +344,7 @@ class TicketMod extends CI_Model {
 		
 		if ($this->TicketGravado->TipoId != $this->TipoId) {
 			$this->load->model ( "TransactionMod" );
+			$this->TransactionMod->Start ();
 			
 			$this->load->model ( "Ticket_AtendimentoMod" );
 			$this->Ticket_AtendimentoMod->setTicketId ( $this->getTicketId () );

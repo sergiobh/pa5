@@ -2,25 +2,27 @@
 <div class='titulo_page'>Consulta de Pacientes</div>
 <div class="paciente_consultar">
 	<form class='formulario form-signin'>
-		
+
 		<div class="form-group">
-			<label>CPF:</label>
-			<input type = 'text' maxlength = '14' id='cpf' name = 'cpf' descricao = 'Cpf'  obrigatorio = 'sim' class="form-control"/>
+			<label>CPF:</label> <input type='text' maxlength='14' id='cpf'
+				name='cpf' class="form-control" autofocus />
 		</div>
 		<div class="form-group">
 			<div class='retorno_ajax'></div>
 			<div class="linha_botoes">
-			<button class='btn btn-sm btn btn-success btn-block botao_submit' >Consultar </button>
-			<button class="btn btn-sm btn btn-danger btn-block botao_reset" type="reset">Limpar</button>
+				<button class='btn btn-sm btn btn-success btn-block botao_submit'>Consultar
+				</button>
+				<button class="btn btn-sm btn btn-danger btn-block botao_reset"
+					type="reset">Limpar</button>
 			</div>
-			
+
 		</div>
 
 	</form>
 
 	<div id='Redirect' class='hide'></div>
 
-<script type="text/javascript">
+	<script type="text/javascript">
 $(document).ready(function(){
 	$("#cpf").mask("999.999.999-99");
 
@@ -53,7 +55,7 @@ function consultaCpf(){
 
 	var Html;
 
-	$.blockUI({ message: '<h1>Consultando paciente...</h1>' });
+	$.blockUI({ message: '<h3>Consultando paciente...</h3>' });
 
 	$.ajax({
 		type: "POST",

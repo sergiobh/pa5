@@ -9,7 +9,7 @@ if (! is_numeric ( $Cpf )) {
 	<form class='formulario form-signin'>
 		<div class="form-group">
 			<label>Nome:</label> <input class="form-control" id='nome'
-				type='text' maxlength='100' name='nome' />
+				type='text' maxlength='100' name='nome' autofocus />
 		</div>
 		<div class="form-group">
 			<label>Plano:</label> <select class="form-control" name="tipo"

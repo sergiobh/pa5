@@ -2,8 +2,8 @@
 <div class='painel_pacientes'>
 	<form class='formulario form-signin'>
 		<div class="form-group">
-			<label>Status:</label> <select name="status" descricao="status"
-				id='status' obrigatorio='sim' class="form-control">
+			<label>Status:</label> <select name="status" id='status'
+				class="form-control" autofocus>
 				<option value="1"
 					<?php echo ($Paciente->Status == 1) ? 'selected="selected"' : '';?>>Presente</option>
 						<?php if($Paciente->Ocupacao == 0){ ?>
@@ -20,7 +20,7 @@
 		</div>
 		<div class="form-group">
 			<label>Plano:</label> <select class="form-control" name="tipo"
-				descricao="plano" id='tipo'>
+				id='tipo'>
 				<option value="">--- Selecione ---</option>
 				<option value="1"
 					<?php echo ($Paciente->Tipo == 1) ? 'selected="selected"' : '';?>>Apartamento</option>
@@ -41,8 +41,8 @@
 		</div>
 		<div class="form-group">
 			<label>CPF:</label> <input class="form-control" type='text'
-				maxlength='11' name='cpf' id='cpf' value='<?php echo $Paciente->Cpf;?>'
-				readonly="readonly" />
+				maxlength='11' name='cpf' id='cpf'
+				value='<?php echo $Paciente->Cpf;?>' readonly="readonly" />
 		</div>
 		<div class="form-group">
 			<label>Logradouro:</label> <input class="form-control" type='text'
@@ -76,8 +76,9 @@
 		</div>
 		<div class="form-group">
 			<label>Contatos:</label> <input class='add_telefone' type='button'
-				value='Adicionar' /> <input type="hidden" name="QtdTelefone"
-				value="<?php echo count($Paciente->Telefones);?>" id="QtdTelefone">
+				name='add_telefone' value='Adicionar' /> <input type="hidden"
+				name="QtdTelefone" value="<?php echo count($Paciente->Telefones);?>"
+				id="QtdTelefone">
 		</div>
 		<div class="form-group">
 			<div class="add_contatos"></div>
@@ -91,7 +92,7 @@
 			</div>
 		</div>
 	</form>
-</div>	
+</div>
 <script type="text/javascript">
 var validator = '';
 var Telefones = [];

@@ -216,7 +216,7 @@ class PacienteMod extends CI_Model{
             // Grava telefone
             $this->setTelefone();
 
-            echo '{"success": true, "PacienteId": "'.$this->PacienteId.'", "msg": "Paciente já cadastrado!" }';
+            echo '{"success": true, "PacienteId": "'.$this->PacienteId.'", "msg": "Paciente cadastrado com sucesso!" }';
         }
         else{
             echo '{"success": false, "msg": "Favor recarregar a página!" }';

@@ -2,41 +2,44 @@
 <div class="quarto_editar">
 <?php if($Quarto) { ?>
 	<form class='formulario form-signin'>
-		
+
 		<div class="form-group">
-			<label>Andar:</label>
-			<input class="form-control" type="text" id="Andar" name="Andar" value="<?php echo $Quarto->Andar;?>" <?php echo ($Quarto->Status == '3') ? 'readonly="readonly"' : '';?> obrigatorio = 'sim' >
+			<label>Andar:</label> <input class="form-control" type="text"
+				id="Andar" name="Andar" value="<?php echo $Quarto->Andar;?>"
+				<?php echo ($Quarto->Status == '3') ? 'readonly="readonly"' : '';?>
+				autofocus>
 		</div>
-		
+
 		<div class="form-group">
-			<label>Identificação:</label>
-			<input class="form-control" type = 'text' maxlength = '10' id='Identificacao' name = 'Identificacao' descricao = 'Identificação'  obrigatorio = 'sim' value="<?php echo $Quarto->Identificacao;?>" />
+			<label>Identificação:</label> <input class="form-control" type='text'
+				maxlength='10' id='Identificacao' name='Identificacao'
+				value="<?php echo $Quarto->Identificacao;?>" />
 		</div>
-		
+
 		<div class="form-group">
-			<label>Status:</label>
-			<select class="form-control" id='Status' descricao = 'Status' obrigatorio = 'sim'>
+			<label>Status:</label> <select class="form-control" id='Status'>
 						<?php if($Quarto->Status != '3') { ?>
 							<?php foreach($Status as $Registro){ ?>
-								<option value="<?php echo $Registro->Status;?>" <?php echo ($Quarto->Status == $Registro->Status) ? 'selected="selected"' : '';?>><?php echo $Registro->Nome;?></option>
+								<option value="<?php echo $Registro->Status;?>"
+					<?php echo ($Quarto->Status == $Registro->Status) ? 'selected="selected"' : '';?>><?php echo $Registro->Nome;?></option>
 							<?php } ?>
 						<?php }else { ?>
 							<option value="1" selected="selected">Ocupado</option>
 						<?php } ?>
 					</select>
 		</div>
-		
+
 		<div class="form-group">
-			
+
 			<div class='retorno_ajax'></div>
-		<div class="linha_botoes">
-			<button class="btn btn-sm btn btn-success btn-block botao_submit">
-				Enviar</button>
-			<button class="btn btn-sm btn btn-danger btn-block botao_reset"
-				type="reset">Cancelar</button>
+			<div class="linha_botoes">
+				<button class="btn btn-sm btn btn-success btn-block botao_submit">
+					Enviar</button>
+				<button class="btn btn-sm btn btn-danger btn-block botao_reset"
+					type="reset">Cancelar</button>
+			</div>
 		</div>
-		</div>
-</form>
+	</form>
 <?php } else{ ?>
 	<div class=''>Quarto inválido!</div>
 <?php } ?>
@@ -77,11 +80,6 @@ function salvarEdicao(){
 		dataType: 'json',
 		success: function(retorno){
 			if(retorno.success){
-
-				console.log('retorno post');
-				// Se retorno do php Deu OK
-				//$('.retorno').html(retorno.msg);
-	
 				$.blockUI({ message: '<h3>'+retorno.msg+'</h3>' });
 
 				// Efetuar o redirecionamento
@@ -93,14 +91,12 @@ function salvarEdicao(){
 				);
 			}
 			else{
-				console.log('retorno else post');
 				// Se php retornou erro irá salvar o retorno da div "retorno"
 				$('.retorno_ajax').html(retorno.msg);
 				$.unblockUI();
 			}
 		},
 		error: function(){
-			console.log('retorno error post');
 			$('.retorno_ajax').html('Ocorreu um erro no servidor. Tentar novamente!');
 			$.unblockUI();
 		}

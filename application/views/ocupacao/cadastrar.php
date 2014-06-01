@@ -3,7 +3,7 @@
 	<form class='formulario form-signin'>
 		<div class="form-group">
 			<label>Paciente:</label> <select class="form-control"
-				name="PacienteId" id='PacienteId'>
+				name="PacienteId" id='PacienteId' autofocus>
 				<option value="">--- Selecione ---</option>
 					<?php if($Pacientes){ ?>
 						<?php foreach($Pacientes as $Registro) { ?>

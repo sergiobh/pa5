@@ -55,7 +55,7 @@ class QuartoMod extends CI_Model{
                                     ,COUNT(L.LeitoId) AS QtdLeitos
                                     ,GROUP_CONCAT(L.LeitoId) AS Leitos
                                     ";
-
+                
                 $sql_from       = "
                                     INNER JOIN leito L ON L.QuartoId = Q.QuartoId
                                     LEFT JOIN ocupacao O ON O.LeitoId = L.LeitoId AND O.FuncBaixa IS NULL
@@ -64,7 +64,6 @@ class QuartoMod extends CI_Model{
                 $sql_where      = "
                                     WHERE
                                         Q.Status = 1
-                                        AND L.Status != 0
                                     ";
 
                 $sql_group_by   = "
@@ -73,10 +72,15 @@ class QuartoMod extends CI_Model{
                                     ";
 
                 if($Paciente->Tipo == 1){
-                    $sql_having     = "
+                	$sql_where 		.= " AND L.Status != 0 ";
+                	
+                	$sql_having     = "
                                         HAVING
                                             QtdLeitos = 1
                                         ";
+                }
+                else{
+                	$sql_where 		.= " AND L.Status = 1 ";
                 }
             }
             else{
@@ -148,22 +152,33 @@ class QuartoMod extends CI_Model{
             if($Paciente){
                 $sql_column     = "
                                     ,O.LeitoId AS Ocupacao
+                					,COUNT(L.LeitoId) AS QtdLeitos
+                					,IF(L.Status = 1, 1, 0) AS TemAtivo
                                     ";
 
-                $sql_having     = "
+                /*$sql_having     = "
                                     HAVING
                                         O.LeitoId IS NULL
-                                    ";
+                						AND TemAtivo = 1
+                                    ";*/
 
                 $sql_from       = "
                                     INNER JOIN leito L ON L.QuartoId = Q.QuartoId
-                                    LEFT JOIN ocupacao O ON O.LeitoId = L.LeitoId AND O.FuncBaixa IS NULL
+                                    LEFT JOIN ocupacao O ON O.LeitoId = L.LeitoId AND O.FuncBaixa IS NULL AND O.LeitoId IS NULL
                                     ";
 
                 $sql_where      = "
                                     AND Q.Status = 1
-                                    AND L.Status = 1
                                     ";
+                
+                // Tipo 1 = Apartamento e Tipo 2 = Enfermaria 
+                if($Paciente->Tipo == 1){
+                	$sql_where      = " AND L.Status <> 0 ";   	
+                	//$sql_having     .= " AND QtdLeitos = 1 ";
+                	$sql_having     = "
+                	 					HAVING
+                	 						QtdLeitos = 1 ";
+                }
             }
             else{
                 // Retornar inválido!
@@ -190,7 +205,7 @@ class QuartoMod extends CI_Model{
                     ORDER BY
                         Quarto
                     ";
-
+//echo '<pre>'.$sql;exit;
         $query  = $this->db->query($sql);
 
         $dados = $query->result();

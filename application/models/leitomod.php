@@ -287,5 +287,47 @@ class LeitoMod extends CI_Model{
 
         return $ListStatus;
     }
+    
+    public function setOcupacao(){
+    	$sql        = "
+                            UPDATE
+                                leito
+                            SET
+                                Ocupado = 1
+                            WHERE
+                                LeitoId = ".$this->LeitoId."
+                               	AND Ocupado = 0
+                            ";
+    	
+    	$this->db->query($sql);
+    	
+    	if($this->db->affected_rows() > 0){
+    		return true;
+    	}
+    	else{
+    		return false;
+    	}
+    }
+    
+    public function setDesocupacao(){
+    	$sql        = "
+                            UPDATE
+                                leito
+                            SET
+                                Ocupado = 0
+                            WHERE
+                                LeitoId = ".$this->LeitoId."
+                               	AND Ocupado = 1
+                            ";
+    	 
+    	$this->db->query($sql);
+    	 
+    	if($this->db->affected_rows() > 0){
+    		return true;
+    	}
+    	else{
+    		return false;
+    	}
+    }
 }
 ?>
