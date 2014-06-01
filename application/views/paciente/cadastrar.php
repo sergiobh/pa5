@@ -72,7 +72,8 @@ if (! is_numeric ( $Cpf )) {
 			</div>
 		</div>
 	</form>
-	<script type="text/javascript">
+</div>
+<script type="text/javascript">
 var validator = '';
 var Telefones = [];
 
@@ -164,7 +165,7 @@ function AddTelefone(){
 	// Adiciona o Telefone no array
 	Telefones.push(QtdTelefone);
 
-	var AddTelefone = "<div class='linha_telefone linha_telefone"+QtdTelefone+"'><div class='columnRemoveTelefone'><input class='del_telefone' onclick='DelTelefone("+QtdTelefone+")' name='DelTelefone"+QtdTelefone+"' type='button' value='Remover' /></div><div class='columnTitleTelefone'>Telefone"+QtdTelefone+":</div><div class='dadosTelefone'><input class='form-control telefone' type='text' maxlength='14' name='telefone"+QtdTelefone+"' id='telefone"+QtdTelefone+"' /></div>";
+	var AddTelefone = "<div class='linha_telefone linha_telefone"+QtdTelefone+"'><div class='columnRemoveTelefone'><input class='del_telefone' onclick='DelTelefone("+QtdTelefone+")' name='DelTelefone"+QtdTelefone+"' type='button' value='Remover' /></div><div class='columnTitleTelefone'>Telefone"+QtdTelefone+":</div><div class='dadosTelefone'><input class='form-control telefone' type='text' maxlength='13' name='telefone"+QtdTelefone+"' id='telefone"+QtdTelefone+"' /></div>";
 	
 	$(".add_contatos").append(AddTelefone);
 
