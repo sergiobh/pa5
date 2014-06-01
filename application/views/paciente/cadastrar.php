@@ -215,8 +215,6 @@ function DelTelefone(Telefone){
 }
 
 function salvarPaciente(){
-console.log('salvar');
-
 	// Declaração de variaveis
 	var Nome 			= $("#nome").val();
 	var Tipo 			= $("#tipo").val();
@@ -322,4 +320,3 @@ $(document).ready(function(){
 	});	
 });
 </script>
-</div>
