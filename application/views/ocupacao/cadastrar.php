@@ -123,7 +123,7 @@ function getAndar(PacienteId){
 		$('#LeitoId').html(OptPaciente);
 	}
 	else{
-		var Url		= '<?php echo BASE_URL;?>/quarto/getAndar';
+		var Url		= '<?php echo BASE_URL;?>/quarto/getAndarOcupacao';
 		var data 	= 'PacienteId='+PacienteId
 						+'&Ocupacao=1'
 
@@ -171,7 +171,7 @@ function getQuarto(Andar){
 	else{
 		var PacienteId = $('#PacienteId').val();
 
-		var Url		= '<?php echo BASE_URL;?>/quarto/getQuartos';
+		var Url		= '<?php echo BASE_URL;?>/quarto/getQuartosOcupacao';
 		var data 	= 'Andar='+Andar
 						+'&Ocupacao=1'
 						+'&PacienteId='+PacienteId;
@@ -218,7 +218,7 @@ function getLeito(QuartoId){
 		var PacienteId = $('#PacienteId').val();
 
 
-		var Url		= '<?php echo BASE_URL;?>/leito/getLeitos';
+		var Url		= '<?php echo BASE_URL;?>/leito/getLeitosOcupacao';
 		var data 	= 'QuartoId='+QuartoId
 						+'&Ocupacao=1'
 						+'&PacienteId='+PacienteId;

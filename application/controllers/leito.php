@@ -98,4 +98,14 @@ class Leito extends CI_Controller {
 		$this->LeitoMod->QuartoId		= $QuartoId;
 		$this->LeitoMod->getLeitos();
 	}
+	
+	public function getLeitosOcupacao(){
+		$QuartoId 		= $this->input->get("QuartoId");
+		$PacienteId 	= $this->input->get("PacienteId"); 
+	
+		$this->load->model("LeitoMod");
+		$this->LeitoMod->QuartoId		= $QuartoId;
+		$this->LeitoMod->PacienteId 	= $PacienteId;
+		$this->LeitoMod->getLeitosOcupacao();
+	}
 }
