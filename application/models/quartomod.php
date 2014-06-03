@@ -124,6 +124,7 @@ class QuartoMod extends CI_Model {
 	}
 	public function getAndarOcupacao() {
 		$sql_having = '';
+		$sql_where = '';
 		
 		$this->load->model ( 'PacienteMod' );
 		$this->PacienteMod->PacienteId = $this->PacienteId;

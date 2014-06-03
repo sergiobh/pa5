@@ -7,7 +7,7 @@
 				<option value="">--- Selecione ---</option>
 					<?php if($Pacientes){ ?>
 						<?php foreach($Pacientes as $Registro) { ?>
-							<option value="<?php echo $Registro->PacienteId;?>"><?php echo $Registro->Paciente;?></option>';
+							<option value="<?php echo $Registro->PacienteId;?>"><?php echo $Registro->Paciente;?></option>
 						<?php } ?>
 					<?php } ?>
 			</select>

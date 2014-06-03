@@ -187,8 +187,8 @@ class OcupacaoMod extends CI_Model{
         		echo '{"success": false, "msg": "Ocorreu um erro ao salvar, tente novamente!" }';
         	}
         }
-        else{
-            echo '{"success": false, "msg": "Ocorreu um erro ao salvar, tente novamente!" }';
+        else{ 
+        	echo '{"success": false, "msg": "Ocorreu um erro ao salvar, tente novamente!" }';
         }
     }
 }

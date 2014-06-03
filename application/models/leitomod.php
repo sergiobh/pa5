@@ -274,6 +274,7 @@ class LeitoMod extends CI_Model {
 						Q.QuartoId	
 						,Q.Andar
 						,Q.Identificacao AS Quarto
+						,L.LeitoId
 						,L.Identificacao AS Leito
 						,L.Status	
 						,L.Ocupado AS Ocupado
