@@ -96,42 +96,29 @@
 					var andar="";
     	       		$.each(data.Leitos, function(index, d){  
 						var src=""			 
-						if(d.Status=="Ocupado"){
-							src = URL_OCUPADO;	
-	
-							if(andar!=d.Andar){
-	
-								insereAndar(d.Andar);
-	
-								andar=d.Andar;
-							}
-	
-							insereLeito();
+				
+						if(d.Status=="Liberado"){
+							src = URL_DISPONIVEL;
 						}
-						else {					
-							if(d.Status=="Liberado"){
-								src = URL_DISPONIVEL;
-							}
-							else if(d.Status=="Ocupado"){
-								src = URL_OCUPADO;
-							}
-							else if(d.Status=="Desativado"){
-								src = URL_DESATIVADO;
-							}
-							else {
-								src = URL_ARRUMACAO;
-							}	
-	
-							if(andar!=d.Andar){
-	
-								insereAndar(d.Andar);
-	
-								andar=d.Andar;
-							}										
+						else if(d.Status=="Ocupado"){
+							src = URL_OCUPADO;
+						}
+						else if(d.Status=="Desativado"){
+							src = URL_DESATIVADO;
+						}
+						else {
+							src = URL_ARRUMACAO;
+						}	
 
-							insereLeito(src, d.Leito, d.Quarto, d.Status, d.LeitoId);
-							
-						}
+						if(andar!=d.Andar){
+
+							insereAndar(d.Andar);
+
+							andar=d.Andar;
+						}										
+
+						insereLeito(src, d.Leito, d.Quarto, d.Status, d.LeitoId);
+						
 					});
 
 					$.unblockUI();

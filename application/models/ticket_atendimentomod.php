@@ -209,6 +209,26 @@ class Ticket_AtendimentoMod extends CI_Model {
 			return false;
 		}
 	}
+	public function updateFechaAtendimento() {
+		$sql = "
+				UPDATE
+					ticket_atendimento
+				SET
+					StatusId = " . $this->StatusId . "
+				WHERE
+					TicketId = " . $this->TicketId . "
+					AND Tipo_Nivel >= " . $this->Tipo_Nivel . "
+					AND Ativo = 1
+				";
+	
+		$this->db->query ( $sql );
+	
+		if ($this->db->affected_rows () > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	public function getAtendimentos() {
 		$sql = "
 				SELECT

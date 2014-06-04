@@ -314,6 +314,8 @@ class LeitoMod extends CI_Model {
 		}
 	}
 	public function getStatusAll($Status = 0) {
+		$Item = new stdClass();
+		
 		if ($Status == 3) {
 			$Item->Status = 3;
 			$Item->Nome = 'Ocupado';
@@ -324,11 +326,13 @@ class LeitoMod extends CI_Model {
 			$ListStatus [] = $Item;
 			
 			unset ( $Item );
+			$Item = new stdClass();
 			$Item->Status = 1;
 			$Item->Nome = 'Ativo';
 			$ListStatus [] = $Item;
 			
 			unset ( $Item );
+			$Item = new stdClass();
 			$Item->Status = 2;
 			$Item->Nome = 'Arrumação';
 			$ListStatus [] = $Item;

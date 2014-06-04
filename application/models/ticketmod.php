@@ -224,7 +224,7 @@ class TicketMod extends CI_Model {
 					T.TicketId
 					,TH.TicketId
 				";
-//echo '<pre>'.$sql;exit;
+		// echo '<pre>'.$sql;exit;
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();
@@ -326,7 +326,7 @@ class TicketMod extends CI_Model {
 				WHERE
 					TicketId = " . $this->TicketId . "
 				";
-		
+		//echo '<pre>'.$sql;exit;
 		$this->db->query ( $sql );
 		
 		// if ($this->db->affected_rows () > 0) {
@@ -339,13 +339,12 @@ class TicketMod extends CI_Model {
 		return json_encode ( $retorno );
 	}
 	private function checkAlteracoesAtendimento() {
+		$this->load->model ( "TransactionMod" );
+		
 		$retorno ['success'] = true;
 		$retorno ["msg"] = "Dados salvos com sucesso!";
 		
 		if ($this->TicketGravado->TipoId != $this->TipoId) {
-			$this->load->model ( "TransactionMod" );
-			$this->TransactionMod->Start ();
-			
 			$this->load->model ( "Ticket_AtendimentoMod" );
 			$this->Ticket_AtendimentoMod->setTicketId ( $this->getTicketId () );
 			
@@ -382,17 +381,28 @@ class TicketMod extends CI_Model {
 			/*
 			 * Verificar se é $this->StatusId == 4 para inserir o AtendenteId
 			 */
-			$this->load->model ( "TransactionMod" );
-			
 			$this->setAtendenteId ( $_SESSION ['Funcionario']->FuncionarioId );
 			
 			$this->load->model ( "Ticket_AtendimentoMod" );
 			$this->Ticket_AtendimentoMod->setTicketId ( $this->getTicketId () );
 			$this->Ticket_AtendimentoMod->setStatusId ( $this->StatusId );
 			$this->Ticket_AtendimentoMod->setTipo_Nivel ( $this->Tipo_Nivel );
-			$this->Ticket_AtendimentoMod->setAtendenteId( $this->AtendenteId );
+			$this->Ticket_AtendimentoMod->setAtendenteId ( $this->AtendenteId );
 			
 			if ($this->Ticket_AtendimentoMod->updateAtendimento ()) {
+				$this->TransactionMod->Commit ();
+			} else {
+				$this->TransactionMod->Rollback ();
+				
+				$retorno ['success'] = false;
+				$retorno ["msg"] = "Ocorreu um erro ao atualizar o atendimento!";
+			}
+		} else if ($this->StatusId == 5) {
+			$this->load->model ( "Ticket_AtendimentoMod" );
+			$this->Ticket_AtendimentoMod->setTicketId ( $this->getTicketId () );
+			$this->Ticket_AtendimentoMod->setStatusId ( $this->StatusId );
+			
+			if ($this->Ticket_AtendimentoMod->updateFechaAtendimento ()) {
 				$this->TransactionMod->Commit ();
 			} else {
 				$this->TransactionMod->Rollback ();
@@ -407,7 +417,13 @@ class TicketMod extends CI_Model {
 	private function montaSetUpdate() {
 		$setUpdate = array ();
 		
-		if ($this->TicketGravado->Permissao == 'Chefe' || $this->TicketGravado->Permissao == 'Atendente') {
+	
+		if ($this->TicketGravado->TipoId != $this->TipoId) {
+			$setUpdate [] = "TipoId = " . $this->TipoId;
+			$setUpdate [] = "DH_Previsao = NULL ";
+			$setUpdate [] = "DH_Aceite = NULL ";
+			
+		} else if ($this->TicketGravado->Permissao == 'Chefe' || $this->TicketGravado->Permissao == 'Atendente') {
 			
 			// Se Aberto, Respondido ou Em Manutenção
 			if (in_array ( $this->TicketGravado->StatusId, array (
@@ -423,6 +439,7 @@ class TicketMod extends CI_Model {
 			if (in_array ( $this->StatusId, array (
 					4 
 			) )) {
+				$setUpdate [] = "DH_Aceite = '" . date ( 'Y-m-d H:i:s' ) . "'";
 				$setUpdate [] = "DH_Previsao = '" . $this->criaDH_Previsao () . "'";
 			}
 			
@@ -436,35 +453,17 @@ class TicketMod extends CI_Model {
 			// $setUpdate [] = "AtendenteId = " . $this->AtendenteId;
 			$setUpdate [] = "PrioridadeId = " . $this->PrioridadeId;
 		} else if ($this->TicketGravado->Permissao == 'Setor') {
-			if (in_array ( $this->TicketGravado->StatusId, array (
-					1 
-			) )) {
-				$setUpdate [] = "TipoId = " . $this->TipoId;
-				// $setUpdate [] = "StatusId = " . $this->StatusId;
-			}
-			
+		
 			// Se o Setor selecionar o Ticket para Em Manutenção, Cancelado, Indeferido
-			if (in_array ( $this->StatusId, array (
-					4 
-			) )) {
-				$this->setFuncionarioId ( $_SESSION ['Funcionario']->FuncionarioId );
-				
-				// $setUpdate [] = "StatusId = " . $this->StatusId;
-				// $setUpdate [] = "AtendenteId = " . $this->getFuncionarioId ();
+			if ( in_array ( $this->TicketGravado->StatusId, array ( 1 ) ) && in_array ( $this->StatusId, array ( 4 ) ) ) {
+				$setUpdate [] = "DH_Aceite = '" . date ( 'Y-m-d H:i:s' ) . "'";
+				$setUpdate [] = "DH_Previsao = '" . $this->criaDH_Previsao () . "'";
 				$setUpdate [] = "PrioridadeId = " . $this->PrioridadeId;
 			}
-		} else if ($this->TicketGravado->Permissao == 'Solicitante') {
 			
-			// Se em aberto pode trocar Categoria e Tipo
-			// if ($this->TicketGravado->StatusId == 1) {
-			if (in_array ( $this->TicketGravado->StatusId, array (
-					1,
-					2,
-					3,
-					4 
-			) )) {
-				$setUpdate [] = "TipoId = " . $this->TipoId;
-			}
+			// temos outros saves ?
+			
+			
 		}
 		
 		return implode ( ", ", $setUpdate );
