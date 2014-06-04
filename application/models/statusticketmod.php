@@ -62,11 +62,17 @@ class StatusTicketMod extends CI_Model {
 	private function checkPermissao() {
 		$Opcoes = '';
 		
-		if($this->Nivel > 1){
+		/*if($this->Nivel > 1){
 			$Opcoes = $this->StatusId;
 		}
-		else if ($this->Permissao == 'Solicitante') {
-			$Opcoes = $this->StatusId;
+		else*/ if ($this->Permissao == 'Solicitante') {
+
+			if ($this->StatusId == 1) {
+				$Opcoes .= '1,5,6';
+			}
+			else{
+				$Opcoes = $this->StatusId;
+			}
 		} else if ($this->Permissao == 'Setor') {
 			if ($this->StatusId == 1) {
 				$Opcoes = '1,4,6,7';

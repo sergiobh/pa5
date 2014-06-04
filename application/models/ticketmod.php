@@ -217,14 +217,18 @@ class TicketMod extends CI_Model {
 						OR S.FuncionarioId IS NOT NULL
 						OR (
 							SF.SetorFuncionarioId IS NOT NULL
-							AND TA.Tipo_Nivel = 1
 						)
 					)
 				GROUP BY
 					T.TicketId
 					,TH.TicketId
 				";
-		// echo '<pre>'.$sql;exit;
+		
+		/*
+		 * AND TA.Tipo_Nivel = 1
+		 * */
+		
+		//echo '<pre>'.$sql;exit;
 		$query = $this->db->query ( $sql );
 		
 		$dados = $query->result ();
@@ -328,13 +332,8 @@ class TicketMod extends CI_Model {
 				";
 		//echo '<pre>'.$sql;exit;
 		$this->db->query ( $sql );
-		
-		// if ($this->db->affected_rows () > 0) {
-		
+			
 		$retorno = $this->checkAlteracoesAtendimento ();
-		/*
-		 * } else { $retorno ['success'] = false; $retorno ["msg"] = "Altere pelo menos um dos campos!"; }
-		 */
 		
 		return json_encode ( $retorno );
 	}
@@ -397,7 +396,7 @@ class TicketMod extends CI_Model {
 				$retorno ['success'] = false;
 				$retorno ["msg"] = "Ocorreu um erro ao atualizar o atendimento!";
 			}
-		} else if ($this->StatusId == 5) {
+		} else if (in_array ( $this->StatusId, array ( 4, 5, 6, 7 ) ) ) {
 			$this->load->model ( "Ticket_AtendimentoMod" );
 			$this->Ticket_AtendimentoMod->setTicketId ( $this->getTicketId () );
 			$this->Ticket_AtendimentoMod->setStatusId ( $this->StatusId );
