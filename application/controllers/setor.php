@@ -11,7 +11,7 @@ class Setor extends CI_Controller {
 	public function listar() {
 		$this->CheckLogado ();
 		
-		$Dados ['View'] = 'Setor/listar';
+		$Dados ['View'] = 'setor/listar';
 		$this->load->view ( 'body/index', $Dados );
 	}
 	public function getListar() {
